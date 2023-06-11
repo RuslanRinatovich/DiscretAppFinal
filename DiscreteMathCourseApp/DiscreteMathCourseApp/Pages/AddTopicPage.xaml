@@ -1,0 +1,262 @@
+﻿<Page x:Class="DiscreteMathCourseApp.Pages.AddTopicPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+       xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:local="clr-namespace:DiscreteMathCourseApp.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="800"
+        Title="Тема"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="14"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition/>
+ 
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="245"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Button x:Name="BtnSave" Grid.Row="13" Content="Сохранить"  Style="{StaticResource MaterialDesignFlatButton}"
+                HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" 
+                Click="BtnSaveClick" Grid.ColumnSpan="2"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Порядковый номер №"  Margin="20 0"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Название темы"  Margin="20 0"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Описание"  Margin="20 0"/>
+        <TextBox x:Name="TextBoxTitle" Text="{Binding Title}" 
+                 Grid.Row="3" Grid.Column="1" Padding="0,2" Height="Auto"/>
+        <TextBox x:Name="TextBoxProductDescription" Text="{Binding Description}" VerticalAlignment="Stretch" 
+                 HorizontalAlignment="Stretch" TextWrapping="Wrap"  
+                 VerticalContentAlignment="Top"
+                 HorizontalContentAlignment="Stretch"
+                 Grid.Row="4" Grid.Column="1" Padding="0,2" Height="Auto"/>
+        <xctk:IntegerUpDown x:Name="UpDownIndexNumber" Grid.Row=" 0" Grid.Column="1" Minimum="1" Value="{Binding IndexNumber}" />
+
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Количество часов"  Margin="20 0"/>
+        <xctk:IntegerUpDown x:Name="UpDownTotalHours" Grid.Row="5" Grid.Column="1" Minimum="1" Value="{Binding TotalHours}" />
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Раздел"  Margin="20 0"/>
+        <ComboBox x:Name="ComboChapter" 
+                  SelectedItem="{Binding Chapter}" 
+                  Grid.Row="1" Grid.Column="1" 
+                  DisplayMemberPath="Title" 
+                  SelectedValuePath="Id"  />
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Тип занятия"  Margin="20 0"/>
+        <ComboBox x:Name="ComboTopicType" 
+                  SelectedItem="{Binding TopicType}"
+                  Grid.Row="2" Grid.Column="1" 
+                  DisplayMemberPath="Title" 
+                  SelectedValuePath="Id" />
+        <ScrollViewer Grid.Row="6" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Rectangle  Fill="#FF9A67EA" Grid.Row="0" />
+                <TextBlock Grid.Row="0" Text="Материал занятия" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}" Foreground="White" HorizontalAlignment="Center"/>
+                <ListBox x:Name="ListBoxTopicContents"   
+                 ScrollViewer.VerticalScrollBarVisibility="Visible"    HorizontalContentAlignment="Stretch"
+                   Grid.Row="1" Margin="0 0 40 0"
+                 
+                >
+                    <ListBox.ItemTemplate >
+                        <DataTemplate >
+                            <Grid HorizontalAlignment="Stretch" UseLayoutRounding="True">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="40"/>
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Column="0" Width="60" Height="40" 
+                               Stretch="Uniform" Source="{Binding Path=GetIcon}" 
+                               Margin="5 0 5 0"/>
+                                <StackPanel Grid.Column="1" >
+                                    <!--<TextBlock Margin="2" FontSize="16" FontWeight="Bold"
+                                       Text="{Binding Path=Data}" 
+                                       Width="Auto" HorizontalAlignment="Left" />-->
+                                    <TextBlock Margin="2" FontSize="16" 
+                                       Text="{Binding Path=TopicTitle}" 
+                                       Width="Auto" HorizontalAlignment="Left" />
+                                    <TextBlock Margin="2" FontSize="16" 
+                                       Text="{Binding Path=IndexNumber, StringFormat={}№: {0}}"
+                                       Width="Auto" HorizontalAlignment="Left" />
+
+
+                                </StackPanel>
+                                <Button   Content="{materialDesign:PackIcon ArrowUpBold}"  x:Name="BtnUp" ToolTip="Вверх" 
+                                  Grid.Column="3" Width="40" Padding="0"                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnUp_Click"/>
+
+                                <Button   Content="{materialDesign:PackIcon ArrowDownBold}"  x:Name="BtnDown" ToolTip="Вниз" 
+                                  Grid.Column="2" Width="40" Padding="0"
+                         HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnDown_Click"/>
+
+                                <Button   Content="{materialDesign:PackIcon Eye}"  x:Name="BtnEye" ToolTip="Просмотр" 
+                                  Grid.Column="4" Width="40" Padding="0"                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnEye_Click"/>
+
+                                <Button   Content="{materialDesign:PackIcon Delete}"  x:Name="BtnDeleteTopicContent" ToolTip="Удалить" 
+                                  Grid.Column="5" Width="40" Padding="0"
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnDeleteTopicContent_Click"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                </ListBox>
+
+
+                <Button   Content="{materialDesign:PackIcon Add}"  x:Name="BtnAddTopicContent" Style="{StaticResource MaterialDesignFlatButton}" ToolTip="Добавить" Grid.Row="1"  Width="40" Padding="0"
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Top" Click="BtnAddTopicContent_Click"/>
+
+
+                <Rectangle  Fill="#FF9A67EA" Grid.Row="2" />
+                <TextBlock Grid.Row="2" Text="Задания" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}" Foreground="White" HorizontalAlignment="Center"/>
+                <ListBox x:Name="ListBoxControlPoints"   
+                 ScrollViewer.VerticalScrollBarVisibility="Visible"    HorizontalContentAlignment="Stretch"
+                 SelectedValuePath="AgentId"    Grid.Row="3"  Margin="0 0 40 0"
+                 
+                >
+                    <ListBox.ItemTemplate >
+                        <DataTemplate >
+                            <Grid HorizontalAlignment="Stretch" UseLayoutRounding="True">
+                                <Grid.ColumnDefinitions>
+
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="40"/>
+
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0" >
+                                    <TextBlock Margin="2" FontSize="16" 
+                                       Text="{Binding Path=IndexNumber, StringFormat={}Задание №: {0}}"
+                                       Width="Auto" HorizontalAlignment="Left" />
+                                    <TextBlock Margin="2" FontSize="16" FontWeight="Bold"
+                                       Text="{Binding Path=TaskTitle}" 
+                                       Width="Auto" HorizontalAlignment="Left" />
+                                    <TextBlock Margin="2" FontSize="16" 
+                                       Text="{Binding Path=AnswerTitle}" 
+                                       Width="Auto" HorizontalAlignment="Left" />
+
+                                </StackPanel>
+                                <Button   Content="{materialDesign:PackIcon ArrowUpBold}"  x:Name="BtnUpControlPoint" ToolTip="Вверх" 
+                                  Grid.Column="2" Width="40" Padding="0"                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnUpControlPoint_Click"/>
+
+                                <Button   Content="{materialDesign:PackIcon ArrowDownBold}"  x:Name="BtnDownControlPoint" ToolTip="Вниз" 
+                                  Grid.Column="1" Width="40" Padding="0"
+                         HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnDownControlPoint_Click"/>
+
+                                <Button   Content="{materialDesign:PackIcon Edit}"  x:Name="BtnEyeControlPoint" ToolTip="Изменить" 
+                                  Grid.Column="3" Width="40" Padding="0"                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnEyeControlPoint_Click"/>
+
+                                <Button   Content="{materialDesign:PackIcon Delete}"  x:Name="BtnDeleteControlPoint" ToolTip="Удалить" 
+                                  Grid.Column="4" Width="40" Padding="0"
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnDeleteControlPoint_Click"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                </ListBox>
+
+
+                <Button   Content="{materialDesign:PackIcon Add}"  x:Name="BtnAddControlPoint" Style="{StaticResource MaterialDesignFlatButton}" ToolTip="Добавить" Grid.Row="3"  Width="40" Padding="0"
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Top" Click="BtnAddControlPoint_Click" />
+
+                <Rectangle  Fill="#FF9A67EA" Grid.Row="4"/>
+                <TextBlock Grid.Row="4"  Text="Тесты" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}"
+                   Foreground="White" HorizontalAlignment="Center"/>
+                <ListBox x:Name="ListBoxTests"   
+                 ScrollViewer.VerticalScrollBarVisibility="Visible"    HorizontalContentAlignment="Stretch"
+                 SelectedValuePath="AgentId"    Grid.Row="5" Margin="0 0 40 0"
+                 
+                >
+                    <ListBox.ItemTemplate >
+                        <DataTemplate >
+                            <Grid HorizontalAlignment="Stretch" UseLayoutRounding="True">
+                                <Grid.ColumnDefinitions>
+
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="40"/>
+
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0" >
+                                    <TextBlock Margin="2" FontSize="16" 
+                                       Text="{Binding Path=IndexNumber, StringFormat={}Тест №: {0}}"
+                                       Width="Auto" HorizontalAlignment="Left" />
+                                    <TextBlock Margin="2" FontSize="16" FontWeight="Bold"
+                                       Text="{Binding Path=Title}" 
+                                       Width="Auto" HorizontalAlignment="Left" />
+
+
+                                </StackPanel>
+                                <Button   Content="{materialDesign:PackIcon ArrowUpBold}"  x:Name="BtnUpTest" ToolTip="Вверх" 
+                                  Grid.Column="2" Width="40" Padding="0"                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnUpTest_Click" />
+
+                                <Button   Content="{materialDesign:PackIcon ArrowDownBold}"  x:Name="BtnDownTest" ToolTip="Вниз" 
+                                  Grid.Column="1" Width="40" Padding="0"
+                         HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnDownTest_Click" />
+
+                                <Button   Content="{materialDesign:PackIcon Edit}"  x:Name="BtnEyeTest" ToolTip="Изменить" 
+                                  Grid.Column="3" Width="40" Padding="0"                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnEyeTest_Click" />
+
+                                <Button   Content="{materialDesign:PackIcon Delete}"  x:Name="BtnDeleteTest" ToolTip="Удалить" 
+                                  Grid.Column="4" Width="40" Padding="0"
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnDeleteTest_Click" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                </ListBox>
+                <Button   Content="{materialDesign:PackIcon Add}"  x:Name="BtnAddTest" Style="{StaticResource MaterialDesignFlatButton}"
+                          ToolTip="Добавить" Grid.Row="5"  Width="40" Padding="0"
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Top" Click="BtnAddTest_Click" />
+            </Grid>
+        </ScrollViewer>
+
+        
+    </Grid>
+</Page>
+
+

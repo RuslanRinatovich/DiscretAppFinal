@@ -1,0 +1,110 @@
+﻿<Page x:Class="DiscreteMathCourseApp.Pages.PassTestPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:DiscreteMathCourseApp.Pages"
+      mc:Ignorable="d" 
+     d:DesignHeight="600" d:DesignWidth="800"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="Прохождение теста"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="14"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="200"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Rectangle  Fill="#FF9A67EA" Grid.Row="0" />
+        <TextBlock Grid.Row="0" Text="Тест" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}" Foreground="White" HorizontalAlignment="Center"/>
+
+        <Image x:Name="ImagePhoto" Width="200"
+               Grid.Row="1" Grid.Column="1" 
+               VerticalAlignment="Stretch" HorizontalAlignment="Right"
+                 />
+        <Button   Content="{materialDesign:PackIcon Kind=Eye}" Style="{StaticResource MaterialDesignFlatButton}"
+                  
+                  x:Name="BtnView" ToolTip="Просмотр"  Grid.Row="1"  Width="40" Padding="0"
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Bottom"
+                  Click="BtnView_Click"/>
+
+        <TextBlock x:Name="TextBoxTitle"
+                 Style="{DynamicResource MaterialDesignHeadline6TextBlock}"  
+                TextWrapping="Wrap"
+                 Grid.Row="1" Padding="0,2" Height="Auto" Margin="0 0 210 0"/>
+        <TextBlock x:Name="TextBoxProductDescription"   VerticalAlignment="Stretch"  Margin="10 0" 
+                 HorizontalAlignment="Stretch" TextWrapping="Wrap"   materialDesign:HintAssist.Hint="Описание"
+                 Style="{DynamicResource MaterialDesignSubtitle1TextBlock}"
+                
+                 Grid.Row="2" Grid.Column="1" Padding="0,2" Height="Auto"/>
+
+        <ListBox x:Name="ListBoxAnswers"   
+                 ScrollViewer.VerticalScrollBarVisibility="Visible"   
+                    Grid.Row="3" Grid.Column="0"  
+                 ItemContainerStyle="{DynamicResource good_item}" 
+                >
+            <ListBox.ItemTemplate>
+                <DataTemplate >
+                    <Grid HorizontalAlignment="Stretch" UseLayoutRounding="True">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="60"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock  FontSize="16" FontWeight="Bold" Grid.Column="1" 
+                                       Text="{Binding Path=Title}" 
+                                       Width="Auto" HorizontalAlignment="Left" />
+                        <CheckBox Grid.Column ="0" 
+                                  
+                                  IsChecked="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}, Path=IsSelected}"
+                                  Style="{DynamicResource MaterialDesignAccentCheckBox}" Margin="10 0 10 0"/>
+
+
+
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+        </ListBox>
+
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button   Content="{materialDesign:PackIcon SkipPrevious}"  x:Name="BtnFirst" ToolTip="Первый вопрос"  Width="40" Padding="0"
+                  HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFlatButton}"
+                  VerticalAlignment="Top" Click="BtnFirst_Click"/>
+            <Button   Content="{materialDesign:PackIcon ArrowLeftBold}" Style="{StaticResource MaterialDesignFlatButton}" x:Name="BtnArrowLeftBold" ToolTip="Предыдущий вопрос"  Width="40" Padding="0"
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Top" Click="BtnArrowLeftBold_Click"/>
+            <Button   Content="{materialDesign:PackIcon ArrowRightBold}" Style="{StaticResource MaterialDesignFlatButton}" x:Name="BtnArrowRightBold" ToolTip="Следующий вопрос"  Width="40" Padding="0"
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Top" Click="BtnArrowRightBold_Click"/>
+            <Button   Content="{materialDesign:PackIcon SkipNext}" Style="{StaticResource MaterialDesignFlatButton}" x:Name="BtnLast" ToolTip="Последний вопрос"  Width="40" Padding="0"
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Top" Click="BtnLast_Click"/>
+
+            <Button   Content="{materialDesign:PackIcon CheckBold}" Style="{StaticResource MaterialDesignFlatButton}" x:Name="BtnFinishTest" ToolTip="Завершить тест"  Width="40" Padding="0" Margin="100 0 0 0"
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Top" Click="BtnFinishTest_Click"/>
+
+        </StackPanel>
+        <TextBlock x:Name="TextBlockQuestionNumber" Grid.Row="4" HorizontalAlignment="Left" Width="200"/>
+    </Grid>
+</Page>
+

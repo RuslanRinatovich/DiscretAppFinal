@@ -1,0 +1,482 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Хранилище DiscretMathBDModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Answer">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Title" Type="nvarchar" MaxLength="1000" Nullable="false" />
+    <Property Name="IsRight" Type="bit" Nullable="false" />
+    <Property Name="QuestionId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Chapter">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+    <Property Name="IndexNumber" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ControlPoint">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TopicId" Type="int" Nullable="false" />
+    <Property Name="TaskTitle" Type="nvarchar" MaxLength="1000" />
+    <Property Name="AnswerTitle" Type="nvarchar" MaxLength="1000" />
+    <Property Name="IndexNumber" Type="int" Nullable="false" />
+    <Property Name="TaskLink" Type="nvarchar" MaxLength="100" />
+    <Property Name="AnswerLink" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="Question">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Title" Type="nvarchar" MaxLength="1000" Nullable="false" />
+    <Property Name="Image" Type="nvarchar" MaxLength="1000" />
+    <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+  </EntityType>
+  <EntityType Name="Role">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Title" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Grade" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="Test">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TopicId" Type="int" Nullable="false" />
+    <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+    <Property Name="IndexNumber" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TestProgress">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="AnswerId" Type="int" Nullable="false" />
+    <Property Name="QuestionId" Type="int" Nullable="false" />
+    <Property Name="TestId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TestQuestion">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="QuestionId" Type="int" Nullable="false" />
+    <Property Name="TestId" Type="int" Nullable="false" />
+    <Property Name="IndexNumber" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Topic">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Title" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="TotalHours" Type="int" Nullable="false" />
+    <Property Name="ChapterId" Type="int" Nullable="false" />
+    <Property Name="IndexNumber" Type="int" Nullable="false" />
+    <Property Name="TopicTypeId" Type="int" />
+  </EntityType>
+  <EntityType Name="TopicContent">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TopicId" Type="int" Nullable="false" />
+    <Property Name="TopicTitle" Type="nvarchar(max)" />
+    <Property Name="TopicLink" Type="nvarchar" MaxLength="1000" />
+    <Property Name="IndexNumber" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TopicType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserName" />
+    </Key>
+    <Property Name="UserName" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Password" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="RoleId" Type="int" Nullable="false" />
+    <Property Name="Surname" Type="nvarchar" MaxLength="100" />
+    <Property Name="Name" Type="nvarchar" MaxLength="100" />
+    <Property Name="Patronymic" Type="nvarchar" MaxLength="100" />
+    <Property Name="DateOfRegs" Type="date" Nullable="false" />
+    <Property Name="StudentGroup" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="UserControlPoint">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ControlPointId" Type="int" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Answer" Type="nvarchar(max)" />
+    <Property Name="AnswerLink" Type="nvarchar" MaxLength="1000" />
+    <Property Name="Result" Type="int" />
+  </EntityType>
+  <EntityType Name="UserTestResults">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TestId" Type="int" Nullable="false" />
+    <Property Name="Result" Type="int" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="100" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UserTopicContent">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="TopicContentId" Type="int" Nullable="false" />
+    <Property Name="IsStudied" Type="bit" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Answer_Question">
+    <End Role="Question" Type="Self.Question" Multiplicity="1" />
+    <End Role="Answer" Type="Self.Answer" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Question">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Answer">
+        <PropertyRef Name="QuestionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ControlPoint_Topic">
+    <End Role="Topic" Type="Self.Topic" Multiplicity="1" />
+    <End Role="ControlPoint" Type="Self.ControlPoint" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Topic">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ControlPoint">
+        <PropertyRef Name="TopicId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CourseProgress_User">
+    <End Role="User" Type="Self.User" Multiplicity="1" />
+    <End Role="UserTopicContent" Type="Self.UserTopicContent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserName" />
+      </Principal>
+      <Dependent Role="UserTopicContent">
+        <PropertyRef Name="UserName" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test_Topic">
+    <End Role="Topic" Type="Self.Topic" Multiplicity="1" />
+    <End Role="Test" Type="Self.Test" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Topic">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Test">
+        <PropertyRef Name="TopicId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TestProgress_Answer">
+    <End Role="Answer" Type="Self.Answer" Multiplicity="1" />
+    <End Role="TestProgress" Type="Self.TestProgress" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Answer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TestProgress">
+        <PropertyRef Name="AnswerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TestProgress_Question">
+    <End Role="Question" Type="Self.Question" Multiplicity="1" />
+    <End Role="TestProgress" Type="Self.TestProgress" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Question">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TestProgress">
+        <PropertyRef Name="QuestionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TestProgress_Test">
+    <End Role="Test" Type="Self.Test" Multiplicity="1" />
+    <End Role="TestProgress" Type="Self.TestProgress" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Test">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TestProgress">
+        <PropertyRef Name="TestId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TestProgress_User">
+    <End Role="User" Type="Self.User" Multiplicity="1" />
+    <End Role="TestProgress" Type="Self.TestProgress" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserName" />
+      </Principal>
+      <Dependent Role="TestProgress">
+        <PropertyRef Name="UserName" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TestQuestion_Question">
+    <End Role="Question" Type="Self.Question" Multiplicity="1" />
+    <End Role="TestQuestion" Type="Self.TestQuestion" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Question">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TestQuestion">
+        <PropertyRef Name="QuestionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TestQuestion_Test">
+    <End Role="Test" Type="Self.Test" Multiplicity="1" />
+    <End Role="TestQuestion" Type="Self.TestQuestion" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Test">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TestQuestion">
+        <PropertyRef Name="TestId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TestResults_Test">
+    <End Role="Test" Type="Self.Test" Multiplicity="1" />
+    <End Role="UserTestResults" Type="Self.UserTestResults" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Test">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserTestResults">
+        <PropertyRef Name="TestId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TestResults_User">
+    <End Role="User" Type="Self.User" Multiplicity="1" />
+    <End Role="UserTestResults" Type="Self.UserTestResults" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserName" />
+      </Principal>
+      <Dependent Role="UserTestResults">
+        <PropertyRef Name="UserName" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Topic_Chapter">
+    <End Role="Chapter" Type="Self.Chapter" Multiplicity="1" />
+    <End Role="Topic" Type="Self.Topic" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Chapter">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Topic">
+        <PropertyRef Name="ChapterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Topic_TopicType">
+    <End Role="TopicType" Type="Self.TopicType" Multiplicity="0..1" />
+    <End Role="Topic" Type="Self.Topic" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TopicType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Topic">
+        <PropertyRef Name="TopicTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TopicContent_Topic">
+    <End Role="Topic" Type="Self.Topic" Multiplicity="1" />
+    <End Role="TopicContent" Type="Self.TopicContent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Topic">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TopicContent">
+        <PropertyRef Name="TopicId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_User_Role">
+    <End Role="Role" Type="Self.Role" Multiplicity="1" />
+    <End Role="User" Type="Self.User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserControlPoint_ControlPoint">
+    <End Role="ControlPoint" Type="Self.ControlPoint" Multiplicity="1" />
+    <End Role="UserControlPoint" Type="Self.UserControlPoint" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ControlPoint">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserControlPoint">
+        <PropertyRef Name="ControlPointId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserControlPoint_User">
+    <End Role="User" Type="Self.User" Multiplicity="1" />
+    <End Role="UserControlPoint" Type="Self.UserControlPoint" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserName" />
+      </Principal>
+      <Dependent Role="UserControlPoint">
+        <PropertyRef Name="UserName" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserTopicContent_TopicContent">
+    <End Role="TopicContent" Type="Self.TopicContent" Multiplicity="1" />
+    <End Role="UserTopicContent" Type="Self.UserTopicContent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TopicContent">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserTopicContent">
+        <PropertyRef Name="TopicContentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Хранилище DiscretMathBDModelContainer">
+    <EntitySet Name="Answer" EntityType="Self.Answer" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Chapter" EntityType="Self.Chapter" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ControlPoint" EntityType="Self.ControlPoint" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Question" EntityType="Self.Question" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Test" EntityType="Self.Test" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TestProgress" EntityType="Self.TestProgress" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TestQuestion" EntityType="Self.TestQuestion" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Topic" EntityType="Self.Topic" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TopicContent" EntityType="Self.TopicContent" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TopicType" EntityType="Self.TopicType" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UserControlPoint" EntityType="Self.UserControlPoint" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UserTestResults" EntityType="Self.UserTestResults" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UserTopicContent" EntityType="Self.UserTopicContent" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Answer_Question" Association="Self.FK_Answer_Question">
+      <End Role="Question" EntitySet="Question" />
+      <End Role="Answer" EntitySet="Answer" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ControlPoint_Topic" Association="Self.FK_ControlPoint_Topic">
+      <End Role="Topic" EntitySet="Topic" />
+      <End Role="ControlPoint" EntitySet="ControlPoint" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CourseProgress_User" Association="Self.FK_CourseProgress_User">
+      <End Role="User" EntitySet="User" />
+      <End Role="UserTopicContent" EntitySet="UserTopicContent" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test_Topic" Association="Self.FK_Test_Topic">
+      <End Role="Topic" EntitySet="Topic" />
+      <End Role="Test" EntitySet="Test" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TestProgress_Answer" Association="Self.FK_TestProgress_Answer">
+      <End Role="Answer" EntitySet="Answer" />
+      <End Role="TestProgress" EntitySet="TestProgress" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TestProgress_Question" Association="Self.FK_TestProgress_Question">
+      <End Role="Question" EntitySet="Question" />
+      <End Role="TestProgress" EntitySet="TestProgress" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TestProgress_Test" Association="Self.FK_TestProgress_Test">
+      <End Role="Test" EntitySet="Test" />
+      <End Role="TestProgress" EntitySet="TestProgress" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TestProgress_User" Association="Self.FK_TestProgress_User">
+      <End Role="User" EntitySet="User" />
+      <End Role="TestProgress" EntitySet="TestProgress" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TestQuestion_Question" Association="Self.FK_TestQuestion_Question">
+      <End Role="Question" EntitySet="Question" />
+      <End Role="TestQuestion" EntitySet="TestQuestion" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TestQuestion_Test" Association="Self.FK_TestQuestion_Test">
+      <End Role="Test" EntitySet="Test" />
+      <End Role="TestQuestion" EntitySet="TestQuestion" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TestResults_Test" Association="Self.FK_TestResults_Test">
+      <End Role="Test" EntitySet="Test" />
+      <End Role="UserTestResults" EntitySet="UserTestResults" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TestResults_User" Association="Self.FK_TestResults_User">
+      <End Role="User" EntitySet="User" />
+      <End Role="UserTestResults" EntitySet="UserTestResults" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Topic_Chapter" Association="Self.FK_Topic_Chapter">
+      <End Role="Chapter" EntitySet="Chapter" />
+      <End Role="Topic" EntitySet="Topic" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Topic_TopicType" Association="Self.FK_Topic_TopicType">
+      <End Role="TopicType" EntitySet="TopicType" />
+      <End Role="Topic" EntitySet="Topic" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TopicContent_Topic" Association="Self.FK_TopicContent_Topic">
+      <End Role="Topic" EntitySet="Topic" />
+      <End Role="TopicContent" EntitySet="TopicContent" />
+    </AssociationSet>
+    <AssociationSet Name="FK_User_Role" Association="Self.FK_User_Role">
+      <End Role="Role" EntitySet="Role" />
+      <End Role="User" EntitySet="User" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserControlPoint_ControlPoint" Association="Self.FK_UserControlPoint_ControlPoint">
+      <End Role="ControlPoint" EntitySet="ControlPoint" />
+      <End Role="UserControlPoint" EntitySet="UserControlPoint" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserControlPoint_User" Association="Self.FK_UserControlPoint_User">
+      <End Role="User" EntitySet="User" />
+      <End Role="UserControlPoint" EntitySet="UserControlPoint" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserTopicContent_TopicContent" Association="Self.FK_UserTopicContent_TopicContent">
+      <End Role="TopicContent" EntitySet="TopicContent" />
+      <End Role="UserTopicContent" EntitySet="UserTopicContent" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

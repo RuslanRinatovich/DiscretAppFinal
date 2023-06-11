@@ -1,0 +1,219 @@
+﻿<Page x:Class="DiscreteMathCourseApp.Pages.TopicLearnPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:local="clr-namespace:DiscreteMathCourseApp.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Тема"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="14"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}" IsVisibleChanged="PageIsVisibleChanged" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="200"/>
+            <RowDefinition/>
+
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <ProgressBar x:Name="TopicProgress" 
+  Height="20" Background="White"  Foreground="Green" Margin="5 0 5 0"/>
+        
+        
+        <TextBlock x:Name="TextBlockPercent" Visibility="Hidden"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" x:Name="TextBlockTopic" Text="{Binding GetAllInformation}" Margin="20 0" Style="{StaticResource MaterialDesignHeadline6TextBlock }"/>
+        <ScrollViewer Grid.Row="2" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Rectangle  Fill="#FF9A67EA" Grid.Row="0" />
+                <TextBlock Grid.Row="0" Text="Материал занятия" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}" Foreground="White" HorizontalAlignment="Center"/>
+
+                <ListBox x:Name="ListBoxTopicContents"   
+                 ScrollViewer.VerticalScrollBarVisibility="Visible"    HorizontalContentAlignment="Stretch"
+                   Grid.Row="1" 
+                 
+                >
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Background" Value="{Binding GetColor}"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate >
+                        <DataTemplate >
+                            <Grid HorizontalAlignment="Stretch" UseLayoutRounding="True">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="60"/>
+                               
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Column="0" Width="60" Height="40" 
+                               Stretch="Uniform" Source="{Binding Path=GetIcon}" 
+                               Margin="5 0 5 0"/>
+                                <StackPanel Grid.Column="1" >
+                                    <!--<TextBlock Margin="2" FontSize="16" FontWeight="Bold"
+                                       Text="{Binding Path=Data}" 
+                                       Width="Auto" HorizontalAlignment="Left" />-->
+                                    <TextBlock Margin="2" FontSize="16" 
+                                       Text="{Binding Path=TopicTitle}" 
+                                       Width="Auto" HorizontalAlignment="Left" />
+                                    <TextBlock Margin="2" FontSize="16" 
+                                       Text="{Binding Path=IndexNumber, StringFormat={}№: {0}}"
+                                       Width="Auto" HorizontalAlignment="Left" />
+
+
+                                </StackPanel>
+
+
+                                <Button   Content="{materialDesign:PackIcon Eye}"  x:Name="BtnEye" ToolTip="Просмотр" 
+                                  Grid.Column="2" Width="40" Padding="0"    Style="{StaticResource MaterialDesignFlatButton}"              HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnEye_Click"/>
+
+                                <!--<CheckBox Grid.Column="3" Click="CheckBox_Click" HorizontalAlignment="Center"
+                                          materialDesign:CheckBoxAssist.CheckBoxSize="30"
+                                          IsChecked="{Binding IsStudied, Mode=OneWay}"   />-->
+
+                                <ToggleButton  Grid.Column="3"
+                                    Content="NO"  IsChecked="{Binding IsStudied, Mode=OneWay}"   Style="{StaticResource MaterialDesignActionToggleButton}"  ToolTip="Изучил" Click="ToggleButton_Click" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                </ListBox>
+
+
+
+
+
+                <!--<Rectangle  Fill="#FF9A67EA" Grid.Row="2" />-->
+                <Rectangle  Fill="#FF9A67EA" Grid.Row="2" />
+                <TextBlock Grid.Row="2" Text="Задания" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}" Foreground="White" HorizontalAlignment="Center"/>
+                <ListBox x:Name="ListBoxControlPoints"   
+                 ScrollViewer.VerticalScrollBarVisibility="Visible"    HorizontalContentAlignment="Stretch"
+                    Grid.Row="3"  
+                 
+                >
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Background" Value="{Binding GetColor}"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+
+
+                    <ListBox.ItemTemplate >
+                        <DataTemplate >
+                            <Grid HorizontalAlignment="Stretch" UseLayoutRounding="True">
+                                <Grid.ColumnDefinitions>
+
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="60"/>
+
+
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0" >
+                                    <TextBlock Margin="2" FontSize="16" 
+                                       Text="{Binding Path=IndexNumber, StringFormat={}Задание №: {0}}"
+                                       Width="Auto" HorizontalAlignment="Left" />
+                                    <TextBlock Margin="2" FontSize="16" FontWeight="Bold"
+                                       Text="{Binding Path=TaskTitle}" 
+                                       Width="Auto" HorizontalAlignment="Left" />
+                                    <TextBlock Margin="2" FontSize="16" 
+                                       Text="{Binding Path=AnswerTitle}" 
+                                       Width="Auto" HorizontalAlignment="Left" />
+
+                                </StackPanel>
+
+
+                                <Button   Content="{materialDesign:PackIcon Eye}"  x:Name="BtnEyeControlPoint" ToolTip="Просмотр" 
+                                  Grid.Column="1" Width="40" Padding="0"                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnEyeControlPoint_Click"/>
+                                <TextBlock Margin="2" FontSize="16" FontWeight="Bold"
+                                       Text="{Binding GetBall}" Grid.Column="2" 
+                                       Width="Auto" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                </ListBox>
+
+
+
+
+                <Rectangle  Fill="#FF9A67EA" Grid.Row="4"/>
+                <TextBlock Grid.Row="4"  Text="Тесты" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}"
+                   Foreground="White" HorizontalAlignment="Center"/>
+                <ListBox x:Name="ListBoxTests"   
+                 ScrollViewer.VerticalScrollBarVisibility="Visible"    HorizontalContentAlignment="Stretch"
+                    Grid.Row="5"
+                 
+                >
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Background" Value="{Binding GetColor}"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate >
+                        <DataTemplate >
+                            <Grid HorizontalAlignment="Stretch" UseLayoutRounding="True">
+                                <Grid.ColumnDefinitions>
+
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="60"/>
+
+
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0" >
+                                    <TextBlock Margin="2" FontSize="16" 
+                                       Text="{Binding Path=IndexNumber, StringFormat={}Тест №: {0}}"
+                                       Width="Auto" HorizontalAlignment="Left" />
+                                    <TextBlock Margin="2" FontSize="16" FontWeight="Bold"
+                                       Text="{Binding Path=Title}" 
+                                       Width="Auto" HorizontalAlignment="Left" />
+
+
+                                </StackPanel>
+
+
+
+                                <Button   Content="{materialDesign:PackIcon Eye}"  x:Name="BtnEyeTest" ToolTip="Просмотр" 
+                                  Grid.Column="1" Width="40" Padding="0"                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnEyeTest_Click" />
+
+                                <TextBlock Margin="2" FontSize="16" FontWeight="Bold"
+                                       Text="{Binding GetResult, StringFormat={}{0}%}" Grid.Column="2" 
+                                       Width="Auto" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                </ListBox>
+
+            </Grid>
+        </ScrollViewer>
+
+
+    </Grid>
+</Page>
+
+

@@ -1,0 +1,67 @@
+﻿<Window x:Class="DiscreteMathCourseApp.Windows.RegsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DiscreteMathCourseApp.Windows"
+        mc:Ignorable="d"
+         
+      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="14"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+      Width="600" Height="400"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+  
+     Title="Регистрация"      WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40" />
+
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="TextBoxUserName" 
+                 Text="{Binding UserName}" Grid.Column="0" VerticalAlignment="Center" Grid.Row="0" Height="30" Margin="0,7"
+                materialDesign:HintAssist.Hint="Имя пользователя" Padding="20 5 0 0" TextChanged="TextBoxUserName_TextChanged" PreviewTextInput="TextBoxUserName_PreviewTextInput" 
+                 />
+        <TextBox Text="{Binding Surname}" materialDesign:HintAssist.Hint="Фамилия"  Padding="20 5 0 0" Grid.Column="0" VerticalAlignment="Center"  Grid.Row="1" Height="30" Margin="0,7"  />
+        <TextBox Text="{Binding Name}" materialDesign:HintAssist.Hint="Имя"  Padding="20 5 0 0" Grid.Column="0" VerticalAlignment="Center" Grid.Row="2" Height="30" Margin="0,7" />
+        <TextBox Text="{Binding Patronymic}" materialDesign:HintAssist.Hint="Отчество"  Padding="20 5 0 0" Grid.Column="0" VerticalAlignment="Center" Grid.Row="3" Height="30" Margin="0,7" />
+        <!--<ComboBox x:Name="ComboUserType" materialDesign:HintAssist.Hint="Тип пользователя" Padding="20 5 0 0"
+                  SelectedItem="{Binding Role}"
+                  Grid.Row="4"
+                  DisplayMemberPath="Title" VerticalAlignment="Stretch" VerticalContentAlignment="Center"
+                  SelectedValuePath="Id" />-->
+        <!--<TextBox Text="{Binding StudentGroup}" materialDesign:HintAssist.Hint="Группа"  Padding="20 5 0 0" 
+                 VerticalAlignment="Center" Grid.Row="4" Height="30" Margin="0,7"  />-->
+
+        <ComboBox x:Name="ComboGroup" materialDesign:HintAssist.Hint="Группа" Padding="20 5 0 0"
+                  SelectedItem="{Binding StudentGroup}"
+                  Grid.Row="4"
+                  DisplayMemberPath="Title" VerticalAlignment="Stretch" VerticalContentAlignment="Center"
+                  SelectedValuePath="Id" />
+        <TextBox Text="{Binding Password}" Grid.Column="0" 
+                 Margin="20,0,0,2" x:Name="PasswordBoxPassword"  VerticalAlignment="Center"
+                 materialDesign:HintAssist.Hint="Пароль" Grid.Row="5" Height="30" />
+
+        <TextBox  Grid.Column="0" 
+                 Margin="20,0,0,2" x:Name="PasswordBoxSecondPassword"  VerticalAlignment="Center"
+                 materialDesign:HintAssist.Hint="повторите пароль" Grid.Row="6" Height="30" />
+        <Button IsDefault="True" Click="BtnSaveClick" Width="120" Grid.Row="7"  Style="{StaticResource MaterialDesignFlatButton}" Margin="5">Сохранить</Button>
+
+
+
+    </Grid>
+</Window>
