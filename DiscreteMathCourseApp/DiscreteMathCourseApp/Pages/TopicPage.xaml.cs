@@ -73,7 +73,7 @@ namespace DiscreteMathCourseApp.Pages
             TextBoxStats.Text = answer + $"ИТОГО: {sum} ч.";
             topicTypes.Insert(0, new TopicType
             {
-                Title = "Все типы"
+                Title = "Все типы занятий"
             }
             );
             ComboTopicType.ItemsSource = topicTypes;

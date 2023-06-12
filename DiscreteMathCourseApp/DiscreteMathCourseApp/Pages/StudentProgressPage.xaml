@@ -147,9 +147,9 @@
                 <!--<DataGridTextColumn Binding="{Binding Chapter.GetChapter}" Header="Раздел" Width="120" ElementStyle="{StaticResource First}" />-->
                 <DataGridTextColumn Binding="{Binding IndexNumber}" Header="№" Width="60" />
                 <DataGridTextColumn Binding="{Binding Title}" Header="Название" Width="*" ElementStyle="{StaticResource WrapText}"/>
-                <DataGridTextColumn Binding="{Binding TotalHours}" Header="Описание" Width="*" ElementStyle="{StaticResource WrapText}"/>
+                <DataGridTextColumn Binding="{Binding TotalHours}" Header="Количество часов" Width="auto" ElementStyle="{StaticResource WrapText}"/>
 
-                <DataGridTextColumn Binding="{Binding TopicType.Title}" Header="Тип занятия" Width="120"  />
+                <DataGridTextColumn Binding="{Binding TopicType.Title}" Header="Тип занятия" Width="auto"  />
                 <DataGridTextColumn Binding="{Binding GetData}" Header="Изучено" Width="200" ElementStyle="{StaticResource WrapText}"/>
                 <!--<DataGridTextColumn Binding="{Binding GetProgress, StringFormat={}{0} %}" Header="Изучено %"  ElementStyle="{StaticResource Align}" Width="120"/>-->
                 <DataGridTemplateColumn Width="100" Header="Изучено %">
