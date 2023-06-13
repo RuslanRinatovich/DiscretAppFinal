@@ -29,8 +29,6 @@ c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\Dis
 c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\DiscreteMathCourseApp.csproj.CopyComplete
 C:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Interop.VBIDE.dll
 C:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\DiscreteMathCourseApp.csproj.ResolveComReference.cache
-C:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\MyCoursePage.g.cs
-C:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\MyCoursePage.baml
 C:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\ChapterPage.g.cs
 C:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\ChapterPage.baml
 C:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\bin\Debug\Xceed.Wpf.AvalonDock.dll
@@ -494,3 +492,25 @@ h:\SHARE\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourse
 h:\SHARE\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\ShowImageWindow.g.cs
 h:\SHARE\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\AddNewQuestionWindow.baml
 h:\SHARE\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\ShowImageWindow.baml
+c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\bin\Debug\LiveCharts.dll
+c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\bin\Debug\LiveCharts.Wpf.dll
+c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\bin\Debug\LiveCharts.pdb
+c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\bin\Debug\LiveCharts.xml
+c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\bin\Debug\LiveCharts.Wpf.pdb
+c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\bin\Debug\LiveCharts.Wpf.xml
+c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\CheckTestPage.g.cs
+c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\GroupsPage.g.cs
+c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\StudentProgressPage.g.cs
+c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\UsersTestPassPage.g.cs
+c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\AddNewQuestionWindow.g.cs
+c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\RegsWindow.g.cs
+c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\ShowImageWindow.g.cs
+c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\StudentGroupWindow.g.cs
+c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\CheckTestPage.baml
+c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\GroupsPage.baml
+c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\StudentProgressPage.baml
+c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\UsersTestPassPage.baml
+c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\AddNewQuestionWindow.baml
+c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\RegsWindow.baml
+c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\ShowImageWindow.baml
+c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\StudentGroupWindow.baml

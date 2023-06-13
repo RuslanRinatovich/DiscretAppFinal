@@ -15,8 +15,8 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
       Width="600" Height="400"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-  
-     Title="Регистрация"      WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow" >
+  MaxHeight="400" MaxWidth="600"
+     Title="Регистрация"      WindowStartupLocation="CenterScreen" MinHeight="400" MinWidth="600" WindowStyle="ToolWindow" >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
@@ -52,11 +52,11 @@
                   Grid.Row="4"
                   DisplayMemberPath="Title" VerticalAlignment="Stretch" VerticalContentAlignment="Center"
                   SelectedValuePath="Id" />
-        <TextBox Text="{Binding Password}" Grid.Column="0" 
+        <PasswordBox  Grid.Column="0" 
                  Margin="20,0,0,2" x:Name="PasswordBoxPassword"  VerticalAlignment="Center"
-                 materialDesign:HintAssist.Hint="Пароль" Grid.Row="5" Height="30" />
+                 materialDesign:HintAssist.Hint="пароль" Grid.Row="5" Height="30" />
 
-        <TextBox  Grid.Column="0" 
+        <PasswordBox  Grid.Column="0" 
                  Margin="20,0,0,2" x:Name="PasswordBoxSecondPassword"  VerticalAlignment="Center"
                  materialDesign:HintAssist.Hint="повторите пароль" Grid.Row="6" Height="30" />
         <Button IsDefault="True" Click="BtnSaveClick" Width="120" Grid.Row="7"  Style="{StaticResource MaterialDesignFlatButton}" Margin="5">Сохранить</Button>

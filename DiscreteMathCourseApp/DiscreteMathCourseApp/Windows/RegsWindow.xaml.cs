@@ -64,9 +64,10 @@ namespace DiscreteMathCourseApp.Windows
                 s.AppendLine("Задайте имя пользователя");
             if (badName)
                 s.AppendLine("Выберите другое имя пользователя");
-            if (string.IsNullOrWhiteSpace(_currentItem.Password))
+            
+            if (PasswordBoxPassword.Password == "")
                 s.AppendLine("Задайте пароль");
-            if (PasswordBoxPassword.Text != PasswordBoxSecondPassword.Text)
+            if (PasswordBoxPassword.Password != PasswordBoxSecondPassword.Password)
                 s.AppendLine("Пароли разные");
             return s;
         }
@@ -88,6 +89,7 @@ namespace DiscreteMathCourseApp.Windows
                 // добавление нового товара, 
                 _currentItem.RoleId = 1;
                 _currentItem.DateOfRegs = DateTime.Now;
+                _currentItem.Password = PasswordBoxPassword.Password;
                 MyMoodleBDEntities.GetContext().Users.Add(_currentItem);
                  MyMoodleBDEntities.GetContext().SaveChanges();  // Сохраняем изменения в БД
                 MessageBox.Show("Вы успешно зарегистрировались в системе", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
