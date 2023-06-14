@@ -387,13 +387,15 @@ namespace DiscreteMathCourseApp.Pages
             DataGridData.ItemsSource = collectionView;
             int total = Convert.ToInt32(Convert.ToDouble(totalCompleteTask) / totalTasks * 100);
             GaugeTotalStats.Value = total;
-            TextBlockCount.Text = $" Результат запроса: {_itemcount} записей из {_itemcount}";
             _itemcount = data.Count;
+            TextBlockCount.Text = $" Результат запроса: {_itemcount} записей из {_itemcount}";
+         
 
             if (user != null)
             {
                 TextBlockUserName.Text = $"{user.GetFio}";
-                TextBlockGroup.Text = $"группа:{user.StudentGroup.Title}";
+                if (user.StudentGroup != null)
+                    TextBlockGroup.Text = $"группа:{user.StudentGroup.Title}";
                 TextBlockMaterials.Text = $"Материалов изучено {user.GetPassedTopicContentString}";
                 TextBlockTasks.Text = $"Заданий выполнено {user.GetPassedControlPointCountString}";
                 TextBlockTests.Text = $"Тестов пройдено {user.GetTestPassCountString}";

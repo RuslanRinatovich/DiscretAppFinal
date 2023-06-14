@@ -9,15 +9,7 @@ namespace DiscreteMathCourseApp.Models
 {
     public partial class Answer
     {
-        //public string GetColor
-        //{
-        //    get
-        //    {
-        //        if (IsRight) return "#0F0";
-        //        return "#F00";
-        //    }
-        //}
-
+       
 
         public string GetColor1 { set; get; }
         

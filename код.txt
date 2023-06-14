@@ -1,0 +1,3558 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+
+namespace DiscreteMathCourseApp.Models
+{
+    public partial class User
+    {
+        public string GetFio
+        {
+            get
+            {
+                return $"{Surname} {Name} ";
+            }
+        }
+
+        public string GetTestPassCountString
+        {
+            get
+            {
+                int tests = MyMoodleBDEntities.GetContext().Tests.Count();
+
+                return $"{GetTestPassCount} из {tests}";
+            }
+        }
+
+
+        public int GetTestPassCount
+        {
+            get
+            {
+                int k = 0;
+                foreach (UserTestResult userTestResult in UserTestResults)
+                    if (Convert.ToDouble(userTestResult.Result)/userTestResult.Test.TestQuestions.Count > 0.50)
+                        k++;
+
+                return k;
+            }
+        }
+
+        public int GetPassedControlPointCount
+        {
+            get
+            {
+                int k = 0;
+                foreach (UserControlPoint userControlPoint in UserControlPoints)
+                    if (userControlPoint.Result > 2)
+                        k++;
+
+                return k;
+            }
+        }
+
+        public string GetPassedControlPointCountString
+        {
+            get
+            {
+                int controlPoints = MyMoodleBDEntities.GetContext().ControlPoints.Count(); // 4
+
+                return $"{GetPassedControlPointCount} из {controlPoints}";
+            }
+        }
+
+        public int GetPassedTopicContent
+        {
+            get
+            {
+                int k = 0;
+                foreach (UserTopicContent userTopicContent in UserTopicContents)
+                    if (userTopicContent.IsStudied)
+                        k++;
+
+                return k;
+            }
+        }
+
+        public string GetPassedTopicContentString
+        {
+            get
+            {
+                int topicContents = MyMoodleBDEntities.GetContext().TopicContents.Count(); // 5
+
+                return $"{GetPassedTopicContent} из {topicContents}";
+            }
+        }
+
+        public int GetProgress
+        {
+            get
+            {
+                int controlPoints = MyMoodleBDEntities.GetContext().ControlPoints.Count(); // 4
+                int topicContents = MyMoodleBDEntities.GetContext().TopicContents.Count(); // 5
+                int tests = MyMoodleBDEntities.GetContext().Tests.Count(); // 3
+
+                double total = controlPoints + topicContents + tests;
+                // 2 + 3 + 3
+                return Convert.ToInt32((GetPassedTopicContent + GetTestPassCount + GetPassedControlPointCount)/ total * 100);
+            }
+        }
+        public Visibility GetVisibility
+        {
+            get
+            {
+                if (RoleId == 1)
+                    return Visibility.Visible;
+                return Visibility.Hidden;
+            }
+        }
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DiscreteMathCourseApp.Models
+{
+    public partial class UserControlPoint
+    {
+        public string GetColor
+        {
+            get
+            {
+                if (Result == 5)
+                    return "#FF76E383";
+                if (Result == 4)
+                    return "FF0000";
+                if (Result == 4)
+                    return "0000FF";
+                return "fff";
+            }
+        }
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DiscreteMathCourseApp.Models
+{
+    public partial class TopicContent
+    {
+        public string GetColor
+        {
+            get
+            {
+                UserTopicContent userTopicContent = UserTopicContents.FirstOrDefault(p => p.User == Manager.CurrentUser);
+
+                if (userTopicContent == null) return "#FFF";
+                if (userTopicContent.IsStudied == false) return "#FFF";
+                return "#FF76E383";
+               
+            }
+        }
+
+        public Boolean IsStudied
+        {
+            get
+            {
+                UserTopicContent userTopicContent = UserTopicContents.FirstOrDefault(p => p.User == Manager.CurrentUser);
+
+                if (userTopicContent == null)
+                    return false;
+          
+                return userTopicContent.IsStudied;
+
+            }
+        }
+
+
+
+        public string GetIcon
+        {
+            get
+            {
+                string currentDirectory = System.IO.Directory.GetCurrentDirectory();
+                Dictionary<string, string> extentions = new Dictionary<string, string>()
+                {
+                    ["doc"] = currentDirectory + @"\Data\Icons\doc.png",
+                    ["docx"] = currentDirectory + @"\Data\Icons\docx.png",
+                    ["pptx"] = currentDirectory + @"\Data\Icons\pptx.png",
+                    ["pdf"] = currentDirectory + @"\Data\Icons\pdf.png",
+                    ["xps"] = currentDirectory + @"\Data\Icons\docx.png",
+                  ["mp4"] = currentDirectory + @"\Data\Icons\mp4.png"
+                };
+                int k = TopicLink.LastIndexOf('.');
+                string ext = TopicLink.Substring(k+1);
+                return extentions[ext];
+
+            }
+        }
+    }
+}
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DiscreteMathCourseApp.Models
+{
+    public partial class Topic
+    {
+        public string GetAllInformation
+        {
+            get
+            {
+                return $"Тема №{IndexNumber}\n" +
+                     $"Раздел: {Chapter.Title}\n" +
+                     $"Тип занятия: {TopicType.Title}\n" +
+                     $"Название: {Title}\n" +
+                     $"Описание: {Description}";
+
+            }
+        }
+
+        public int GetProgress { get; set; }
+        public string GetData { get; set; }
+        public string GetColor { get; set; }
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DiscreteMathCourseApp.Models
+{
+    public partial class Test
+    {
+        public int GetResult { set; get; }
+        public string GetColor { set; get; }
+    }
+}
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DiscreteMathCourseApp.Models
+{
+    public partial class Question
+    {
+        public string GetImage
+        {
+            get
+            {
+                if (Image is null)
+                    return System.IO.Directory.GetCurrentDirectory() + @"\Data\Images\picture.png";
+                return System.IO.Directory.GetCurrentDirectory() + @"\Data\Images\" + Image.Trim();
+            }
+        }
+    }
+}
+
+
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DiscreteMathCourseApp.Models
+{
+    public partial class MyMoodleBDEntities: DbContext
+    {
+        private static MyMoodleBDEntities _context;
+
+
+        public static MyMoodleBDEntities GetContext()
+        {
+            if (_context == null)
+            {
+                _context = new MyMoodleBDEntities();
+            }
+            return _context;
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+
+namespace DiscreteMathCourseApp.Models
+{
+    public partial class ControlPoint
+    {
+        public string GetColor { set; get; }
+        public string GetBall { set; get; }
+
+        public int? Result { set; get; }
+
+        public Visibility GetVisibility { set; get; }
+        public UserControlPoint GetUserControlPoint { set; get; }
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DiscreteMathCourseApp.Models
+{
+    public partial class Chapter
+    {
+        public string GetChapter
+        {
+            get
+            {
+                return $"{IndexNumber}. {Title} ";
+            }
+        }
+
+        public string GetTotalHours
+        {
+            get
+            {
+                List<TopicType> topicTypes = MyMoodleBDEntities.GetContext().TopicTypes.OrderBy(p => p.Title).ToList();
+                Dictionary<string, int> data = new Dictionary<string, int>();
+                foreach (TopicType x in topicTypes)
+                {
+                    data.Add(x.Title, 0);
+                }
+                foreach (Topic topic in Topics)
+                {
+                    data[topic.TopicType.Title] += topic.TotalHours;
+                }
+
+                string answer = "";
+                foreach (var x in data)
+                {
+                    answer += $"{x.Key}: {x.Value}ч.\t";
+                   
+                }
+                return answer;
+            }
+        }
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+
+namespace DiscreteMathCourseApp.Models
+{
+    public partial class Answer
+    {
+       
+
+        public string GetColor1 { set; get; }
+        
+         
+        public Visibility GetVisibility
+        {
+            get
+            {
+                if (IsRight) return Visibility.Visible;
+                return Visibility.Hidden;
+            }
+        }
+
+
+    }
+}
+
+
+<Window x:Class="DiscreteMathCourseApp.Windows.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:DiscreteMathCourseApp.Windows"
+        mc:Ignorable="d"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="14"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+           Title="Вход"   Height="250"
+        Width="400" MinHeight="250" MinWidth="400" 
+        WindowStartupLocation="CenterScreen" 
+        ResizeMode="NoResize" Closing="Window_Closing">
+    <!--NoResize - нужен, чтобы нельзя было изменить зааднные размеры окна-->
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="75"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+        <Grid />
+        <materialDesign:PackIcon Kind="Key" Foreground="{StaticResource PrimaryHueMidBrush}"
+               Margin="10,10,0,0" 
+               HorizontalAlignment="Left" Height="25" Width="62"/>
+        <TextBlock Grid.Row="0" Text="Электронный курс по Дискретной математике" 
+                   HorizontalAlignment="Center" 
+                   VerticalAlignment="Center"
+                   FontSize="16" TextWrapping="Wrap" TextAlignment="Center"
+                   FontWeight="Bold" Height="60"  Width="242"  />
+
+
+        <TextBox x:Name="TbLogin"  Grid.Row="1"
+                     Grid.Column="1" materialDesign:HintAssist.Hint="Логин" 
+                     Width="300" Text="admin"/>
+
+        <PasswordBox x:Name="TbPass" Height="30" Width="300" materialDesign:HintAssist.Hint="Пароль" Password="1" Grid.Row="2" />
+        <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Center">
+            <Button Width="100" Height="30" 
+                    Content="OK"   Style="{StaticResource MaterialDesignFlatButton}"
+                    x:Name="BtnOk" 
+                    Click="BtnOkClick" IsDefault="True"/>
+            <Button Width="100"
+                    Height="30" 
+                    Content="Cancel" 
+                    x:Name="BtnCancel"   Style="{StaticResource MaterialDesignFlatButton}"
+                    Click="BtnCancelClick" IsCancel="True"/>
+        </StackPanel>
+        <Button   Grid.Row="4" Height="20"  Style="{StaticResource MaterialDesignFlatButton}"
+                    Content="Регистрация" Padding="0" FontSize="8" VerticalContentAlignment="Center" VerticalAlignment="Center"
+                    x:Name="BtnRegs" 
+                    Click="BtnRegs_Click" />
+    </Grid>
+</Window>
+
+
+using DiscreteMathCourseApp.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+
+namespace DiscreteMathCourseApp.Windows
+{
+    /// <summary>
+    /// Логика взаимодействия для LoginWindow.xaml
+    /// </summary>
+    public partial class LoginWindow : Window
+    {
+        private void BtnOkClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {  //загрузка всех пользователей из БД в список
+                List<User> users = MyMoodleBDEntities.GetContext().Users.ToList();
+                //попытка найти пользователя с указанным паролем и логином
+                //если такого пользователя не будет обнаружено то переменная u будет равна null
+                User u = users.FirstOrDefault(p => p.Password == TbPass.Password && p.UserName == TbLogin.Text);
+
+                if (u != null)
+                {
+                    // логин и пароль корректные запускаем главную форму приложения
+                    MainWindow mainWindow = new MainWindow(u);
+                    Manager.CurrentUser = u;
+                    mainWindow.Owner = this;
+                    this.Hide();
+                    mainWindow.Show();
+                    
+                   // this.DialogResult = true;
+                }
+                else
+                {
+                    MessageBox.Show("Не верный логин или пароль");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
+        }
+        //код кнопки Cancel
+        private void BtnCancelClick(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            MessageBoxResult x = MessageBox.Show("Вы действительно хотите закрыть приложение?",
+          "Выйти", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+            if (x == MessageBoxResult.Cancel)
+                e.Cancel = true;
+        }
+
+        private void BtnRegs_Click(object sender, RoutedEventArgs e)
+        {
+            RegsWindow regsWindow = new RegsWindow();
+            regsWindow.ShowDialog();
+        }
+    }
+}
+
+
+<Window x:Class="DiscreteMathCourseApp.Windows.RegsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DiscreteMathCourseApp.Windows"
+        mc:Ignorable="d"
+         
+      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="14"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+      Width="600" Height="400"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+  MaxHeight="400" MaxWidth="600"
+     Title="Регистрация"      WindowStartupLocation="CenterScreen" MinHeight="400" MinWidth="600" WindowStyle="ToolWindow" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40" />
+
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="TextBoxUserName" 
+                 Text="{Binding UserName}" Grid.Column="0" VerticalAlignment="Center" Grid.Row="0" Height="30" Margin="0,7"
+                materialDesign:HintAssist.Hint="Имя пользователя" Padding="20 5 0 0" TextChanged="TextBoxUserName_TextChanged" PreviewTextInput="TextBoxUserName_PreviewTextInput" 
+                 />
+        <TextBox Text="{Binding Surname}" materialDesign:HintAssist.Hint="Фамилия"  Padding="20 5 0 0" Grid.Column="0" VerticalAlignment="Center"  Grid.Row="1" Height="30" Margin="0,7"  />
+        <TextBox Text="{Binding Name}" materialDesign:HintAssist.Hint="Имя"  Padding="20 5 0 0" Grid.Column="0" VerticalAlignment="Center" Grid.Row="2" Height="30" Margin="0,7" />
+        <TextBox Text="{Binding Patronymic}" materialDesign:HintAssist.Hint="Отчество"  Padding="20 5 0 0" Grid.Column="0" VerticalAlignment="Center" Grid.Row="3" Height="30" Margin="0,7" />
+        <!--<ComboBox x:Name="ComboUserType" materialDesign:HintAssist.Hint="Тип пользователя" Padding="20 5 0 0"
+                  SelectedItem="{Binding Role}"
+                  Grid.Row="4"
+                  DisplayMemberPath="Title" VerticalAlignment="Stretch" VerticalContentAlignment="Center"
+                  SelectedValuePath="Id" />-->
+        <!--<TextBox Text="{Binding StudentGroup}" materialDesign:HintAssist.Hint="Группа"  Padding="20 5 0 0" 
+                 VerticalAlignment="Center" Grid.Row="4" Height="30" Margin="0,7"  />-->
+
+        <ComboBox x:Name="ComboGroup" materialDesign:HintAssist.Hint="Группа" Padding="20 5 0 0"
+                  SelectedItem="{Binding StudentGroup}"
+                  Grid.Row="4"
+                  DisplayMemberPath="Title" VerticalAlignment="Stretch" VerticalContentAlignment="Center"
+                  SelectedValuePath="Id" />
+        <PasswordBox  Grid.Column="0" 
+                 Margin="20,0,0,2" x:Name="PasswordBoxPassword"  VerticalAlignment="Center"
+                 materialDesign:HintAssist.Hint="пароль" Grid.Row="5" Height="30" />
+
+        <PasswordBox  Grid.Column="0" 
+                 Margin="20,0,0,2" x:Name="PasswordBoxSecondPassword"  VerticalAlignment="Center"
+                 materialDesign:HintAssist.Hint="повторите пароль" Grid.Row="6" Height="30" />
+        <Button IsDefault="True" Click="BtnSaveClick" Width="120" Grid.Row="7"  Style="{StaticResource MaterialDesignFlatButton}" Margin="5">Сохранить</Button>
+
+
+
+    </Grid>
+</Window>
+
+
+using DiscreteMathCourseApp.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+
+namespace DiscreteMathCourseApp.Windows
+{
+    /// <summary>
+    /// Логика взаимодействия для RegsWindow.xaml
+    /// </summary>
+    public partial class RegsWindow : Window
+    {
+        public User _currentItem { get; private set; }
+        List<User> users = new List<User>();
+        bool isNew = false;
+        bool badName = false;
+        string msg = "Изменения сохранены";
+        public RegsWindow()
+        {
+            InitializeComponent();
+            LoadAndInitData();
+        }
+
+
+        void LoadAndInitData()
+        {     // если передано null, то мы добавляем новый товар
+
+            users = MyMoodleBDEntities.GetContext().Users.OrderBy(p => p.UserName).ToList();
+
+            ComboGroup.ItemsSource = MyMoodleBDEntities.GetContext().StudentGroups.ToList();
+
+           
+                _currentItem = new User();
+                isNew = true;
+                msg = "Запись добавлена";
+            
+
+            DataContext = _currentItem;
+
+        }
+
+        /// <summary>
+        /// Проверка полей ввод на корректыне данные
+        /// </summary>
+        /// <returns>текст StringBuilder содержащий ошибки, если они есть</returns>
+        private StringBuilder CheckFields()
+        {
+            StringBuilder s = new StringBuilder();
+
+
+
+            if (string.IsNullOrWhiteSpace(_currentItem.UserName))
+                s.AppendLine("Задайте имя пользователя");
+            if (badName)
+                s.AppendLine("Выберите другое имя пользователя");
+            
+            if (PasswordBoxPassword.Password == "")
+                s.AppendLine("Задайте пароль");
+            if (PasswordBoxPassword.Password != PasswordBoxSecondPassword.Password)
+                s.AppendLine("Пароли разные");
+            return s;
+        }
+
+        private void BtnSaveClick(object sender, RoutedEventArgs e)
+        {
+            StringBuilder _error = CheckFields();
+            // если ошибки есть, то выводим ошибки в MessageBox
+            // и прерываем выполнение 
+            if (_error.Length > 0)
+            {
+                MessageBox.Show(_error.ToString());
+                return;
+            }
+            // проверка полей прошла успешно
+            // если товар новый, то его ID == 0
+            try
+            {
+                // добавление нового товара, 
+                _currentItem.RoleId = 1;
+                _currentItem.DateOfRegs = DateTime.Now;
+                _currentItem.Password = PasswordBoxPassword.Password;
+                MyMoodleBDEntities.GetContext().Users.Add(_currentItem);
+                 MyMoodleBDEntities.GetContext().SaveChanges();  // Сохраняем изменения в БД
+                MessageBox.Show("Вы успешно зарегистрировались в системе", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                this.DialogResult = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
+        }
+
+     
+
+        private void TextBoxUserName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string username = TextBoxUserName.Text.ToLower();
+            User user = MyMoodleBDEntities.GetContext().Users.Where(p => p.UserName.ToLower() == username).FirstOrDefault();
+            if (user == _currentItem)
+                return;
+            if (user != null)
+            {
+                TextBoxUserName.Foreground = new SolidColorBrush(Colors.Red);
+                badName = true;
+            }
+            else
+            {
+                TextBoxUserName.Foreground = new SolidColorBrush(Colors.Green);
+                badName = false;
+            }
+        }
+
+        private void TextBoxUserName_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex(@"[^a-zA-Z\s]");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+    }
+}
+
+
+<Window x:Class="DiscreteMathCourseApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:DiscreteMathCourseApp"
+        mc:Ignorable="d"
+        
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        MinHeight="600" MinWidth="800"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+       WindowStartupLocation="CenterScreen"  Closing="Window_Closing"
+        BorderThickness="1" WindowStyle="None" Closed="Window_Closed" >
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+
+
+        <Rectangle Grid.Row="0" Grid.Column="0" Fill="White"/>
+
+
+
+        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Right" >
+
+            <!--<Button x:Name="BtnAdmin"   Margin="5 0 10 0"  
+                Style="{StaticResource MaterialDesignFlatButton}" Click="BtnAdminClick">
+                <materialDesign:PackIcon x:Name="IconBtnKey" Kind="Login"/>
+            </Button>-->
+
+            <Button x:Name="BtnMinimize" Content="{materialDesign:PackIcon Kind=WindowMinimize}"
+               Style="{StaticResource MaterialDesignFlatButton}" Click="BtnMinimize_Click"/>
+            <Button x:Name="BtnMaximizeMin" 
+               Style="{StaticResource MaterialDesignFlatButton}" Click="BtnMaximizeMin_Click">
+                <materialDesign:PackIcon x:Name="IconMaximize" Kind="WindowMaximize"/>
+            </Button>
+            <Button x:Name="BtnClose" Content="{materialDesign:PackIcon Kind=Close}"
+               Style="{StaticResource MaterialDesignFlatButton}" Click="BtnCloseClick"/>
+        </StackPanel>
+        <materialDesign:ColorZone Grid.Column="1" Grid.Row="1" VerticalAlignment="Stretch"
+  Mode="PrimaryMid" Foreground="White"
+  Padding="0">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
+                    <Image Height="30" Width="30" x:Name="ImgUserPhoto" Stretch="UniformToFill" Margin="10 0 10 0"/>
+                    <TextBlock Grid.Row="0" Text="{Binding ElementName=MainFrame, Path=Content.Title}" 
+                               Style="{StaticResource MaterialDesignHeadline6TextBlock}" 
+                               VerticalAlignment="Center" HorizontalAlignment="Center" Width="300"/>
+                    
+              
+                    <Button x:Name="BtnTopicPage" Content="{materialDesign:PackIcon Kind=AlphaPBox, Size=24}" Foreground="White" ToolTip="Темы"           
+                Style="{StaticResource MaterialDesignFlatButton}" Click="BtnTopicPage_Click" Visibility="Collapsed"/>
+                    <Button x:Name="BtnUserPage" Content="{materialDesign:PackIcon Kind=People, Size=24}" Foreground="White" ToolTip="Пользователи"           
+                Style="{StaticResource MaterialDesignFlatButton}" Click="BtnUserPage_Click" Visibility="Collapsed"/>
+                    <Button x:Name="BtnQuestionPage" Content="{materialDesign:PackIcon Kind=QuestionMarkBox, Size=24}" Foreground="White" Visibility="Collapsed" ToolTip="Банк вопросов"           
+                Style="{StaticResource MaterialDesignFlatButton}" Click="BtnQuestionPage_Click"/>
+                    <Button x:Name="BtnUserLearningPage" Content="{materialDesign:PackIcon Kind=AlphaLBox, Size=24}" Foreground="White" ToolTip="Обучение"           
+                Style="{StaticResource MaterialDesignFlatButton}" Click="BtnUserLearningPage_Click" Visibility="Collapsed"/>
+                </StackPanel>
+                <Button x:Name="BtnMyAccount" Content="{materialDesign:PackIcon Kind=Man, Size=24}" Foreground="White" ToolTip="Мой профиль"           
+                Style="{StaticResource MaterialDesignFlatButton}" Click="BtnMyAccount_Click" Visibility="Collapsed"/>
+                <Button x:Name="BtnBack" Content="{materialDesign:PackIcon Kind=ArrowBack, Size=24}"   Foreground="White"  HorizontalAlignment="Right"  Margin="5 0 10 0"      
+                Style="{StaticResource MaterialDesignFlatButton}" Visibility="Collapsed" Click="BtnBack_Click"/>
+                <TextBlock Height="30" Width="200" x:Name="TbUserInfo"  Margin="10 0 10 0" VerticalAlignment="Center" HorizontalAlignment="Right" Padding="3" FontWeight="Bold" 
+                           Style="{DynamicResource MaterialDesignHeadline6TextBlock}"
+                           />
+            </StackPanel >
+            
+            
+        </materialDesign:ColorZone>
+
+
+
+        <Frame x:Name="MainFrame" Grid.Row="2" 
+NavigationUIVisibility="Hidden" BorderBrush="{StaticResource MaterialDesignPaper}"
+BorderThickness="2" ContentRendered="MainFrameContentRendered"/>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Электронный курс по Дискретной математике"
+                   Style="{StaticResource MaterialDesignHeadline1TextBlock}" 
+                   FontSize="16" VerticalAlignment="Center" FontWeight="Bold" Padding="30 0" Margin="0 0 300 0"
+                   MouseDown="TextBlock_MouseDown"/>
+        <!--<materialDesign:PackIcon  Grid.Row="0" Grid.Column="0" Kind="" 
+                                  Foreground="Red" 
+                                  VerticalAlignment="Center" 
+                                  Margin="10 0"/>-->
+        <Image Grid.Row="0" Width="20" Margin="5 0 0 0" HorizontalAlignment="Left" Source="/DiscreteMathCourseApp;component/Resources/9110106_intersection_icon.png"  />
+
+            <TextBlock Grid.Row="3" Grid.Column="0" x:Name="TextBlockCount" Foreground="White"  Background="{StaticResource PrimaryHueDarkBrush}" />
+
+       
+
+      
+
+    </Grid>
+</Window>
+
+
+using DiscreteMathCourseApp.Models;
+using DiscreteMathCourseApp.Pages;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+using Word = Microsoft.Office.Interop.Word;
+
+namespace DiscreteMathCourseApp
+{
+    /// <summary>
+    /// Логика взаимодействия для MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        bool _login = false;
+        int _itemcount = 0;
+
+
+        public MainWindow(User user)
+        {
+            InitializeComponent();
+            Manager.MainFrame = MainFrame;
+
+            if (user.RoleId == 1)
+            {
+                MainFrame.Navigate(new UsersLearningCoursePage(user));
+            }
+            else
+            {
+                MainFrame.Navigate(new TopicPage());
+            }
+            TbUserInfo.Text = user.GetFio;
+        }
+
+
+
+
+        private void BtnCloseClick(object sender, RoutedEventArgs e)
+        {
+            Close();
+         
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // на экране отображается форма с двумя кнопками
+            MessageBoxResult x = MessageBox.Show("Вы действительно хотите выйти из системы?",
+            "Выйти", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+            if (x == MessageBoxResult.Cancel)
+                e.Cancel = true;
+        }
+
+
+        private void MainFrameContentRendered(object sender, EventArgs e)
+        {
+            if (MainFrame.CanGoBack)
+            {
+               
+                BtnBack.Visibility = Visibility.Visible;
+                //вошли как пользователь
+             //   BtnTopicPage.Visibility = Visibility.Collapsed;
+                BtnQuestionPage.Visibility = Visibility.Collapsed;
+                BtnUserPage.Visibility = Visibility.Collapsed;
+                BtnMyAccount.Visibility = Visibility.Collapsed;
+                // BtnUserLearningPage.Visibility = Visibility.Collapsed;
+
+
+            }
+            else
+            {
+                if (Manager.CurrentUser.RoleId == 1)
+                {
+                  //  BtnTopicPage.Visibility = Visibility.Collapsed;
+                    BtnQuestionPage.Visibility = Visibility.Collapsed;
+                    BtnUserPage.Visibility = Visibility.Collapsed;
+                    BtnMyAccount.Visibility = Visibility.Visible;
+                    // BtnUserLearningPage.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                   // BtnTopicPage.Visibility = Visibility.Visible;
+                    BtnQuestionPage.Visibility = Visibility.Visible;
+                    BtnUserPage.Visibility = Visibility.Visible;
+                    BtnMyAccount.Visibility = Visibility.Collapsed;
+                    // BtnUserLearningPage.Visibility = Visibility.Collapsed;
+                }
+
+                BtnBack.Visibility = Visibility.Collapsed;
+                    
+            }
+        }
+
+ 
+
+        private void BtnMaximizeMin_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Normal)
+            {
+                this.WindowState = WindowState.Maximized;
+                IconMaximize.Kind = MaterialDesignThemes.Wpf.PackIconKind.WindowRestore;
+            }
+
+            else
+            {
+                this.WindowState = WindowState.Normal;
+                IconMaximize.Kind = MaterialDesignThemes.Wpf.PackIconKind.WindowMaximize;
+            }
+
+        }
+
+
+
+        private void BtnMinimize_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+
+
+        private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                this.DragMove();
+        }
+
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
+        {
+           
+
+            Manager.MainFrame.GoBack();
+
+        }
+
+      
+
+     
+        private void BtnChapters_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new ChapterPage());
+        }
+
+        private void BtnTopicType_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new TopicTypePage());
+        }
+
+        private void BtnTopicPage_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new TopicPage());
+        }
+
+        private void BtnUserPage_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new StudentsPage());
+        }
+
+        private void BtnQuestionPage_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new QuestionsPage());
+        }
+
+        private void BtnTestPage_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new TestsPage());
+        }
+
+        private void BtnUserLearningPage_Click(object sender, RoutedEventArgs e)
+        {
+           // MainFrame.Navigate(new UsersLearningCoursePage(user));
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            Owner.Show();
+        }
+
+        private void BtnMyAccount_Click(object sender, RoutedEventArgs e)
+        {
+            Manager.MainFrame.Navigate(new AddUserPage(Manager.CurrentUser));
+        }
+    }
+}
+
+
+<Page x:Class="DiscreteMathCourseApp.Pages.UsersLearningCoursePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:DiscreteMathCourseApp.Pages"
+      mc:Ignorable="d" 
+      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="14"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+      d:DesignHeight="450" d:DesignWidth="800"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+      Title="Темы" IsVisibleChanged="PageIsVisibleChanged" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+             
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+
+                <RowDefinition  Height="40"/>
+                <RowDefinition  Height="40"/>
+                <RowDefinition  Height="40"/>
+            </Grid.RowDefinitions>
+
+
+            <TextBlock x:Name="TextBlockMaterials"  Grid.Row="0" Grid.Column="1" Style="{DynamicResource MaterialDesignSubtitle1TextBlock}" 
+                           Margin="10 0 "
+                           VerticalAlignment="Center"/>
+            <TextBlock x:Name="TextBlockTasks"  Grid.Row="1" Grid.Column="1" Style="{DynamicResource MaterialDesignSubtitle1TextBlock}" Margin="10 0 " VerticalAlignment="Center" />
+            <TextBlock x:Name="TextBlockTests"  Grid.Row="2" Grid.Column="1" Style="{DynamicResource MaterialDesignSubtitle1TextBlock}" Margin="10 0 " VerticalAlignment="Center" />
+
+            <TextBlock x:Name="TextBlockUserName"  Grid.Row="0" Grid.Column="2" Style="{DynamicResource MaterialDesignHeadline6TextBlock}" Margin="10 0 " VerticalAlignment="Center"/>
+            <TextBlock x:Name="TextBlockGroup"  Grid.Row="1" Grid.Column="2" Style="{DynamicResource MaterialDesignHeadline6TextBlock}" Margin="10 0 " VerticalAlignment="Center"/>
+
+            <StackPanel Grid.Column="3"  VerticalAlignment="Stretch" Grid.RowSpan="3"
+                   HorizontalAlignment="Right" 
+                 >
+
+                <TextBox Width="275" x:Name="TBoxSearch"   materialDesign:HintAssist.Hint="Введите название темы, раздела"
+                         TextChanged="TBoxSearchTextChanged"/>
+                <ComboBox Width="275" x:Name="ComboChapter" FontSize="14" Padding="3"
+                      materialDesign:HintAssist.Hint="Выберите раздел"
+                    SelectionChanged="ComboTypeSelectionChanged" DisplayMemberPath="Title"/>
+
+                <ComboBox Width="275" x:Name="ComboTopicType" FontSize="14" Padding="3"
+                      materialDesign:HintAssist.Hint="Выберите тип занятия"
+                    SelectionChanged="ComboTypeSelectionChanged" DisplayMemberPath="Title"/>
+
+
+                <ComboBox Width="275" materialDesign:HintAssist.Hint="Сортировать"
+                          x:Name="ComboSort"
+                          SelectionChanged="ComboSortSelectionChanged" Margin="3 0 0 0" >
+                    <ComboBoxItem >
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Название"/>
+                            <materialDesign:PackIcon Kind="SortAscending" Margin="5 0 0 0"/>
+                        </StackPanel>
+                    </ComboBoxItem>
+                    <ComboBoxItem >
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Название"/>
+                            <materialDesign:PackIcon Kind="SortDescending" Margin="5 0 0 0"/>
+                        </StackPanel>
+                    </ComboBoxItem>
+
+                </ComboBox>
+
+            </StackPanel>
+            <lvc:Gauge Grid.Column="0"  Uses360Mode="True"  Grid.RowSpan="3"
+                   From="0" To="100" Value="99" Width="120" Height="120" x:Name="GaugeTotalStats" HorizontalAlignment="Left"
+                   >
+                <lvc:Gauge.GaugeActiveFill>
+                    <LinearGradientBrush>
+                        <GradientStop Color="#FFDDC9FF" Offset="0.0" />
+                        <GradientStop Color="#FFC19EFF" Offset="0.5" />
+                        <GradientStop Color="#FF604395" Offset="1.0" />
+                    </LinearGradientBrush>
+                </lvc:Gauge.GaugeActiveFill>
+            </lvc:Gauge>
+
+            <!--<lvc:Gauge Grid.Column="1"  Uses360Mode="True" 
+                   From="0" To="100" Value="50" Width="120" Height="120" x:Name="GaugeTotalStats" 
+                       InnerRadius="40"
+                       HorizontalAlignment="Right"
+                   GaugeBackground="#BE91FB86" FromColor="#BE62E954" ToColor="#BE11B600"
+                       />-->
+            <!--<lvc:Gauge  Width="120" Height="120"
+                        Uses360Mode="True" Grid.Column="1" 
+                        Value="50" 
+                        x:Name="GaugeTotalStats"  From="0" To="100" 
+                        Visibility="{Binding GetVisibility}"
+                        
+                   HighFontSize="12" Foreground="Black"  InnerRadius="30" 
+                        GaugeBackground="#FFCBAEFD" 
+                        FromColor="#FF673AB7" 
+                        ToColor="#FF9073C8"/>-->
+            
+        </Grid>
+
+        
+        
+
+        <DataGrid x:Name="DataGridData" Grid.Row="2"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  ItemsSource="{Binding}"   HorizontalContentAlignment="Stretch"
+                  SelectionMode="Single"
+                 >
+            <DataGrid.Resources>
+
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="{Binding GetColor}"/>
+                </Style>
+
+                <Style TargetType="TextBlock" x:Key="WrapText">
+                    <Setter Property="TextWrapping" Value="Wrap"/>
+                    <Setter Property="TextAlignment" Value="Justify"/>
+                </Style>
+                <Style TargetType="TextBlock" x:Key="First">
+                    <Setter Property="TextWrapping" Value="Wrap"/>
+                    <Setter Property="TextAlignment" Value="Left"/>
+                </Style>
+
+                <Style TargetType="TextBlock" x:Key="Align">
+                    <Setter Property="TextAlignment" Value="Center" />
+                </Style>
+
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <!--<DataGridTextColumn Binding="{Binding Chapter.GetChapter}" Header="Раздел" Width="120" ElementStyle="{StaticResource First}" />-->
+                <DataGridTextColumn Binding="{Binding IndexNumber}" Header="№" Width="60" />
+                <DataGridTextColumn Binding="{Binding Title}" Header="Название" Width="*" ElementStyle="{StaticResource WrapText}"/>
+                <DataGridTextColumn Binding="{Binding TotalHours}" Header="Количество часов" Width="auto" ElementStyle="{StaticResource WrapText}"/>
+
+                <DataGridTextColumn Binding="{Binding TopicType.Title}" Header="Тип занятия" Width="auto"  />
+                <DataGridTextColumn Binding="{Binding GetData}" Header="Изучено" Width="200" ElementStyle="{StaticResource WrapText}"/>
+                <!--<DataGridTextColumn Binding="{Binding GetProgress, StringFormat={}{0} %}" Header="Изучено %"  ElementStyle="{StaticResource Align}" Width="120"/>-->
+                <DataGridTemplateColumn Width="100" Header="Изучено %">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <lvc:Gauge    Uses360Mode="True"  From="0" To="100" Value="{Binding GetProgress}"
+                   HighFontSize="12" Foreground="Black"  InnerRadius="20" GaugeBackground="#FFDDC9FF" FromColor="#FF673AB7" ToColor="#FF673AB7"/>
+
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button VerticalAlignment="Center" x:Name="BtnEye"  Style="{StaticResource MaterialDesignFlatButton}" 
+                                Content="{materialDesign:PackIcon Kind=Eye, Size=20}"   ToolTip="Просмотр"  Height="40" Click="BtnEye_Click"  />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+            </DataGrid.Columns>
+
+            <DataGrid.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Path=Chapter}"    FontWeight="Bold" Padding="3"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                    <GroupStyle.ContainerStyle>
+                        <Style TargetType="{x:Type GroupItem}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type GroupItem}">
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="auto" />
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Rectangle Margin="5" Grid.Row="0" Height="2" Fill="#FF9A67EA"/>
+                                            <Expander Grid.Row="1" IsExpanded="True">
+
+                                                <Expander.Header >
+                                                    <StackPanel >
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="{Binding Path=Name.Title}" Style="{StaticResource MaterialDesignHeadline6TextBlock}"  />
+                                                            <TextBlock Text="{Binding Path=ItemCount, StringFormat= {}{0} тем}" Margin="10 0 0 0"  Style="{DynamicResource MaterialDesignSubtitle2TextBlock}"/>
+
+                                                        </StackPanel>
+                                                        <TextBlock Text="{Binding Path=Name.GetTotalHours}"
+                                                              
+                                                                Style="{DynamicResource MaterialDesignSubtitle2TextBlock}"/>
+
+                                                    </StackPanel>
+                                                </Expander.Header>
+                                                <ItemsPresenter />
+                                            </Expander>
+                                            <Rectangle Margin="5" Grid.Row="2" Height="2" Fill="#FF9A67EA"/>
+
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </GroupStyle.ContainerStyle>
+                </GroupStyle>
+            </DataGrid.GroupStyle>
+        </DataGrid>
+
+        <TextBlock Grid.Row="4" x:Name="TextBlockCount" Width="300"  HorizontalAlignment="Left"/>
+        <StatusBar x:Name="StatusBarStatistics" Grid.Row="3">
+            <StatusBarItem>
+                <TextBlock Name="TextBoxStats" Style="{DynamicResource MaterialDesignBody1TextBlock}" Margin=" 10 0 0 0" />
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Page>
+
+using DiscreteMathCourseApp.Models;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace DiscreteMathCourseApp.Pages
+{
+    /// <summary>
+    /// Логика взаимодействия для UsersLearningCoursePage.xaml
+    /// </summary>
+    public partial class UsersLearningCoursePage : Page
+    {
+        int _itemcount = 0;
+        List<Topic> data;
+        User user;
+        int totalTasks = 0;
+        int totalCompleteTask = 0;
+        public UsersLearningCoursePage(User u)
+        {
+            InitializeComponent();
+            user = u;
+
+            //LoadData();
+
+        }
+
+
+        private void PageIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            //событие отображения данного Page
+            // обновляем данные каждый раз когда активируется этот Page
+            if (Visibility == Visibility.Visible)
+            {
+                LoadData();
+            }
+        }
+
+        void LoadData()
+        {
+
+            totalTasks = 0;
+            totalCompleteTask = 0;
+            var chapters = MyMoodleBDEntities.GetContext().Chapters.OrderBy(p => p.IndexNumber).ToList();
+            chapters.Insert(0, new Chapter
+            {
+                Title = "Все разделы"
+            }
+            );
+            ComboChapter.ItemsSource = chapters;
+            ComboChapter.SelectedIndex = 0;
+
+            var topicTypes = MyMoodleBDEntities.GetContext().TopicTypes.OrderBy(p => p.Title).ToList();
+            TextBoxStats.Text = "";
+            string answer = "";
+            int sum = 0;
+            foreach (TopicType topicType in topicTypes)
+            {
+                string title = topicType.Title;
+                int k = topicType.Topics.Sum(p => p.TotalHours);
+                answer += $"\t{title}: {k}ч. ";
+                sum += k;
+            }
+
+            TextBoxStats.Text = answer + $"ИТОГО: {sum} ч.";
+            topicTypes.Insert(0, new TopicType
+            {
+                Title = "Все типы занятий"
+            }
+            );
+            ComboTopicType.ItemsSource = topicTypes;
+            ComboTopicType.SelectedIndex = 0;
+
+            DataGridData.ItemsSource = null;
+            //загрузка обновленных данных
+            MyMoodleBDEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+            data = MyMoodleBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+            
+            foreach (Topic topic in data)
+            {
+
+                int studiedTopicContents = 0;
+                int passedControlPoints = 0;
+                int passedTests = 0;
+
+                int topicContentsCount = 0;
+                int controlPointsCount = 0;
+                int testCount = 0;
+
+                List<TopicContent> topicContents = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
+                //количсетво пройденных тем пользователем
+                topicContentsCount = topicContents.Count;
+                string name = user.UserName;
+                foreach (TopicContent topicContent in topicContents)
+                {
+                    UserTopicContent userTopicContent = MyMoodleBDEntities.GetContext().UserTopicContents.FirstOrDefault(p => p.TopicContentId == topicContent.Id && p.UserName == name);
+                    if (userTopicContent == null)
+                        continue;
+                    if (userTopicContent.IsStudied)
+                        studiedTopicContents++;
+                }
+                var controlPoints = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
+                foreach (ControlPoint controlPoint in controlPoints)
+                {
+
+                    UserControlPoint userControlPoint = MyMoodleBDEntities.GetContext().UserControlPoints.
+                        FirstOrDefault(p => p.ControlPointId == controlPoint.Id && p.UserName == name);
+                    if (userControlPoint == null)
+                        continue;
+
+                    if (userControlPoint.Result >= 3)
+                    {
+                        passedControlPoints++;
+                    }
+                }
+                controlPointsCount = controlPoints.Count;
+                var tests = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
+                foreach (Test test in tests)
+                {
+                    UserTestResult userTestResult = MyMoodleBDEntities.GetContext().UserTestResults.FirstOrDefault(p => p.TestId == test.Id && p.UserName == name);
+                    double count = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == test.Id).Count();
+
+                    if (userTestResult == null)
+                        continue;
+                    int testResult = Convert.ToInt32(Math.Round(userTestResult.Result / count * 100));
+                    if (testResult > 50)
+                        {
+                            passedTests++;
+                        }
+
+                   
+                }
+                testCount = tests.Count;
+
+
+
+                int k = passedTests + passedControlPoints + studiedTopicContents;
+                int m = controlPointsCount + testCount + topicContentsCount;
+                totalTasks += m;
+                totalCompleteTask += k;
+                //MessageBox.Show($"{k}  / {m}");
+                if (m == 0)
+                {
+                    topic.GetProgress = 0;
+                    topic.GetColor = "#FFF";
+                }
+                else
+                {
+                    int percent = Convert.ToInt32(Convert.ToDouble(k) / m * 100);
+                    topic.GetProgress = Convert.ToInt32(Convert.ToDouble(k) / m * 100);
+                    if (percent >= 90)
+                        topic.GetColor = "#FF76E383";
+                    else
+                        topic.GetColor = "#FFF";
+
+                }
+
+
+
+                topic.GetData = $"Материалов изучено {studiedTopicContents} из {topicContentsCount}\n" +
+                   $"Заданий выполнено {passedControlPoints} из {controlPointsCount}  \n"+
+                   $"Тестов пройдено {passedTests} из {testCount}\n";
+
+
+            }
+
+
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(data);
+            collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Chapter"));
+            DataGridData.ItemsSource = collectionView;
+            int total = Convert.ToInt32(Convert.ToDouble(totalCompleteTask) / totalTasks * 100);
+            GaugeTotalStats.Value = total;
+            TextBlockCount.Text = $" Результат запроса: {_itemcount} записей из {_itemcount}";
+            _itemcount = data.Count;
+            if (user != null)
+            {
+                TextBlockUserName.Text = $"{user.GetFio}";
+                TextBlockGroup.Text = $"группа:{user.StudentGroup.Title}";
+                TextBlockMaterials.Text = $"Материалов изучено {user.GetPassedTopicContentString}";
+                TextBlockTasks.Text = $"Заданий выполнено {user.GetPassedControlPointCountString}";
+                TextBlockTests.Text = $"Тестов пройдено {user.GetTestPassCountString}";
+            }
+
+
+        }
+
+        private void BtnAddClick(object sender, RoutedEventArgs e)
+        {
+            // открытие  AddGoodPage для добавления новой записи
+           // Manager.MainFrame.Navigate(new AddTopicPage(null));
+        }
+
+     
+
+        // отображение номеров строк в DataGrid
+        private void DataGridDataLoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            e.Row.Header = (e.Row.GetIndex() + 1).ToString();
+        }
+
+        // Поиск товаров, которые содержат данную поисковую строку
+        private void TBoxSearchTextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateData();
+        }
+        // Поиск товаров конкретного производителя
+        private void ComboTypeSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateData();
+        }
+
+
+
+
+
+        /// <summary>
+        /// Метод для фильтрации и сортировки данных
+        /// </summary>
+        private void UpdateData()
+        {
+            // получаем текущие данные из бд
+            //var currentGoods = MyMoodleBDEntities.GetContext().Abonements.OrderBy(p => p.CategoryTrainer.Trainer.LastName).ToList();
+
+            var currentData = MyMoodleBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+            // выбор только тех товаров, которые принадлежат данному производителю
+
+            if (ComboChapter.SelectedIndex > 0)
+            {
+                currentData = currentData.Where(p => p.ChapterId == ((ComboChapter.SelectedItem) as Chapter).Id).ToList();
+            }
+
+            if (ComboTopicType.SelectedIndex > 0)
+            {
+                currentData = currentData.Where(p => p.TopicTypeId == ((ComboTopicType.SelectedItem) as TopicType).Id).ToList();
+            }
+            //// выбор тех товаров, в названии которых есть поисковая строка
+            currentData = currentData.Where(p => p.Title.ToLower().Contains(TBoxSearch.Text.ToLower())).ToList();
+
+
+            if (ComboSort.SelectedIndex >= 0)
+            {
+                // сортировка по возрастанию цены
+                if (ComboSort.SelectedIndex == 0)
+                    currentData = currentData.OrderBy(p => p.IndexNumber).ToList();
+                if (ComboSort.SelectedIndex == 1)
+                    currentData = currentData.OrderByDescending(p => p.IndexNumber).ToList();
+                // сортировка по убыванию цены
+            }
+
+            // В качестве источника данных присваиваем список данных
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(currentData);
+            collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Chapter"));
+            DataGridData.ItemsSource = collectionView;
+            // DataGridData.ItemsSource = currentData;
+            // отображение количества записей
+            TextBlockCount.Text = $" Результат запроса: {currentData.Count} записей из {_itemcount}";
+        }
+        // сортировка товаров 
+        private void ComboSortSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateData();
+        }
+
+        private void DataGridData_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            e.Row.Header = (e.Row.GetIndex() + 1).ToString();
+        }
+
+        private void BtnEye_Click(object sender, RoutedEventArgs e)
+        {
+            Topic topic = (sender as Button).DataContext as Topic;
+            Manager.MainFrame.Navigate(new TopicLearnPage(topic));
+        }
+    }
+}
+
+<Page x:Class="DiscreteMathCourseApp.Pages.TopicPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:DiscreteMathCourseApp.Pages"
+      mc:Ignorable="d" 
+      
+      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="14"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+      d:DesignHeight="450" d:DesignWidth="800"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      Title="Темы" IsVisibleChanged="PageIsVisibleChanged" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <WrapPanel Grid.Row="0" 
+                   HorizontalAlignment="Stretch" 
+                 >
+
+            <TextBox Width="275" x:Name="TBoxSearch"   materialDesign:HintAssist.Hint="Введите название темы, раздела"
+                         TextChanged="TBoxSearchTextChanged"/>
+            <ComboBox Width="275" x:Name="ComboChapter" FontSize="14" Padding="3"
+                      materialDesign:HintAssist.Hint="Выберите раздел"
+                    SelectionChanged="ComboTypeSelectionChanged" DisplayMemberPath="Title"/>
+
+            <ComboBox Width="275" x:Name="ComboTopicType" FontSize="14" Padding="3"
+                      materialDesign:HintAssist.Hint="Выберите тип занятия"
+                    SelectionChanged="ComboTypeSelectionChanged" DisplayMemberPath="Title"/>
+
+
+            <ComboBox Width="275" materialDesign:HintAssist.Hint="Сортировать"
+                          x:Name="ComboSort"
+                          SelectionChanged="ComboSortSelectionChanged" Margin="10 0 0 0" >
+                <ComboBoxItem >
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Название"/>
+                        <materialDesign:PackIcon Kind="SortAscending" Margin="5 0 0 0"/>
+                    </StackPanel>
+                </ComboBoxItem>
+                <ComboBoxItem >
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Название"/>
+                        <materialDesign:PackIcon Kind="SortDescending" Margin="5 0 0 0"/>
+                    </StackPanel>
+                </ComboBoxItem>
+
+            </ComboBox>
+
+        </WrapPanel>
+
+        <DataGrid x:Name="DataGridData" Grid.Row="1"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  ItemsSource="{Binding}"   HorizontalContentAlignment="Stretch"
+                  SelectionMode="Single"
+                 >
+            <DataGrid.Resources>
+                <Style TargetType="TextBlock" x:Key="WrapText">
+                    <Setter Property="TextWrapping" Value="Wrap"/>
+                    <Setter Property="TextAlignment" Value="Justify"/>
+                </Style>
+                <Style TargetType="TextBlock" x:Key="First">
+                    <Setter Property="TextWrapping" Value="Wrap"/>
+                    <Setter Property="TextAlignment" Value="Left"/>
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <!--<DataGridTextColumn Binding="{Binding Chapter.GetChapter}" Header="Раздел" Width="120" ElementStyle="{StaticResource First}" />-->
+                <DataGridTextColumn Binding="{Binding IndexNumber}" Header="№" Width="60" />
+                <DataGridTextColumn Binding="{Binding Title}" Header="Название" Width="*" ElementStyle="{StaticResource WrapText}"/>
+                <DataGridTextColumn Binding="{Binding TotalHours}" Header="Количество часов"  ElementStyle="{StaticResource WrapText}"  Width="auto" />
+                <DataGridTextColumn Binding="{Binding TopicType.Title}" Header="Тип занятия" Width="auto"  />
+                <DataGridTemplateColumn Width="auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button VerticalAlignment="Center" x:Name="BtnUp"  Style="{StaticResource MaterialDesignFlatButton}" 
+                                Content="{materialDesign:PackIcon Kind=ArrowUpBold, Size=20}"  ToolTip="Вверх"  Height="40" Click="BtnUp_Click" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button VerticalAlignment="Center" x:Name="BtnDown"  Style="{StaticResource MaterialDesignFlatButton}" 
+                                Content="{materialDesign:PackIcon Kind=ArrowDownBold, Size=20}"   ToolTip="Вниз"  Height="40" Click="BtnDown_Click" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button VerticalAlignment="Center" x:Name="BtnEdit"  Style="{StaticResource MaterialDesignFlatButton}" 
+                                Content="{materialDesign:PackIcon Kind=Edit, Size=20}"   ToolTip="Изменить"  Height="40" Click="BtnEdit_Click" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button VerticalAlignment="Center" x:Name="BtnDelete"  Style="{StaticResource MaterialDesignFlatButton}" 
+                                Content="{materialDesign:PackIcon Kind=Delete, Size=20}"   ToolTip="Удалить"  Height="40" Click="BtnDeleteClick" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+
+            <DataGrid.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Path=Chapter}"    FontWeight="Bold" Padding="3"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                    <GroupStyle.ContainerStyle>
+                        <Style TargetType="{x:Type GroupItem}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type GroupItem}">
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="auto" />
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Rectangle Margin="5" Grid.Row="0" Height="2" Fill="#FF9A67EA"/>
+                                            <Expander Grid.Row="1" IsExpanded="True">
+
+                                                <Expander.Header >
+                                                    <StackPanel >
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="{Binding Path=Name.Title}" Style="{StaticResource MaterialDesignHeadline6TextBlock}"  />
+                                                            <TextBlock Text="{Binding Path=ItemCount, StringFormat= {}{0} тем}" Margin="10 0 0 0"  Style="{DynamicResource MaterialDesignSubtitle2TextBlock}"/>
+
+                                                        </StackPanel>
+                                                        <TextBlock Text="{Binding Path=Name.GetTotalHours}"
+                                                              
+                                                                Style="{DynamicResource MaterialDesignSubtitle2TextBlock}"/>
+
+                                                    </StackPanel>
+                                                </Expander.Header>
+                                                <ItemsPresenter />
+                                            </Expander>
+                                            <Rectangle Margin="5" Grid.Row="2" Height="2" Fill="#FF9A67EA"/>
+
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </GroupStyle.ContainerStyle>
+                </GroupStyle>
+            </DataGrid.GroupStyle>
+        </DataGrid>
+        <StackPanel Grid.Row="3" HorizontalAlignment="Right" Orientation="Horizontal" >
+            <Button x:Name="BtnTopicType" Grid.Row="3" Width="auto"  Margin="5" Style="{StaticResource MaterialDesignFlatButton}"
+                Content="Типы занятий" Click="BtnTopicType_Click"  />
+            <Button x:Name="BtnChapters" Grid.Row="3" Width="auto"  Margin="5" Style="{StaticResource MaterialDesignFlatButton}"
+                Content="Разделы" Click="BtnChapters_Click"/>
+            <Button x:Name="BtnAdd"  Width="100" Margin="5" Style="{StaticResource MaterialDesignFlatButton}"
+                Content="Добавить" Click="BtnAddClick"/>
+           
+        </StackPanel>
+        <TextBlock Grid.Row="3" x:Name="TextBlockCount" Width="300"  HorizontalAlignment="Left"/>
+        <StatusBar x:Name="StatusBarStatistics" Grid.Row="2">
+            <StatusBarItem>
+                <TextBlock Name="TextBoxStats" Style="{DynamicResource MaterialDesignBody1TextBlock}" Margin=" 10 0 0 0" />
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Page>
+     
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using DiscreteMathCourseApp.Models;
+
+namespace DiscreteMathCourseApp.Pages
+{
+    /// <summary>
+    /// Логика взаимодействия для TopicPage.xaml
+    /// </summary>
+    public partial class TopicPage : Page
+    {
+        int _itemcount = 0;
+        List<Topic> data;
+        public TopicPage()
+        {
+            InitializeComponent();
+            LoadData();
+
+        }
+        private void ButtonClick(object sender, RoutedEventArgs e)
+        {
+            // открытие редактирования товара
+            // передача выбранного товара в AddGoodPage
+          //  Manager.MainFrame.Navigate(new AddServicePage((sender as Button).DataContext as Service));
+        }
+
+        private void PageIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            //событие отображения данного Page
+            // обновляем данные каждый раз когда активируется этот Page
+            if (Visibility == Visibility.Visible)
+            {
+                LoadData();
+            }
+        }
+
+        void LoadData()
+        {
+            var chapters = MyMoodleBDEntities.GetContext().Chapters.OrderBy(p => p.IndexNumber).ToList();
+            chapters.Insert(0, new Chapter
+            {
+                Title = "Все разделы"
+            }
+            );
+            ComboChapter.ItemsSource = chapters;
+            ComboChapter.SelectedIndex = 0;
+
+            var topicTypes = MyMoodleBDEntities.GetContext().TopicTypes.OrderBy(p => p.Title).ToList();
+            TextBoxStats.Text = "";
+            string answer = "";
+            int sum = 0;
+            foreach (TopicType topicType in topicTypes)
+            {
+                string title = topicType.Title;
+                int k = topicType.Topics.Sum(p => p.TotalHours);
+                answer += $"\t{title}: {k}ч. ";
+                sum += k;
+            }
+
+            TextBoxStats.Text = answer + $"ИТОГО: {sum} ч.";
+            topicTypes.Insert(0, new TopicType
+            {
+                Title = "Все типы занятий"
+            }
+            );
+            ComboTopicType.ItemsSource = topicTypes;
+            ComboTopicType.SelectedIndex = 0;
+
+            DataGridData.ItemsSource = null;
+            //загрузка обновленных данных
+            MyMoodleBDEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+            data = MyMoodleBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(data);
+            collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Chapter"));
+            DataGridData.ItemsSource = collectionView;
+
+            TextBlockCount.Text = $" Результат запроса: {_itemcount} записей из {_itemcount}";
+            _itemcount = data.Count;
+            
+            
+        }
+
+        private void BtnAddClick(object sender, RoutedEventArgs e)
+        {
+            // открытие  AddGoodPage для добавления новой записи
+            Manager.MainFrame.Navigate(new AddTopicPage(null));
+        }
+
+        private void BtnDeleteClick(object sender, RoutedEventArgs e)
+        {
+            // удаление выбранного товара из таблицы
+            //получаем все выделенные товары
+            var selected = (sender as Button).DataContext as Topic;
+            // вывод сообщения с вопросом Удалить запись?
+            MessageBoxResult messageBoxResult = MessageBox.Show($"Удалить запись???",
+                "Удаление", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+            //если пользователь нажал ОК пытаемся удалить запись
+            if (messageBoxResult == MessageBoxResult.OK)
+            {
+                try
+                {
+                    // берем из списка удаляемых товаров один элемент
+                   
+                    // проверка, есть ли у товара в таблице о продажах связанные записи
+                    // если да, то выбрасывается исключение и удаление прерывается
+                    if (selected.TopicContents.Count > 0 || selected.ControlPoints.Count > 0)
+                        throw new Exception("Ошибка удаления, есть связанные записи");
+
+                    int k = selected.IndexNumber;
+
+                    data = MyMoodleBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+
+                    for (int i = k; i < _itemcount; i++)
+                        data[i].IndexNumber -= 1;
+
+                    MyMoodleBDEntities.GetContext().Topics.Remove(selected);
+                    //сохраняем изменения
+                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    MessageBox.Show("Записи удалены");
+
+                    LoadData();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message.ToString(), "Ошибка удаления", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        // отображение номеров строк в DataGrid
+        private void DataGridDataLoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            e.Row.Header = (e.Row.GetIndex() + 1).ToString();
+        }
+
+        // Поиск товаров, которые содержат данную поисковую строку
+        private void TBoxSearchTextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateData();
+        }
+        // Поиск товаров конкретного производителя
+        private void ComboTypeSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateData();
+        }
+
+
+
+
+
+        /// <summary>
+        /// Метод для фильтрации и сортировки данных
+        /// </summary>
+        private void UpdateData()
+        {
+            // получаем текущие данные из бд
+            //var currentGoods = MyMoodleBDEntities.GetContext().Abonements.OrderBy(p => p.CategoryTrainer.Trainer.LastName).ToList();
+
+            var currentData = MyMoodleBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+            // выбор только тех товаров, которые принадлежат данному производителю
+
+            if (ComboChapter.SelectedIndex > 0)
+            {
+                currentData = currentData.Where(p => p.ChapterId == ((ComboChapter.SelectedItem) as Chapter).Id).ToList();
+            }
+
+            if (ComboTopicType.SelectedIndex > 0)
+            {
+                currentData = currentData.Where(p => p.TopicTypeId == ((ComboTopicType.SelectedItem) as TopicType).Id).ToList();
+            }
+            //// выбор тех товаров, в названии которых есть поисковая строка
+            currentData = currentData.Where(p => p.Title.ToLower().Contains(TBoxSearch.Text.ToLower())).ToList();
+
+
+            if (ComboSort.SelectedIndex >= 0)
+            {
+                // сортировка по возрастанию цены
+                if (ComboSort.SelectedIndex == 0)
+                    currentData = currentData.OrderBy(p => p.IndexNumber).ToList();
+                if (ComboSort.SelectedIndex == 1)
+                    currentData = currentData.OrderByDescending(p => p.IndexNumber).ToList();
+                // сортировка по убыванию цены
+            }
+
+            // В качестве источника данных присваиваем список данных
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(currentData);
+            collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Chapter"));
+            DataGridData.ItemsSource = collectionView;
+           // DataGridData.ItemsSource = currentData;
+            // отображение количества записей
+            TextBlockCount.Text = $" Результат запроса: {currentData.Count} записей из {_itemcount}";
+        }
+        // сортировка товаров 
+        private void ComboSortSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateData();
+        }
+
+        private void DataGridData_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            e.Row.Header = (e.Row.GetIndex() + 1).ToString();
+        }
+
+        private void BtnUp_Click(object sender, RoutedEventArgs e)
+        {
+            Topic topic = (sender as Button).DataContext as Topic;
+            if (topic.IndexNumber == 1)
+                return;
+            int k = topic.IndexNumber - 1;
+            Topic topicPrev = MyMoodleBDEntities.GetContext().Topics.FirstOrDefault(p => p.IndexNumber == k);
+            if (topicPrev is null)
+                return;
+
+            topicPrev.IndexNumber = topic.IndexNumber;
+            topic.IndexNumber = k;
+            MyMoodleBDEntities.GetContext().SaveChanges();
+            LoadData();
+        }
+
+        private void BtnDown_Click(object sender, RoutedEventArgs e)
+        {
+            Topic topic = (sender as Button).DataContext as Topic;
+            if (topic.IndexNumber == DataGridData.Items.Count)
+                return;
+            int k = topic.IndexNumber + 1;
+            Topic topicPrev = MyMoodleBDEntities.GetContext().Topics.FirstOrDefault(p => p.IndexNumber == k);
+            if (topicPrev is null)
+                return;
+
+            topicPrev.IndexNumber = topic.IndexNumber;
+            topic.IndexNumber = k;
+            MyMoodleBDEntities.GetContext().SaveChanges();
+            LoadData();
+        }
+
+        private void BtnEdit_Click(object sender, RoutedEventArgs e)
+        {
+            Manager.MainFrame.Navigate(new AddTopicPage((sender as Button).DataContext as Topic));
+        }
+
+        private void BtnTopicType_Click(object sender, RoutedEventArgs e)
+        {
+            Manager.MainFrame.Navigate(new TopicTypePage());
+        }
+
+        private void BtnChapters_Click(object sender, RoutedEventArgs e)
+        {
+            Manager.MainFrame.Navigate(new ChapterPage());
+        }
+    }
+}
+
+<Page x:Class="DiscreteMathCourseApp.Pages.StudentProgressPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:DiscreteMathCourseApp.Pages"
+      
+      mc:Ignorable="d" 
+      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="14"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+      d:DesignHeight="450" d:DesignWidth="800"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+      Title="Темы" IsVisibleChanged="PageIsVisibleChanged" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <materialDesign:ColorZone
+  Padding="5"
+  Mode="Light">
+            <Grid HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+
+                    <RowDefinition  Height="40"/>
+                    <RowDefinition  Height="40"/>
+                    <RowDefinition  Height="40"/>
+                </Grid.RowDefinitions>
+                <Button Grid.Column="0" Grid.Row="2" x:Name="BtnExcel" Click="BtnExcel_Click" ToolTip="Вывести данные в Excel" Content="{materialDesign:PackIcon Kind=MicrosoftExcel}" Style="{DynamicResource MaterialDesignFlatDarkButton}"/>
+
+                <Button Grid.Column="0" Grid.Row="0" x:Name="BtnTasks" Click="BtnTasks_Click" ToolTip="Задaния" Content="{materialDesign:PackIcon Kind=TaskAdd}" Style="{DynamicResource MaterialDesignFlatDarkButton}"/>
+                <Button Grid.Column="0" Grid.Row="1" x:Name="BtnTests" Click="BtnTests_Click" ToolTip="Тесты" Content="{materialDesign:PackIcon Kind=FormatListChecks}" Style="{DynamicResource MaterialDesignFlatDarkButton}"/>
+
+                <TextBlock x:Name="TextBlockMaterials"  Grid.Row="0" Grid.Column="2" Style="{DynamicResource MaterialDesignSubtitle1TextBlock}" 
+                           Margin="10 0 "
+                           VerticalAlignment="Center"/>
+                <TextBlock x:Name="TextBlockTasks"  Grid.Row="1" Grid.Column="2" Style="{DynamicResource MaterialDesignSubtitle1TextBlock}" Margin="10 0 " VerticalAlignment="Center" />
+                <TextBlock x:Name="TextBlockTests"  Grid.Row="2" Grid.Column="2" Style="{DynamicResource MaterialDesignSubtitle1TextBlock}" Margin="10 0 " VerticalAlignment="Center" />
+
+                <TextBlock x:Name="TextBlockUserName"  Grid.Row="0" Grid.Column="3" Style="{DynamicResource MaterialDesignHeadline6TextBlock}" Margin="10 0 " VerticalAlignment="Center"/>
+                <TextBlock x:Name="TextBlockGroup"  Grid.Row="1" Grid.Column="3" Style="{DynamicResource MaterialDesignHeadline6TextBlock}" Margin="10 0 " VerticalAlignment="Center"/>
+                
+                <!--<lvc:Gauge Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" Uses360Mode="True" 
+                   From="0" To="100" Value="50" Width="120" Height="120" x:Name="GaugeTotalStats" 
+                   >
+                <lvc:Gauge.GaugeActiveFill>
+                    <LinearGradientBrush>
+                        <GradientStop Color="Red" Offset="0.0" />
+                        <GradientStop Color="Yellow" Offset="0.5" />
+                        <GradientStop Color="Green" Offset="1.0" />
+                    </LinearGradientBrush>
+                </lvc:Gauge.GaugeActiveFill>
+            </lvc:Gauge>-->
+                <lvc:Gauge  Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" Uses360Mode="True" 
+                   From="0" To="100" Value="99" Width="120" Height="120" x:Name="GaugeTotalStats" HorizontalAlignment="Right"
+                   >
+                    <lvc:Gauge.GaugeActiveFill>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FFDDC9FF" Offset="0.0" />
+                            <GradientStop Color="#FFC19EFF" Offset="0.5" />
+                            <GradientStop Color="#FF604395" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </lvc:Gauge.GaugeActiveFill>
+                </lvc:Gauge>
+
+                <StackPanel Grid.Column="4" Grid.RowSpan="3" VerticalAlignment="Stretch"
+                   HorizontalAlignment="Right" Orientation="Vertical"
+                 >
+
+                    <TextBox Width="275" x:Name="TBoxSearch"  Grid.Row="0" Grid.Column="0"  materialDesign:HintAssist.Hint="Введите название темы, раздела"
+                         TextChanged="TBoxSearchTextChanged"/>
+                    <ComboBox Width="275" x:Name="ComboChapter" FontSize="14" Padding="3" Grid.Row="1" Grid.Column="0"  
+                      materialDesign:HintAssist.Hint="Выберите раздел"
+                    SelectionChanged="ComboTypeSelectionChanged" DisplayMemberPath="Title"/>
+
+                    <ComboBox Width="275" x:Name="ComboTopicType" FontSize="14" Padding="3" Grid.Row="2" Grid.Column="0"  
+                      materialDesign:HintAssist.Hint="Выберите тип занятия"
+                    SelectionChanged="ComboTypeSelectionChanged" DisplayMemberPath="Title"/>
+
+
+                    <ComboBox Width="275" materialDesign:HintAssist.Hint="Сортировать" Grid.Row="3" Grid.Column="0"  
+                          x:Name="ComboSort" Margin="3 0 0 0"
+                          SelectionChanged="ComboSortSelectionChanged"  >
+                        <ComboBoxItem >
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Название"/>
+                                <materialDesign:PackIcon Kind="SortAscending" Margin="5 0 0 0"/>
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem >
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Название"/>
+                                <materialDesign:PackIcon Kind="SortDescending" Margin="5 0 0 0"/>
+                            </StackPanel>
+                        </ComboBoxItem>
+
+                    </ComboBox>
+
+                </StackPanel>
+            </Grid>
+        </materialDesign:ColorZone>
+
+
+        <DataGrid x:Name="DataGridData" Grid.Row="1"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  ItemsSource="{Binding}"   HorizontalContentAlignment="Stretch"
+                  SelectionMode="Single"
+                 >
+            <DataGrid.Resources>
+
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="{Binding GetColor}"/>
+                </Style>
+
+                <Style TargetType="TextBlock" x:Key="WrapText">
+                    <Setter Property="TextWrapping" Value="Wrap"/>
+                    <Setter Property="TextAlignment" Value="Justify"/>
+                </Style>
+                <Style TargetType="TextBlock" x:Key="First">
+                    <Setter Property="TextWrapping" Value="Wrap"/>
+                    <Setter Property="TextAlignment" Value="Left"/>
+                </Style>
+
+                <Style TargetType="TextBlock" x:Key="Align">
+                    <Setter Property="TextAlignment" Value="Center" />
+                </Style>
+
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <!--<DataGridTextColumn Binding="{Binding Chapter.GetChapter}" Header="Раздел" Width="120" ElementStyle="{StaticResource First}" />-->
+                <DataGridTextColumn Binding="{Binding IndexNumber}" Header="№" Width="60" />
+                <DataGridTextColumn Binding="{Binding Title}" Header="Название" Width="*" ElementStyle="{StaticResource WrapText}"/>
+                <DataGridTextColumn Binding="{Binding TotalHours}" Header="Количество часов" Width="auto" ElementStyle="{StaticResource WrapText}"/>
+
+                <DataGridTextColumn Binding="{Binding TopicType.Title}" Header="Тип занятия" Width="auto"  />
+                <DataGridTextColumn Binding="{Binding GetData}" Header="Изучено" Width="200" ElementStyle="{StaticResource WrapText}"/>
+                <!--<DataGridTextColumn Binding="{Binding GetProgress, StringFormat={}{0} %}" Header="Изучено %"  ElementStyle="{StaticResource Align}" Width="120"/>-->
+                <DataGridTemplateColumn Width="100" Header="Изучено %">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <!--<lvc:Gauge    Uses360Mode="True"  From="0" To="100" Value="{Binding GetProgress}"
+                   HighFontSize="12" Foreground="White"  InnerRadius="0" GaugeBackground="#BE62E954" FromColor="#BE62E954" ToColor="#BE11B600"/>-->
+                            <lvc:Gauge    Uses360Mode="True"  From="0" To="100" Value="{Binding GetProgress}"
+                   HighFontSize="12" Foreground="Black"  InnerRadius="20" GaugeBackground="#FFDDC9FF" FromColor="#FF673AB7" ToColor="#FF673AB7"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+            </DataGrid.Columns>
+
+            <DataGrid.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Path=Chapter}"    FontWeight="Bold" Padding="3"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                    <GroupStyle.ContainerStyle>
+                        <Style TargetType="{x:Type GroupItem}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type GroupItem}">
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="auto" />
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Rectangle Margin="5" Grid.Row="0" Height="2" Fill="#FF9A67EA"/>
+                                            <Expander Grid.Row="1" IsExpanded="True">
+
+                                                <Expander.Header >
+                                                    <StackPanel >
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="{Binding Path=Name.Title}" Style="{StaticResource MaterialDesignHeadline6TextBlock}"  />
+                                                            <TextBlock Text="{Binding Path=ItemCount, StringFormat= {}{0} тем}" Margin="10 0 0 0"  Style="{DynamicResource MaterialDesignSubtitle2TextBlock}"/>
+
+                                                        </StackPanel>
+                                                        <TextBlock Text="{Binding Path=Name.GetTotalHours}"
+                                                              
+                                                                Style="{DynamicResource MaterialDesignSubtitle2TextBlock}"/>
+
+                                                    </StackPanel>
+                                                </Expander.Header>
+                                                <ItemsPresenter />
+                                            </Expander>
+                                            <Rectangle Margin="5" Grid.Row="2" Height="2" Fill="#FF9A67EA"/>
+
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </GroupStyle.ContainerStyle>
+                </GroupStyle>
+            </DataGrid.GroupStyle>
+        </DataGrid>
+
+        <TextBlock Grid.Row="3" x:Name="TextBlockCount" Width="300"  HorizontalAlignment="Left"/>
+        <StatusBar x:Name="StatusBarStatistics" Grid.Row="2">
+            <StatusBarItem>
+                <TextBlock Name="TextBoxStats" Style="{DynamicResource MaterialDesignBody1TextBlock}" Margin=" 10 0 0 0" />
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Page>
+
+using DiscreteMathCourseApp.Models;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using Excel = Microsoft.Office.Interop.Excel;
+
+namespace DiscreteMathCourseApp.Pages
+{
+    /// <summary>
+    /// Логика взаимодействия для StudentProgressPage.xaml
+    /// </summary>
+    public partial class StudentProgressPage : Page
+    {
+        int _itemcount = 0;
+        List<Topic> data;
+        int totalTasks = 0;
+        int totalCompleteTask = 0;
+        User user;
+        public StudentProgressPage(User u)
+        {
+            InitializeComponent();
+            user = u;
+
+            
+
+            //LoadData();
+
+        }
+
+
+        private void PageIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            //событие отображения данного Page
+            // обновляем данные каждый раз когда активируется этот Page
+            if (Visibility == Visibility.Visible)
+            {
+                LoadData();
+            }
+        }
+
+        private void PrintExcel()
+        {
+            string fileName = AppDomain.CurrentDomain.BaseDirectory + "\\" + "Data\\Result" + ".xltx";
+            Excel.Application xlApp = new Excel.Application();
+            Excel.Worksheet xlSheet = new Excel.Worksheet();
+            try
+            {
+                //добавляем книгу
+                xlApp.Workbooks.Open(fileName, Type.Missing, Type.Missing, Type.Missing, Type.Missing,
+                                          Type.Missing, Type.Missing, Type.Missing, Type.Missing,
+                                          Type.Missing, Type.Missing, Type.Missing, Type.Missing,
+                                          Type.Missing, Type.Missing);
+                //делаем временно неактивным документ
+                xlApp.Interactive = false;
+                xlApp.EnableEvents = false;
+                Excel.Range xlSheetRange;
+                //выбираем лист на котором будем работать (Лист 1)
+                xlSheet = (Excel.Worksheet)xlApp.Sheets[1];
+                //Название листа
+                xlSheet.Name = user.GetFio;
+
+                xlSheet.Rows[1].VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+                xlSheet.Rows[1].HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                xlSheet.Rows[2].VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+                xlSheet.Rows[2].HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                xlSheet.Rows[3].VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+                xlSheet.Rows[3].HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                int row = 3;
+                int i = 0;
+                int k = 2;
+                int start = 0;
+                int end = 0;
+                data = MyMoodleBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+                //makeHeader
+                int topicStartIndex = 0;
+                foreach (Topic topic in data)
+                {
+                    List<TopicContent> topicContents = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
+                    string name = user.UserName;
+
+                    topicStartIndex = k;
+                    xlSheet.Cells[row, 1] = "ФИО";
+                    start = k;
+                    foreach (TopicContent topicContent in topicContents)
+                    {
+                        xlSheet.Cells[row, k] = topicContent.TopicTitle;
+                        xlSheet.Cells[row, k].Orientation = 90;
+                        k++;
+                    }
+                    if (k == start)
+                    {
+                        end = k;
+                        k++;
+                    }
+                    else
+                    {
+                        end = k - 1;
+                        xlSheet.Range[xlSheet.Cells[2, start], xlSheet.Cells[2, end]].Merge();
+                    }
+                   
+                    xlSheet.Cells[2, start] = "Материалы";
+
+                    start = k;
+                    var controlPoints = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
+                    foreach (ControlPoint controlPoint in controlPoints)
+                    {
+                        xlSheet.Cells[row, k] = $"Задание № {controlPoint.IndexNumber}";
+                        xlSheet.Cells[row, k].Orientation = 90;
+                        k++;
+                    }
+                    if (k == start)
+                    {
+                        end = k;
+                        k++;
+                    }
+                    else
+                    {
+                        end = k - 1;
+                        xlSheet.Range[xlSheet.Cells[2, start], xlSheet.Cells[2, end]].Merge();
+                    }
+                    xlSheet.Cells[2, start] = "Задания";
+                    start = k;
+                    var tests = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
+                    foreach (Test test in tests)
+                    {
+                        xlSheet.Cells[row, k] = $"Тест № {test.IndexNumber}";
+                        xlSheet.Cells[row, k].Orientation = 90;
+                        k++;
+                    }
+                    if (k == start)
+                    {
+                        end = k;
+                        k++;
+                    }
+                    else
+                    {
+                        end = k - 1;
+                        xlSheet.Range[xlSheet.Cells[2, start], xlSheet.Cells[2, end]].Merge();
+                    }
+
+                    xlSheet.Cells[2, start] = "Тесты";
+                    xlSheet.Range[xlSheet.Cells[1, topicStartIndex], xlSheet.Cells[1, k-1]].Merge();
+                    xlSheet.Cells[1, topicStartIndex] = topic.Title;
+
+                }
+
+                k = 2;
+                row = 4;
+                foreach (Topic topic in data)
+                {
+                    List<TopicContent> topicContents = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
+                    string name = user.UserName;
+                    topicStartIndex = k;
+
+               
+                    start = k;
+                    xlSheet.Cells[row, 1] = user.GetFio;
+                    foreach (TopicContent topicContent in topicContents)
+                    {
+                        UserTopicContent userTopicContent = MyMoodleBDEntities.GetContext().UserTopicContents.FirstOrDefault(p => p.TopicContentId == topicContent.Id && p.UserName == name);
+                       
+                        if (userTopicContent == null)
+                        {
+                            k++;
+                            continue;
+                        }
+                        if (userTopicContent.IsStudied)
+                            xlSheet.Cells[row, k] = "изучен";
+                        k++;
+                    }
+                    if (k == start)
+                    {
+                        k++;
+                    }
+                   
+                    start = k;
+                    var controlPoints = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
+                    foreach (ControlPoint controlPoint in controlPoints)
+                    {
+
+                        UserControlPoint userControlPoint = MyMoodleBDEntities.GetContext().UserControlPoints. FirstOrDefault(p => p.ControlPointId == controlPoint.Id && p.UserName == name);
+                       
+                        if (userControlPoint == null)
+                        {
+                            k++;
+                            continue;
+                        }
+
+                        xlSheet.Cells[row, k] = userControlPoint.Result.ToString();
+                        k++;
+                    }
+                    if (k == start)
+                    {
+                        k++;
+                    }
+                    start = k;
+                    var tests = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
+                    foreach (Test test in tests)
+                    {
+                        UserTestResult userTestResult = MyMoodleBDEntities.GetContext().UserTestResults.FirstOrDefault(p => p.TestId == test.Id && p.UserName == name);
+                        double count = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == test.Id).Count();
+                        if (userTestResult == null)
+                            continue;
+                        int testResult = Convert.ToInt32(Math.Round(userTestResult.Result / count * 100));
+
+                        xlSheet.Cells[row, k] = (testResult/100.0);
+                        xlSheet.Cells[row, k].NumberFormat = "0%";
+
+                        k++;
+                    }
+                    if (k == start)
+                    {
+                        k++;
+                    }
+
+                }
+
+               
+                    xlSheetRange = xlSheet.UsedRange;
+                xlSheetRange.Borders.LineStyle = true;
+                //выравниваем строки и колонки по их содержимому
+                xlSheetRange.Columns.AutoFit();
+                xlSheetRange.Rows.AutoFit();
+                xlSheet.Rows[1].WrapText = true;
+                xlSheet.Rows[1].RowHeight = 150;
+                xlSheet.Rows[1].Font.Bold = true;
+                xlSheet.Rows[2].Font.Bold = true;
+                xlSheet.Rows[3].Font.Bold = true;
+                xlSheet.Columns[1].Font.Bold = true;
+               
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                //Показываем ексель
+                xlApp.Visible = true;
+                xlApp.Interactive = true;
+                xlApp.ScreenUpdating = true;
+                xlApp.UserControl = true;
+            }
+        }
+        void LoadData()
+        {
+            totalTasks = 0;
+            totalCompleteTask = 0;
+            var chapters = MyMoodleBDEntities.GetContext().Chapters.OrderBy(p => p.IndexNumber).ToList();
+            chapters.Insert(0, new Chapter
+            {
+                Title = "Все разделы"
+            }
+            );
+            ComboChapter.ItemsSource = chapters;
+            ComboChapter.SelectedIndex = 0;
+
+            var topicTypes = MyMoodleBDEntities.GetContext().TopicTypes.OrderBy(p => p.Title).ToList();
+            TextBoxStats.Text = "";
+            string answer = "";
+            int sum = 0;
+            foreach (TopicType topicType in topicTypes)
+            {
+                string title = topicType.Title;
+                int k = topicType.Topics.Sum(p => p.TotalHours);
+                answer += $"\t{title}: {k}ч. ";
+                sum += k;
+            }
+
+            TextBoxStats.Text = answer + $"ИТОГО: {sum} ч.";
+            topicTypes.Insert(0, new TopicType
+            {
+                Title = "Все типы занятий"
+            }
+            );
+            ComboTopicType.ItemsSource = topicTypes;
+            ComboTopicType.SelectedIndex = 0;
+
+            DataGridData.ItemsSource = null;
+            //загрузка обновленных данных
+            MyMoodleBDEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+            data = MyMoodleBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+
+            foreach (Topic topic in data)
+            {
+
+                int studiedTopicContents = 0;
+                int passedControlPoints = 0;
+                int passedTests = 0;
+
+                int topicContentsCount = 0;
+                int controlPointsCount = 0;
+                int testCount = 0;
+
+                List<TopicContent> topicContents = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
+                //количсетво пройденных тем пользователем
+                topicContentsCount = topicContents.Count;
+                string name = user.UserName;
+                foreach (TopicContent topicContent in topicContents)
+                {
+                    UserTopicContent userTopicContent = MyMoodleBDEntities.GetContext().UserTopicContents.FirstOrDefault(p => p.TopicContentId == topicContent.Id && p.UserName == name);
+                    if (userTopicContent == null)
+                        continue;
+                    if (userTopicContent.IsStudied)
+                        studiedTopicContents++;
+                }
+                var controlPoints = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
+                foreach (ControlPoint controlPoint in controlPoints)
+                {
+
+                    UserControlPoint userControlPoint = MyMoodleBDEntities.GetContext().UserControlPoints.
+                        FirstOrDefault(p => p.ControlPointId == controlPoint.Id && p.UserName == name);
+                    if (userControlPoint == null)
+                        continue;
+
+                    if (userControlPoint.Result >= 3)
+                    {
+                        passedControlPoints++;
+                    }
+                }
+                controlPointsCount = controlPoints.Count;
+                var tests = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
+                foreach (Test test in tests)
+                {
+                    UserTestResult userTestResult = MyMoodleBDEntities.GetContext().UserTestResults.FirstOrDefault(p => p.TestId == test.Id && p.UserName == name);
+                    double count = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == test.Id).Count();
+
+                    if (userTestResult == null)
+                        continue;
+                    int testResult = Convert.ToInt32(Math.Round(userTestResult.Result / count * 100));
+                    if (testResult > 50)
+                    {
+                        passedTests++;
+                    }
+
+
+                }
+                testCount = tests.Count;
+
+
+
+                int k = passedTests + passedControlPoints + studiedTopicContents;
+                int m = controlPointsCount + testCount + topicContentsCount;
+                totalTasks += m;
+                totalCompleteTask += k;
+                //MessageBox.Show($"{k}  / {m}");
+                if (m == 0)
+                {
+                    topic.GetProgress = 0;
+                    topic.GetColor = "#FFF";
+                }
+                else
+                {
+                    int percent = Convert.ToInt32(Convert.ToDouble(k) / m * 100);
+                    topic.GetProgress = Convert.ToInt32(Convert.ToDouble(k) / m * 100);
+                    if (percent >= 90)
+                        topic.GetColor = "#FF76E383";
+                    else
+                        topic.GetColor = "#FFF";
+
+                }
+
+
+
+                topic.GetData = $"Материалов изучено {studiedTopicContents} из {topicContentsCount}\n" +
+                   $"Заданий выполнено {passedControlPoints} из {controlPointsCount}  \n" +
+                   $"Тестов пройдено {passedTests} из {testCount}\n";
+
+
+            }
+
+
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(data);
+            collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Chapter"));
+            DataGridData.ItemsSource = collectionView;
+            int total = Convert.ToInt32(Convert.ToDouble(totalCompleteTask) / totalTasks * 100);
+            GaugeTotalStats.Value = total;
+            TextBlockCount.Text = $" Результат запроса: {_itemcount} записей из {_itemcount}";
+            _itemcount = data.Count;
+
+            if (user != null)
+            {
+                TextBlockUserName.Text = $"{user.GetFio}";
+                TextBlockGroup.Text = $"группа:{user.StudentGroup.Title}";
+                TextBlockMaterials.Text = $"Материалов изучено {user.GetPassedTopicContentString}";
+                TextBlockTasks.Text = $"Заданий выполнено {user.GetPassedControlPointCountString}";
+                TextBlockTests.Text = $"Тестов пройдено {user.GetTestPassCountString}";
+            }
+        }
+
+        private void BtnAddClick(object sender, RoutedEventArgs e)
+        {
+            // открытие  AddGoodPage для добавления новой записи
+            // Manager.MainFrame.Navigate(new AddTopicPage(null));
+        }
+
+
+
+        // отображение номеров строк в DataGrid
+        private void DataGridDataLoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            e.Row.Header = (e.Row.GetIndex() + 1).ToString();
+        }
+
+        // Поиск товаров, которые содержат данную поисковую строку
+        private void TBoxSearchTextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateData();
+        }
+        // Поиск товаров конкретного производителя
+        private void ComboTypeSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateData();
+        }
+
+
+
+
+
+        /// <summary>
+        /// Метод для фильтрации и сортировки данных
+        /// </summary>
+        private void UpdateData()
+        {
+            // получаем текущие данные из бд
+            //var currentGoods = MyMoodleBDEntities.GetContext().Abonements.OrderBy(p => p.CategoryTrainer.Trainer.LastName).ToList();
+
+            var currentData = MyMoodleBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+            // выбор только тех товаров, которые принадлежат данному производителю
+
+            if (ComboChapter.SelectedIndex > 0)
+            {
+                currentData = currentData.Where(p => p.ChapterId == ((ComboChapter.SelectedItem) as Chapter).Id).ToList();
+            }
+
+            if (ComboTopicType.SelectedIndex > 0)
+            {
+                currentData = currentData.Where(p => p.TopicTypeId == ((ComboTopicType.SelectedItem) as TopicType).Id).ToList();
+            }
+            //// выбор тех товаров, в названии которых есть поисковая строка
+            currentData = currentData.Where(p => p.Title.ToLower().Contains(TBoxSearch.Text.ToLower())).ToList();
+
+
+            if (ComboSort.SelectedIndex >= 0)
+            {
+                // сортировка по возрастанию цены
+                if (ComboSort.SelectedIndex == 0)
+                    currentData = currentData.OrderBy(p => p.IndexNumber).ToList();
+                if (ComboSort.SelectedIndex == 1)
+                    currentData = currentData.OrderByDescending(p => p.IndexNumber).ToList();
+                // сортировка по убыванию цены
+            }
+
+            // В качестве источника данных присваиваем список данных
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(currentData);
+            collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Chapter"));
+            DataGridData.ItemsSource = collectionView;
+            // DataGridData.ItemsSource = currentData;
+            // отображение количества записей
+            TextBlockCount.Text = $" Результат запроса: {currentData.Count} записей из {_itemcount}";
+        }
+        // сортировка товаров 
+        private void ComboSortSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateData();
+        }
+
+        private void DataGridData_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            e.Row.Header = (e.Row.GetIndex() + 1).ToString();
+        }
+
+        private void BtnExcel_Click(object sender, RoutedEventArgs e)
+        {
+            PrintExcel();
+        }
+
+        private void BtnTasks_Click(object sender, RoutedEventArgs e)
+        {
+            Manager.MainFrame.Navigate(new CheckTasksPage(user));
+        }
+
+        private void BtnTests_Click(object sender, RoutedEventArgs e)
+        {
+            Manager.MainFrame.Navigate(new CheckTestPage(user));
+        }
+    }
+}
+
+<Page x:Class="DiscreteMathCourseApp.Pages.AddTopicPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+       xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:local="clr-namespace:DiscreteMathCourseApp.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="800"
+        Title="Тема"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="14"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition/>
+ 
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="245"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Button x:Name="BtnSave" Grid.Row="13" Content="Сохранить"  Style="{StaticResource MaterialDesignFlatButton}"
+                HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" 
+                Click="BtnSaveClick" Grid.ColumnSpan="2"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Порядковый номер №"  Margin="20 0"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Название темы"  Margin="20 0"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Описание"  Margin="20 0"/>
+        <TextBox x:Name="TextBoxTitle" Text="{Binding Title}" 
+                 Grid.Row="3" Grid.Column="1" Padding="0,2" Height="Auto"/>
+        <TextBox x:Name="TextBoxProductDescription" Text="{Binding Description}" VerticalAlignment="Stretch" 
+                 HorizontalAlignment="Stretch" TextWrapping="Wrap"  
+                 VerticalContentAlignment="Top"
+                 HorizontalContentAlignment="Stretch"
+                 Grid.Row="4" Grid.Column="1" Padding="0,2" Height="Auto"/>
+        <xctk:IntegerUpDown x:Name="UpDownIndexNumber" Grid.Row=" 0" Grid.Column="1" Minimum="1" Value="{Binding IndexNumber}" />
+
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Количество часов"  Margin="20 0"/>
+        <xctk:IntegerUpDown x:Name="UpDownTotalHours" Grid.Row="5" Grid.Column="1" Minimum="1" Value="{Binding TotalHours}" />
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Раздел"  Margin="20 0"/>
+        <ComboBox x:Name="ComboChapter" 
+                  SelectedItem="{Binding Chapter}" 
+                  Grid.Row="1" Grid.Column="1" 
+                  DisplayMemberPath="Title" 
+                  SelectedValuePath="Id"  />
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Тип занятия"  Margin="20 0"/>
+        <ComboBox x:Name="ComboTopicType" 
+                  SelectedItem="{Binding TopicType}"
+                  Grid.Row="2" Grid.Column="1" 
+                  DisplayMemberPath="Title" 
+                  SelectedValuePath="Id" />
+        <ScrollViewer Grid.Row="6" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Rectangle  Fill="#FF9A67EA" Grid.Row="0" />
+                <TextBlock Grid.Row="0" Text="Материал занятия" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}" Foreground="White" HorizontalAlignment="Center"/>
+                <ListBox x:Name="ListBoxTopicContents"   
+                 ScrollViewer.VerticalScrollBarVisibility="Visible"    HorizontalContentAlignment="Stretch"
+                   Grid.Row="1" Margin="0 0 40 0"
+                 
+                >
+                    <ListBox.ItemTemplate >
+                        <DataTemplate >
+                            <Grid HorizontalAlignment="Stretch" UseLayoutRounding="True">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="40"/>
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Column="0" Width="60" Height="40" 
+                               Stretch="Uniform" Source="{Binding Path=GetIcon}" 
+                               Margin="5 0 5 0"/>
+                                <StackPanel Grid.Column="1" >
+                                    <!--<TextBlock Margin="2" FontSize="16" FontWeight="Bold"
+                                       Text="{Binding Path=Data}" 
+                                       Width="Auto" HorizontalAlignment="Left" />-->
+                                    <TextBlock Margin="2" FontSize="16" 
+                                       Text="{Binding Path=TopicTitle}" 
+                                       Width="Auto" HorizontalAlignment="Left" />
+                                    <TextBlock Margin="2" FontSize="16" 
+                                       Text="{Binding Path=IndexNumber, StringFormat={}№: {0}}"
+                                       Width="Auto" HorizontalAlignment="Left" />
+
+
+                                </StackPanel>
+                                <Button   Content="{materialDesign:PackIcon ArrowUpBold}"  x:Name="BtnUp" ToolTip="Вверх" 
+                                  Grid.Column="3" Width="40" Padding="0"                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnUp_Click"/>
+
+                                <Button   Content="{materialDesign:PackIcon ArrowDownBold}"  x:Name="BtnDown" ToolTip="Вниз" 
+                                  Grid.Column="2" Width="40" Padding="0"
+                         HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnDown_Click"/>
+
+                                <Button   Content="{materialDesign:PackIcon Eye}"  x:Name="BtnEye" ToolTip="Просмотр" 
+                                  Grid.Column="4" Width="40" Padding="0"                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnEye_Click"/>
+
+                                <Button   Content="{materialDesign:PackIcon Delete}"  x:Name="BtnDeleteTopicContent" ToolTip="Удалить" 
+                                  Grid.Column="5" Width="40" Padding="0"
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnDeleteTopicContent_Click"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                </ListBox>
+
+
+                <Button   Content="{materialDesign:PackIcon Add}"  x:Name="BtnAddTopicContent" Style="{StaticResource MaterialDesignFlatButton}" ToolTip="Добавить" Grid.Row="1"  Width="40" Padding="0"
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Top" Click="BtnAddTopicContent_Click"/>
+
+
+                <Rectangle  Fill="#FF9A67EA" Grid.Row="2" />
+                <TextBlock Grid.Row="2" Text="Задания" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}" Foreground="White" HorizontalAlignment="Center"/>
+                <ListBox x:Name="ListBoxControlPoints"   
+                 ScrollViewer.VerticalScrollBarVisibility="Visible"    HorizontalContentAlignment="Stretch"
+                 SelectedValuePath="AgentId"    Grid.Row="3"  Margin="0 0 40 0"
+                 
+                >
+                    <ListBox.ItemTemplate >
+                        <DataTemplate >
+                            <Grid HorizontalAlignment="Stretch" UseLayoutRounding="True">
+                                <Grid.ColumnDefinitions>
+
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="40"/>
+
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0" >
+                                    <TextBlock Margin="2" FontSize="16" 
+                                       Text="{Binding Path=IndexNumber, StringFormat={}Задание №: {0}}"
+                                       Width="Auto" HorizontalAlignment="Left" />
+                                    <TextBlock Margin="2" FontSize="16" FontWeight="Bold"
+                                       Text="{Binding Path=TaskTitle}" 
+                                       Width="Auto" HorizontalAlignment="Left" />
+                                    <TextBlock Margin="2" FontSize="16" 
+                                       Text="{Binding Path=AnswerTitle}" 
+                                       Width="Auto" HorizontalAlignment="Left" />
+
+                                </StackPanel>
+                                <Button   Content="{materialDesign:PackIcon ArrowUpBold}"  x:Name="BtnUpControlPoint" ToolTip="Вверх" 
+                                  Grid.Column="2" Width="40" Padding="0"                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnUpControlPoint_Click"/>
+
+                                <Button   Content="{materialDesign:PackIcon ArrowDownBold}"  x:Name="BtnDownControlPoint" ToolTip="Вниз" 
+                                  Grid.Column="1" Width="40" Padding="0"
+                         HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnDownControlPoint_Click"/>
+
+                                <Button   Content="{materialDesign:PackIcon Edit}"  x:Name="BtnEyeControlPoint" ToolTip="Изменить" 
+                                  Grid.Column="3" Width="40" Padding="0"                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnEyeControlPoint_Click"/>
+
+                                <Button   Content="{materialDesign:PackIcon Delete}"  x:Name="BtnDeleteControlPoint" ToolTip="Удалить" 
+                                  Grid.Column="4" Width="40" Padding="0"
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnDeleteControlPoint_Click"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                </ListBox>
+
+
+                <Button   Content="{materialDesign:PackIcon Add}"  x:Name="BtnAddControlPoint" Style="{StaticResource MaterialDesignFlatButton}" ToolTip="Добавить" Grid.Row="3"  Width="40" Padding="0"
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Top" Click="BtnAddControlPoint_Click" />
+
+                <Rectangle  Fill="#FF9A67EA" Grid.Row="4"/>
+                <TextBlock Grid.Row="4"  Text="Тесты" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}"
+                   Foreground="White" HorizontalAlignment="Center"/>
+                <ListBox x:Name="ListBoxTests"   
+                 ScrollViewer.VerticalScrollBarVisibility="Visible"    HorizontalContentAlignment="Stretch"
+                 SelectedValuePath="AgentId"    Grid.Row="5" Margin="0 0 40 0"
+                 
+                >
+                    <ListBox.ItemTemplate >
+                        <DataTemplate >
+                            <Grid HorizontalAlignment="Stretch" UseLayoutRounding="True">
+                                <Grid.ColumnDefinitions>
+
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="40"/>
+
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0" >
+                                    <TextBlock Margin="2" FontSize="16" 
+                                       Text="{Binding Path=IndexNumber, StringFormat={}Тест №: {0}}"
+                                       Width="Auto" HorizontalAlignment="Left" />
+                                    <TextBlock Margin="2" FontSize="16" FontWeight="Bold"
+                                       Text="{Binding Path=Title}" 
+                                       Width="Auto" HorizontalAlignment="Left" />
+
+
+                                </StackPanel>
+                                <Button   Content="{materialDesign:PackIcon ArrowUpBold}"  x:Name="BtnUpTest" ToolTip="Вверх" 
+                                  Grid.Column="2" Width="40" Padding="0"                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnUpTest_Click" />
+
+                                <Button   Content="{materialDesign:PackIcon ArrowDownBold}"  x:Name="BtnDownTest" ToolTip="Вниз" 
+                                  Grid.Column="1" Width="40" Padding="0"
+                         HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnDownTest_Click" />
+
+                                <Button   Content="{materialDesign:PackIcon Edit}"  x:Name="BtnEyeTest" ToolTip="Изменить" 
+                                  Grid.Column="3" Width="40" Padding="0"                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnEyeTest_Click" />
+
+                                <Button   Content="{materialDesign:PackIcon Delete}"  x:Name="BtnDeleteTest" ToolTip="Удалить" 
+                                  Grid.Column="4" Width="40" Padding="0"
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Click="BtnDeleteTest_Click" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                </ListBox>
+                <Button   Content="{materialDesign:PackIcon Add}"  x:Name="BtnAddTest" Style="{StaticResource MaterialDesignFlatButton}"
+                          ToolTip="Добавить" Grid.Row="5"  Width="40" Padding="0"
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Top" Click="BtnAddTest_Click" />
+            </Grid>
+        </ScrollViewer>
+
+        
+    </Grid>
+</Page>
+
+using DiscreteMathCourseApp.Models;
+using DiscreteMathCourseApp.Windows;
+using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using Excel = Microsoft.Office.Interop.Excel;
+
+namespace DiscreteMathCourseApp.Pages
+{
+    /// <summary>
+    /// Логика взаимодействия для AddTopicPage.xaml
+    /// </summary>
+    public partial class AddTopicPage : Page
+    {
+        static string currentDirectory = System.IO.Directory.GetCurrentDirectory();
+        private string _filePath = null;
+        // название текущей главной фотографии
+        private string _fileName = null;
+        // текущая папка приложения
+        private static string _currentDirectory = Directory.GetCurrentDirectory() + @"/Data/TopicContents/";
+
+
+
+        // текущий товар
+        private Topic _currentItem = new Topic();
+        int _currentIndex;
+        List<Topic> topics = new List<Topic>();
+        public AddTopicPage(Topic selected)
+        {
+
+            InitializeComponent();
+            LoadAndInitData(selected);
+        }
+
+        void LoadAndInitData(Topic selected)
+        {     // если передано null, то мы добавляем новый товар
+
+            topics = MyMoodleBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+
+            ComboChapter.ItemsSource = MyMoodleBDEntities.GetContext().Chapters.ToList();
+            ComboTopicType.ItemsSource = MyMoodleBDEntities.GetContext().TopicTypes.ToList();
+
+            if (selected != null)
+            {
+                UpDownIndexNumber.Maximum = topics.Count;
+                _currentItem = selected;
+                _currentIndex = _currentItem.IndexNumber;
+                ListBoxTopicContents.ItemsSource = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == selected.Id).OrderBy(p =>p.IndexNumber).ToList();
+                ListBoxControlPoints.ItemsSource = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == selected.Id).OrderBy(p => p.IndexNumber).ToList();
+                ListBoxTests.ItemsSource = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == selected.Id).OrderBy(p => p.IndexNumber).ToList();
+            }
+            else
+            {
+                UpDownIndexNumber.Maximum = topics.Count + 1;
+                BtnAddControlPoint.Visibility = Visibility.Hidden;
+                BtnAddTopicContent.Visibility = Visibility.Hidden;
+                BtnAddTest.Visibility = Visibility.Hidden;
+                _currentIndex = topics.Count + 1;
+                _currentItem.IndexNumber = _currentIndex;
+            }
+            // контекст данных текущий товар
+
+            DataContext = _currentItem;
+
+
+
+        }
+
+        
+
+        /// <summary>
+        /// Проверка полей ввод на корректыне данные
+        /// </summary>
+        /// <returns>текст StringBuilder содержащий ошибки, если они есть</returns>
+        private StringBuilder CheckFields()
+        {
+            StringBuilder s = new StringBuilder();
+            // проверка полей на содержимое
+            if (string.IsNullOrWhiteSpace(_currentItem.Title))
+                s.AppendLine("Поле название темы пустое");
+            if (string.IsNullOrWhiteSpace(_currentItem.Description))
+                s.AppendLine("Введите описание темы");
+            if (ComboChapter.SelectedIndex == -1)
+                s.AppendLine("Выберите раздел");
+            if (ComboTopicType.SelectedIndex == -1)
+                s.AppendLine("Выберите тип занятия");
+            return s;
+        }
+
+        private void BtnSaveClick(object sender, RoutedEventArgs e)
+        {
+            StringBuilder _error = CheckFields();
+            // если ошибки есть, то выводим ошибки в MessageBox
+            // и прерываем выполнение 
+            if (_error.Length > 0)
+            {
+                MessageBox.Show(_error.ToString());
+                return;
+            }
+            // проверка полей прошла успешно
+            // если товар новый, то его ID == 0
+            if (_currentItem.Id == 0)
+            {
+                // добавление нового товара, 
+                // формируем новое название файла картинки,
+                // так как в папке может быть файл с тем же именем
+                if (_currentItem.IndexNumber != topics.Count + 1)
+                {
+                    for (int i = _currentItem.IndexNumber - 1; i < topics.Count; i++)
+                    {
+                        topics[i].IndexNumber += 1;
+                    }
+                }
+
+                MyMoodleBDEntities.GetContext().Topics.Add(_currentItem);
+            }
+            else
+            {
+                if (_currentIndex < _currentItem.IndexNumber)
+                    for (int i = _currentIndex; i < _currentItem.IndexNumber; i++)
+                        topics[i].IndexNumber -= 1;
+                if (_currentIndex > _currentItem.IndexNumber)
+                    for (int i = _currentItem.IndexNumber - 1; i < _currentIndex - 1; i++)
+                        topics[i].IndexNumber += 1;
+            }
+            try
+            {
+
+
+                MyMoodleBDEntities.GetContext().SaveChanges();  // Сохраняем изменения в БД
+                MessageBox.Show("Данные сохранены");
+                //Manager.MainFrame.GoBack();  // Возвращаемся на предыдущую форму
+               // MessageBox.Show(_currentItem.Id.ToString());
+                BtnAddControlPoint.Visibility = Visibility.Visible;
+                BtnAddTopicContent.Visibility = Visibility.Visible;
+                BtnAddTest.Visibility = Visibility.Visible;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
+        }    // загрузка фото 
+
+        private void BtnAddTopicContent_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                //Диалог открытия файла
+                OpenFileDialog op = new OpenFileDialog();
+                op.Title = "Select a picture";
+                op.Filter = "Документ (*.doc)|*.doc|Документ(*.docx) | *.docx| PDF-файлы (*.pdf)|*.pdf|xps-файлы (*.xps)|*.xps|Презентация (*.pptx)|*.pptx|Презентация (*.ppt)|*.ppt|Видео (*.mp4)|*.mp4";
+                //op.Filter = "PDF-файлы (*.pdf)|*.pdf";
+                // диалог вернет true, если файл был открыт
+                if (op.ShowDialog() == true)
+                {
+                    // проверка размера файла
+                    FileInfo fileInfo = new FileInfo(op.FileName);
+                    _fileName = op.SafeFileName;
+                    _filePath = op.FileName;
+                    // формируем новое название файла картинки,
+                    // так как в папке может быть файл с тем же именем
+                    string photo = ChangeFileName(_fileName);
+                    // путь куда нужно скопировать файл
+                    string dest = _currentDirectory + photo;
+                    File.Copy(_filePath, dest);
+                    int maxind = 0;
+                    List <TopicContent> topicContents = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).ToList();
+                    if (topicContents.Count > 0)
+                        maxind = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).Max(p => p.IndexNumber);
+                    
+                    TopicContent topicContent = new TopicContent();
+                    topicContent.IndexNumber = Convert.ToInt32(maxind) + 1;
+                    topicContent.TopicLink = _fileName;
+                    topicContent.TopicId = _currentItem.Id;
+                    topicContent.TopicTitle = _fileName;
+                    MyMoodleBDEntities.GetContext().TopicContents.Add(topicContent);
+                    MyMoodleBDEntities.GetContext().SaveChanges();
+
+
+                    ListBoxTopicContents.ItemsSource = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+                }
+        }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                _filePath = null;
+            }
+}
+
+
+string ChangeFileName(string name)
+        {
+            string x = _currentDirectory + name;
+            string filename = name;
+            int i = 0;
+            if (File.Exists(x))
+            {
+                while (File.Exists(x))
+                {
+                    i++;
+                    x = _currentDirectory + i.ToString() + filename;
+                }
+                filename = i.ToString() + filename;
+            }
+            return filename;
+
+        }
+
+        private void BtnDeleteTopicContent_Click(object sender, RoutedEventArgs e)
+        {
+            // удаление выбранного товара из таблицы
+            //получаем все выделенные товары
+            var selected = (sender as Button).DataContext as TopicContent;
+            // вывод сообщения с вопросом Удалить запись?
+            MessageBoxResult messageBoxResult = MessageBox.Show($"Удалить  запись???",
+                "Удаление", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+            //если пользователь нажал ОК пытаемся удалить запись
+            if (messageBoxResult == MessageBoxResult.OK)
+            {
+                try
+                {
+                    // берем из списка удаляемых товаров один элемент
+
+                    // проверка, есть ли у товара в таблице о продажах связанные записи
+                    // если да, то выбрасывается исключение и удаление прерывается
+                    File.Delete(_currentDirectory + selected.TopicLink);
+                    if (selected.UserTopicContents.Count > 0)
+                        throw new Exception("Ошибка удаления, есть связанные записи");
+
+                    var data = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+
+                    int k = selected.IndexNumber;
+
+                    for (int i = k; i < data.Count; i++)
+                        data[i].IndexNumber -= 1;
+
+                    MyMoodleBDEntities.GetContext().TopicContents.Remove(selected);
+                    //сохраняем изменения
+                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    MessageBox.Show("Записи удалены");
+                    ListBoxTopicContents.ItemsSource = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message.ToString(), "Ошибка удаления", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+
+        }
+
+        private void BtnEye_Click(object sender, RoutedEventArgs e)
+        {
+            TopicContent tc = (sender as Button).DataContext as TopicContent;
+            string filename = Directory.GetCurrentDirectory() + @"\Data\TopicContents\" + tc.TopicLink;
+            Process.Start(filename);
+            //DocumentViewerWindow documentViewerWindow = new DocumentViewerWindow(filename);
+            //documentViewerWindow.Owner = Application.Current.MainWindow;
+            //documentViewerWindow.ShowDialog();
+
+        }
+
+        private void BtnUp_Click(object sender, RoutedEventArgs e)
+        {
+            TopicContent item = (sender as Button).DataContext as TopicContent;
+            if (item.IndexNumber == 1)
+                return;
+            int k = item.IndexNumber - 1;
+            
+            TopicContent itemPrev = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).FirstOrDefault(p => p.IndexNumber == k);
+            if (itemPrev is null)
+                return;
+
+            itemPrev.IndexNumber = item.IndexNumber;
+            item.IndexNumber = k;
+            MyMoodleBDEntities.GetContext().SaveChanges();
+            ListBoxTopicContents.ItemsSource = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p =>p.IndexNumber).ToList();
+        }
+
+        private void BtnDown_Click(object sender, RoutedEventArgs e)
+        {
+            TopicContent item = (sender as Button).DataContext as TopicContent;
+            if (item.IndexNumber == ListBoxTopicContents.Items.Count)
+                return;
+            int k = item.IndexNumber + 1;
+            TopicContent itemPrev = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).FirstOrDefault(p => p.IndexNumber == k);
+            if (itemPrev is null)
+                return;
+
+            itemPrev.IndexNumber = item.IndexNumber;
+            item.IndexNumber = k;
+            MyMoodleBDEntities.GetContext().SaveChanges();
+            ListBoxTopicContents.ItemsSource = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+        }
+
+        private void BtnUpControlPoint_Click(object sender, RoutedEventArgs e)
+        {
+            ControlPoint item = (sender as Button).DataContext as ControlPoint;
+            if (item.IndexNumber == 1)
+                return;
+            int k = item.IndexNumber - 1;
+
+            ControlPoint itemPrev = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).FirstOrDefault(p => p.IndexNumber == k);
+            if (itemPrev is null)
+                return;
+
+            itemPrev.IndexNumber = item.IndexNumber;
+            item.IndexNumber = k;
+            MyMoodleBDEntities.GetContext().SaveChanges();
+            ListBoxControlPoints.ItemsSource = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+        }
+
+        private void BtnDownControlPoint_Click(object sender, RoutedEventArgs e)
+        {
+            ControlPoint item = (sender as Button).DataContext as ControlPoint;
+            if (item.IndexNumber == ListBoxControlPoints.Items.Count)
+                return;
+            int k = item.IndexNumber + 1;
+            ControlPoint itemPrev = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).FirstOrDefault(p => p.IndexNumber == k);
+            if (itemPrev is null)
+                return;
+
+            itemPrev.IndexNumber = item.IndexNumber;
+            item.IndexNumber = k;
+            MyMoodleBDEntities.GetContext().SaveChanges();
+            ListBoxControlPoints.ItemsSource = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+        }
+
+        private void BtnEyeControlPoint_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ControlPoint controlPoint = (sender as Button).DataContext as ControlPoint;
+                AddControlPointWindow window = new AddControlPointWindow(controlPoint, _currentItem);
+                if (window.ShowDialog() == true)
+                {
+
+                    MessageBox.Show("Запись добавлена", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ListBoxControlPoints.ItemsSource = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Ошибка", "Внимание", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void BtnDeleteControlPoint_Click(object sender, RoutedEventArgs e)
+        {
+            // удаление выбранного товара из таблицы
+            //получаем все выделенные товары
+            var selected = (sender as Button).DataContext as ControlPoint;
+            // вывод сообщения с вопросом Удалить запись?
+            MessageBoxResult messageBoxResult = MessageBox.Show($"Удалить  запись???",
+                "Удаление", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+            //если пользователь нажал ОК пытаемся удалить запись
+            if (messageBoxResult == MessageBoxResult.OK)
+            {
+                try
+                {
+                    // берем из списка удаляемых товаров один элемент
+
+                    // проверка, есть ли у товара в таблице о продажах связанные записи
+                    // если да, то выбрасывается исключение и удаление прерывается
+                    if (selected.UserControlPoints.Count > 0)
+                        throw new Exception("Ошибка удаления, есть связанные записи");
+
+                    if (selected.AnswerLink != null)
+                        File.Delete(_currentDirectory + selected.AnswerLink);
+
+                    if (selected.TaskLink != null)
+                        File.Delete(_currentDirectory + selected.TaskLink);
+
+                    var data = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+
+                    int k = selected.IndexNumber;
+
+                    for (int i = k; i < data.Count; i++)
+                        data[i].IndexNumber -= 1;
+
+                    MyMoodleBDEntities.GetContext().ControlPoints.Remove(selected);
+                    //сохраняем изменения
+                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    MessageBox.Show("Записи удалены");
+                    ListBoxControlPoints.ItemsSource = null;
+                    ListBoxControlPoints.ItemsSource = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message.ToString(), "Ошибка удаления", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void BtnAddControlPoint_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                AddControlPointWindow window = new AddControlPointWindow(new ControlPoint(), _currentItem);
+                if (window.ShowDialog() == true)
+                {
+                  
+                    MessageBox.Show("Запись добавлена", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ListBoxControlPoints.ItemsSource = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Ошибка", "Внимание", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void BtnAddTest_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                AddTestWindow window = new AddTestWindow(null, _currentItem);
+                if (window.ShowDialog() == true)
+                {
+
+                    MessageBox.Show("Запись добавлена", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ListBoxTests.ItemsSource = null;
+                    ListBoxTests.ItemsSource = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Ошибка", "Внимание", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                ListBoxTests.ItemsSource = null;
+                ListBoxTests.ItemsSource = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+            }
+        }
+
+        private void BtnEyeTest_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Test test = (sender as Button).DataContext as Test;
+                AddTestWindow window = new AddTestWindow(test, _currentItem);
+                if (window.ShowDialog() == true)
+                {
+
+                    MessageBox.Show("Запись добавлена", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ListBoxTests.ItemsSource = null;
+                    ListBoxTests.ItemsSource = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Ошибка", "Внимание", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void BtnDeleteTest_Click(object sender, RoutedEventArgs e)
+        {
+            // удаление выбранного товара из таблицы
+            //получаем все выделенные товары
+            var selected = (sender as Button).DataContext as Test;
+            // вывод сообщения с вопросом Удалить запись?
+            MessageBoxResult messageBoxResult = MessageBox.Show($"Удалить  запись???",
+                "Удаление", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+            //если пользователь нажал ОК пытаемся удалить запись
+            if (messageBoxResult == MessageBoxResult.OK)
+            {
+                try
+                {
+                    if (selected.UserTestResults.Count > 0 || selected.TestQuestions.Count > 0 || selected.TestProgresses.Count > 0)
+                        throw new Exception("Ошибка удаления, есть связанные записи");
+
+
+                    var data = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+
+                    int k = selected.IndexNumber;
+
+                    for (int i = k; i < data.Count; i++)
+                        data[i].IndexNumber -= 1;
+
+                    MyMoodleBDEntities.GetContext().Tests.Remove(selected);
+                    //сохраняем изменения
+                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    MessageBox.Show("Записи удалены");
+                    ListBoxTests.ItemsSource = null;
+                    ListBoxTests.ItemsSource = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message.ToString(), "Ошибка удаления", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void BtnUpTest_Click(object sender, RoutedEventArgs e)
+        {
+            Test item = (sender as Button).DataContext as Test;
+            if (item.IndexNumber == 1)
+                return;
+            int k = item.IndexNumber - 1;
+
+            Test itemPrev = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).FirstOrDefault(p => p.IndexNumber == k);
+            if (itemPrev is null)
+                return;
+
+            itemPrev.IndexNumber = item.IndexNumber;
+            item.IndexNumber = k;
+            MyMoodleBDEntities.GetContext().SaveChanges();
+            ListBoxTests.ItemsSource = null;
+            ListBoxTests.ItemsSource = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+        }
+
+        private void BtnDownTest_Click(object sender, RoutedEventArgs e)
+        {
+            Test item = (sender as Button).DataContext as Test;
+            if (item.IndexNumber == ListBoxControlPoints.Items.Count)
+                return;
+            int k = item.IndexNumber + 1;
+            Test itemPrev = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).FirstOrDefault(p => p.IndexNumber == k);
+            if (itemPrev is null)
+                return;
+
+            itemPrev.IndexNumber = item.IndexNumber;
+            item.IndexNumber = k;
+            MyMoodleBDEntities.GetContext().SaveChanges();
+            ListBoxTests.ItemsSource = null;
+            ListBoxTests.ItemsSource = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+        }
+    }
+}
+
+
+
+
+
+
+
+
+	 
+
