@@ -64,7 +64,7 @@
                         <DataTemplate>
                             <Border BorderThickness="1" >
                                 <TextBlock FontWeight="Bold" FontSize="14" Text="{Binding Name}"  Background="{StaticResource akcent}" 
-                                           Foreground="{StaticResource main}" />
+                                           Foreground="{StaticResource main}"  TextWrapping="Wrap"/>
                             </Border>
                         </DataTemplate>
                     </GroupStyle.HeaderTemplate>

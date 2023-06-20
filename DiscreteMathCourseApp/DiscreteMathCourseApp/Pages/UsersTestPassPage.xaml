@@ -19,7 +19,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
-            <RowDefinition Height="200"/>
+            <RowDefinition Height="100"/>
             <RowDefinition Height="40"/>
             <RowDefinition/>
             <RowDefinition Height="40"/>
@@ -73,12 +73,16 @@
                         <TextBlock  FontSize="16" FontWeight="Bold" Grid.Column="1" 
                                        Text="{Binding Path=Title}" 
                                        Width="Auto" HorizontalAlignment="Left" />
-                        <CheckBox Grid.Column ="0" 
+                        <CheckBox Grid.Column ="0"  materialDesign:CheckBoxAssist.CheckBoxSize="30"
                                   IsEnabled="False"
                                   IsChecked="{Binding IsRight}"
                                   Style="{DynamicResource MaterialDesignAccentCheckBox}" Margin="10 0 10 0"/>
 
-
+                        <!--<ToggleButton    Grid.Column ="0"  Content="{materialDesign:PackIcon Kind=Check, Size=21}" 
+                                         
+                                         Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"
+                                         IsEnabled="False"   IsChecked="{Binding IsRight}"
+                                         />-->
 
                     </Grid>
                 </DataTemplate>

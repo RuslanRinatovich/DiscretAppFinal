@@ -22,6 +22,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="40"/>
             <RowDefinition/>
             <RowDefinition Height="40"/>
@@ -31,7 +32,7 @@
             <ColumnDefinition Width="200"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <StackPanel  Grid.Row="5" Orientation="Horizontal" Grid.ColumnSpan="2" HorizontalAlignment="Center">
+        <StackPanel  Grid.Row="6" Orientation="Horizontal" Grid.ColumnSpan="2" HorizontalAlignment="Center">
             <Button x:Name="BtnSave" Grid.Row="5" Content="Сохранить"  Style="{StaticResource MaterialDesignFlatButton}"  IsDefault="True"
                 HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" 
                 Click="BtnSave_Click" Grid.ColumnSpan="2"/>
@@ -39,7 +40,7 @@
                 HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" 
                 IsCancel="True" Grid.ColumnSpan="2"/>
         </StackPanel>
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Задание"  Margin="20,0,61,0"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Задание"  Margin="20,0,61,0" VerticalAlignment="Center"/>
 
         <TextBlock x:Name="TextBlockTaskTitle"  VerticalAlignment="Stretch" 
                  HorizontalAlignment="Stretch" TextWrapping="Wrap"  
@@ -47,17 +48,18 @@
 
         <Button   Content="{materialDesign:PackIcon Kind=Eye}"  Style="{StaticResource MaterialDesignFlatButton}" Grid.Row="0" Grid.Column="0" x:Name="BtnViewFile" HorizontalAlignment="Right" ToolTip="Посмотреть"  Width="40" Padding="0"
                 Click="BtnViewFile_Click"/>
-        <Button   Content="{materialDesign:PackIcon Kind=Eye}"  Style="{StaticResource MaterialDesignFlatButton}" Grid.Row="2" Grid.Column="0" x:Name="BtnViewAnswerFile" ToolTip="Посмотреть" HorizontalAlignment="Right"  Width="40" Padding="0"
+        <Button   Content="{materialDesign:PackIcon Kind=Eye}"  Style="{StaticResource MaterialDesignFlatButton}" Grid.Row="3" Grid.Column="0" x:Name="BtnViewAnswerFile" ToolTip="Посмотреть" HorizontalAlignment="Right"  Width="40" Padding="0"
                 Click="BtnViewAnswerFile_Click"/>
 
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Ответ"  Margin="20,0,61,0"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Ответ"  Margin="20,0,61,0" VerticalAlignment="Center"/>
 
         <TextBlock x:Name="TextBlockAnswerTitle" Text="{Binding Answer}" VerticalAlignment="Stretch" 
                  HorizontalAlignment="Stretch" TextWrapping="Wrap"  
                  
-                 Grid.Row="3" Grid.Column="0" Padding="0,2" Grid.ColumnSpan="2" Height="Auto"/>
-        <TextBlock Grid.Row="4" Grid.Column="0" Text="Оценка"  Margin="20 0"/>
-        <xctk:IntegerUpDown x:Name="IntegerUpDownResult" Value="{Binding Result}" Grid.Row="4" Grid.Column="1" Minimum="0" Maximum="5"/>
+                 Grid.Row="4" Grid.Column="0" Padding="0,2" Grid.ColumnSpan="2" Height="Auto"/>
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Оценка"  Margin="20 0" VerticalAlignment="Center"/>
+        <xctk:IntegerUpDown x:Name="IntegerUpDownResult" Value="{Binding Result}" Grid.Row="5" Grid.Column="1" Minimum="0" Maximum="5"/>
+        <Rectangle Fill="#FF673AB7" Height="10"  Grid.Row="2"  Grid.ColumnSpan="2"  />
     </Grid>
 </Window>
 

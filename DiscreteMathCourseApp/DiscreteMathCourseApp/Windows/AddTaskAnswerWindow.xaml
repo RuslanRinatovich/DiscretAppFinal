@@ -22,7 +22,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition/>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
@@ -30,7 +31,7 @@
             <ColumnDefinition Width="200"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <StackPanel  Grid.Row="4" Orientation="Horizontal" Grid.ColumnSpan="2" HorizontalAlignment="Center">
+        <StackPanel  Grid.Row="5" Orientation="Horizontal" Grid.ColumnSpan="2" HorizontalAlignment="Center">
             <Button x:Name="BtnSave" Grid.Row="5" Content="Сохранить" Style="{StaticResource MaterialDesignFlatButton}"  IsDefault="True"
                 HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" 
                 Click="BtnSave_Click" Grid.ColumnSpan="2"/>
@@ -38,7 +39,7 @@
                 HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" 
                 IsCancel="True" Grid.ColumnSpan="2"/>
         </StackPanel>
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="файл задания"  Margin="20,0,67,0"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="файл задания"  Margin="20,0,67,0" VerticalAlignment="Center"/>
         <TextBlock Grid.Row="0" Grid.Column="1" x:Name="TextBlockResult" HorizontalAlignment="Right" VerticalAlignment="Stretch" Style="{DynamicResource MaterialDesignBody2TextBlock}" Margin="20 0"/>
 
         <TextBlock x:Name="TextBlockTaskTitle"  VerticalAlignment="Stretch" 
@@ -48,7 +49,7 @@
         <Button   Content="{materialDesign:PackIcon Kind=Eye}" Style="{StaticResource MaterialDesignFlatButton}"  Grid.Row="0" Grid.Column="0" x:Name="BtnViewFile" HorizontalAlignment="Right" ToolTip="Посмотреть"  Width="40" Padding="0"
                 Click="BtnViewFile_Click"/>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" >
+        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" >
             <Button   Content="{materialDesign:PackIcon Kind=Upload}" Style="{StaticResource MaterialDesignFlatButton}" x:Name="BtnLoadAnswerFile" ToolTip="Загрузить"  Width="40" Padding="0"
                    Click="BtnLoadAnswerFile_Click"/>
             <Button   Content="{materialDesign:PackIcon Kind=Delete}" Style="{StaticResource MaterialDesignFlatButton}" x:Name="BtnDeleteAnswerFile" ToolTip="Удалить" Width="40" Padding="0"
@@ -56,14 +57,16 @@
             <Button   Content="{materialDesign:PackIcon Kind=Eye}"  Style="{StaticResource MaterialDesignFlatButton}" x:Name="BtnViewAnswerFile" ToolTip="Посмотреть"  Width="40" Padding="0"
                 Click="BtnViewAnswerFile_Click"/>
         </StackPanel>
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Загрузить файл ответа"  Margin="20 0"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Загрузить файл ответа"  Margin="20 0" VerticalAlignment="Center"/>
         <TextBlock x:Name="TextBlockAnswerLink" Text="{Binding AnswerLink}" materialDesign:HintAssist.Hint="Файл ответа" 
-                 Grid.Row="2" Grid.Column="1" Padding="0,2" Height="Auto" Margin="0 0 130 0"/>
+                 Grid.Row="3" Grid.Column="1" Padding="0,2" Height="Auto" Margin="0 0 130 0"/>
         <TextBox x:Name="TextBoxAnswerTitle" Text="{Binding Answer}" VerticalAlignment="Stretch" materialDesign:HintAssist.Hint="Ответ"
                  HorizontalAlignment="Stretch" TextWrapping="Wrap"  Margin="10 0" 
                  VerticalContentAlignment="Top"
                  HorizontalContentAlignment="Stretch"
-                 Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Padding="0,2" Height="Auto"/>
+                 Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Padding="0,2" />
+        <!--<GridSplitter  HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="#FF673AB7" Height="10"  Grid.Row="2"   Grid.ColumnSpan="2"/>-->
+        <Rectangle Fill="#FF673AB7" Height="10"  Grid.Row="2"  Grid.ColumnSpan="2"  />
     </Grid>
 </Window>
 
