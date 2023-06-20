@@ -61,13 +61,18 @@
         <DataGrid x:Name="DataGridData" Grid.Row="1"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
-                  
+                  ItemsSource="{Binding}"
+                  HorizontalContentAlignment="Stretch"
                   SelectionMode="Single"
                   LoadingRow="DataGridDataLoadingRow">
             <DataGrid.Resources>
                 <Style TargetType="TextBlock" x:Key="WrapText">
                     <Setter Property="TextWrapping" Value="Wrap"/>
                     <Setter Property="TextAlignment" Value="Justify"/>
+                </Style>
+                <Style TargetType="TextBlock" x:Key="First">
+                    <Setter Property="TextWrapping" Value="Wrap"/>
+                    <Setter Property="TextAlignment" Value="Left"/>
                 </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>
@@ -101,6 +106,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
+            
             <DataGrid.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.HeaderTemplate>
@@ -122,11 +128,12 @@
                                                 <RowDefinition Height="auto"/>
                                             </Grid.RowDefinitions>
                                             <Rectangle Margin="5" Grid.Row="0" Height="2" Fill="#FF9A67EA"/>
-                                            <Expander Grid.Row="1" IsExpanded="True">
+                                            <Expander Grid.Row="1" IsExpanded="False">
                                                 <Expander.Header >
                                                     <StackPanel >
+                                                      
                                                         <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Text="{Binding Path=Name.Title}" Style="{StaticResource MaterialDesignHeadline6TextBlock}"  />
+                                                            <TextBlock Text="{Binding Path=Name.Title}" Style="{StaticResource MaterialDesignHeadline6TextBlock}" />
                                                             <TextBlock Text="{Binding Path=ItemCount, StringFormat= {}{0} вопросов}" Margin="10 0 0 0"  Style="{DynamicResource MaterialDesignSubtitle2TextBlock}"/>
                                                         </StackPanel>
                                                     </StackPanel>
@@ -142,13 +149,7 @@
                     </GroupStyle.ContainerStyle>
                 </GroupStyle>
                 <GroupStyle>
-                    <!--<GroupStyle.HeaderTemplate>
-                        <DataTemplate>
-                               <StackPanel   Height="23" Orientation="Horizontal" Margin="3,0,0,0" Background="#FFF3F3F3">
-                                        <TextBlock FontWeight="Bold"  Text="{Binding Path=Name.Title, StringFormat={}Тема: {0}}"  Style="{StaticResource MaterialDesignSubtitle2TextBlock}" />
-                                    </StackPanel>
-                        </DataTemplate>
-                    </GroupStyle.HeaderTemplate>-->
+                   
 
                     <GroupStyle.ContainerStyle>
                         <Style TargetType="{x:Type GroupItem}">
@@ -156,12 +157,12 @@
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type GroupItem}">
                                         <Grid HorizontalAlignment="Stretch">
-                                            
-                                            <Expander Grid.Row="1" IsExpanded="True">
+
+                                            <Expander Grid.Row="1" IsExpanded="False">
                                                 <Expander.Header >
                                                     <StackPanel >
                                                         <StackPanel Orientation="Horizontal"  Margin="5 0 5 0">
-                                                            <TextBlock Text="{Binding Path=Name.Title, StringFormat={}Тема: {0}}" Style="{StaticResource MaterialDesignSubtitle2TextBlock}"  />
+                                                            <TextBlock Text="{Binding Path=Name.Title, StringFormat={}Тема: {0}}" Style="{StaticResource MaterialDesignSubtitle2TextBlock}" TextWrapping="Wrap"  />
                                                             <TextBlock Text="{Binding Path=ItemCount, StringFormat= {}{0} вопросов}" Margin="10 0 0 0"  Style="{DynamicResource MaterialDesignSubtitle2TextBlock}"/>
                                                         </StackPanel>
                                                     </StackPanel>

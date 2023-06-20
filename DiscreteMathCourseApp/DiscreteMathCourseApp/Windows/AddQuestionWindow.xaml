@@ -66,7 +66,7 @@
         <DataGrid x:Name="DataGridData" Grid.Row="1"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
-                  
+                  HorizontalAlignment="Stretch"
                   SelectionMode="Single"
                   LoadingRow="DataGridDataLoadingRow">
             <DataGrid.Resources>
@@ -115,11 +115,11 @@
                                                 <RowDefinition Height="auto"/>
                                             </Grid.RowDefinitions>
                                             <Rectangle Margin="5" Grid.Row="0" Height="2" Fill="#FF9A67EA"/>
-                                            <Expander Grid.Row="1" IsExpanded="True">
+                                            <Expander Grid.Row="1" IsExpanded="False" HorizontalAlignment="Stretch">
                                                 <Expander.Header >
                                                     <StackPanel >
                                                         <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Text="{Binding Path=Name.Title}" Style="{StaticResource MaterialDesignHeadline6TextBlock}"  />
+                                                            <TextBlock Text="{Binding Path=Name.Title}" Style="{StaticResource MaterialDesignHeadline6TextBlock}" TextWrapping="Wrap" />
                                                             <TextBlock Text="{Binding Path=ItemCount, StringFormat= {}{0} вопросов}" Margin="10 0 0 0"  Style="{DynamicResource MaterialDesignSubtitle2TextBlock}"/>
                                                         </StackPanel>
                                                     </StackPanel>
@@ -150,12 +150,12 @@
                                     <ControlTemplate TargetType="{x:Type GroupItem}">
                                         <Grid HorizontalAlignment="Stretch">
 
-                                            <Expander Grid.Row="1" IsExpanded="True">
+                                            <Expander Grid.Row="1" IsExpanded="False" HorizontalAlignment="Stretch">
                                                 <Expander.Header >
                                                     <StackPanel >
-                                                        <StackPanel Orientation="Horizontal"  Margin="5 0 5 0">
-                                                            <TextBlock Text="{Binding Path=Name.Title, StringFormat={}Тема: {0}}" Style="{StaticResource MaterialDesignSubtitle2TextBlock}"  />
-                                                            <TextBlock Text="{Binding Path=ItemCount, StringFormat= {}{0} вопросов}" Margin="10 0 0 0"  Style="{DynamicResource MaterialDesignSubtitle2TextBlock}"/>
+                                                        <StackPanel Orientation="Horizontal"  Margin="5 0 5 0" HorizontalAlignment="Stretch">
+                                                            <TextBlock Text="{Binding Path=Name.Title, StringFormat={}Тема: {0}}" Style="{StaticResource MaterialDesignSubtitle2TextBlock}"  HorizontalAlignment="Stretch" />
+                                                            <TextBlock Text="{Binding Path=ItemCount, StringFormat= {}{0} вопросов}" Margin="10 0 0 0"  Style="{DynamicResource MaterialDesignSubtitle2TextBlock}" HorizontalAlignment="Stretch"/>
                                                         </StackPanel>
                                                     </StackPanel>
                                                 </Expander.Header>

@@ -124,11 +124,7 @@ namespace DiscreteMathCourseApp.Windows
         private void BtnAddQuestion_Click(object sender, RoutedEventArgs e)
         {
 
-            if (ListBoxQuestions.Items.Count == 5)
-            {
-                MessageBox.Show("Количество вариантов ответов не более 5", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
-            }
+           
             try
             {
                 AddQuestionWindow window = new AddQuestionWindow(_currentTest);
