@@ -2,6 +2,7 @@
 using DiscreteMathCourseApp.Windows;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ namespace DiscreteMathCourseApp.Pages
         public QuestionsPage()
         {
             InitializeComponent();
-            LoadData();
+           // LoadData();
         }
         private void ButtonClick(object sender, RoutedEventArgs e)
         {
@@ -39,12 +40,31 @@ namespace DiscreteMathCourseApp.Pages
         void LoadData()
         {
 
+            var chapters = DiscretMathBDEntities.GetContext().Chapters.OrderBy(p => p.IndexNumber).ToList();
+            chapters.Insert(0, new Chapter
+            {
+                Title = "Все разделы"
+            }
+            );
+            ComboChapter.ItemsSource = chapters;
+            ComboChapter.SelectedIndex = 0;
 
+            var topics = DiscretMathBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+            topics.Insert(0, new Topic
+            {
+                Title = "Все темы"
+            }
+            );
+            ComboTopic.ItemsSource = topics;
+            ComboTopic.SelectedIndex = 0;
             DataGridData.ItemsSource = null;
             //загрузка обновленных данных
-            MyMoodleBDEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
-            data = MyMoodleBDEntities.GetContext().Questions.OrderBy(p => p.Title).ToList();
-            DataGridData.ItemsSource = data;
+            DiscretMathBDEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+            data = DiscretMathBDEntities.GetContext().Questions.OrderBy(p => p.Topic.Chapter.IndexNumber).ThenBy(p => p.Topic.IndexNumber).ToList();
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(data);
+            collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Topic.Chapter"));
+            collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Topic"));
+            DataGridData.ItemsSource = collectionView;
 
             TextBlockCount.Text = $" Результат запроса: {_itemcount} записей из {_itemcount}";
             _itemcount = data.Count;
@@ -107,9 +127,9 @@ namespace DiscreteMathCourseApp.Pages
                     if (selected.Answers.Count > 0 || selected.TestQuestions.Count > 0)
                         throw new Exception("Ошибка удаления, есть связанные записи");
 
-                    MyMoodleBDEntities.GetContext().Questions.Remove(selected);
+                    DiscretMathBDEntities.GetContext().Questions.Remove(selected);
                     //сохраняем изменения
-                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    DiscretMathBDEntities.GetContext().SaveChanges();
                     MessageBox.Show("Записи удалены");
                     LoadData();
                 }
@@ -140,9 +160,31 @@ namespace DiscreteMathCourseApp.Pages
         private void UpdateData()
         {
             // получаем текущие данные из бд
-            //var currentGoods = MyMoodleBDEntities.GetContext().Abonements.OrderBy(p => p.CategoryTrainer.Trainer.LastName).ToList();
+            //var currentGoods = DiscretMathBDEntities.GetContext().Abonements.OrderBy(p => p.CategoryTrainer.Trainer.LastName).ToList();
+            var currentData = DiscretMathBDEntities.GetContext().Questions.OrderBy(p => p.Topic.Chapter.IndexNumber).ThenBy(p => p.Topic.IndexNumber).ToList();
+            // выбор только тех товаров, которые принадлежат данному производителю
 
-            var currentData = MyMoodleBDEntities.GetContext().Questions.OrderBy(p => p.Title).ToList();
+            if (ComboChapter.SelectedIndex > 0)
+            {
+                if (ComboTopic.SelectedIndex > 0)
+                {
+                    currentData = currentData.Where(p => p.Topic.ChapterId == ((ComboChapter.SelectedItem) as Chapter).Id
+                    && p.TopicId == ((ComboTopic.SelectedItem) as Topic).Id).ToList();
+                }
+                else
+                {
+                    currentData = currentData.Where(p => p.Topic.ChapterId == ((ComboChapter.SelectedItem) as Chapter).Id).ToList();
+                }
+            }
+            else
+            {
+                if (ComboTopic.SelectedIndex > 0)
+                {
+                    currentData = currentData.Where(p => p.TopicId == ((ComboTopic.SelectedItem) as Topic).Id).ToList();
+                }
+            }
+
+
             // выбор только тех товаров, которые принадлежат данному производителю
 
             // выбор тех товаров, в названии которых есть поисковая строка
@@ -159,7 +201,11 @@ namespace DiscreteMathCourseApp.Pages
                 // сортировка по убыванию цены
             }
             // В качестве источника данных присваиваем список данных
-            DataGridData.ItemsSource = currentData;
+
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(currentData);
+            collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Topic.Chapter"));
+            collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Topic"));
+            DataGridData.ItemsSource = collectionView;
             // отображение количества записей
             TextBlockCount.Text = $" Результат запроса: {currentData.Count} записей из {_itemcount}";
         }
@@ -195,9 +241,45 @@ namespace DiscreteMathCourseApp.Pages
             {
                 MessageBox.Show("Ошибка", "Внимание", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            finally
+            {
+                LoadData();
+            }
 
         }
 
-       
+        private void ComboChapter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ComboChapter.SelectedIndex > 0)
+            {
+                Chapter chapter = ComboChapter.SelectedItem as Chapter;
+
+                var topics = DiscretMathBDEntities.GetContext().Topics.Where(p => p.ChapterId == chapter.Id).OrderBy(p => p.IndexNumber).ToList();
+                topics.Insert(0, new Topic
+                {
+                    Title = "Все темы " + chapter.Title
+                }
+                );
+                ComboTopic.ItemsSource = topics;
+                ComboTopic.SelectedIndex = 0;
+            }
+            else
+            {
+                var topics = DiscretMathBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+                topics.Insert(0, new Topic
+                {
+                    Title = "Все темы"
+                }
+                );
+                ComboTopic.ItemsSource = topics;
+                ComboTopic.SelectedIndex = 0;
+            }
+            UpdateData();
+        }
+
+        private void ComboTopic_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateData();
+        }
     }
 }

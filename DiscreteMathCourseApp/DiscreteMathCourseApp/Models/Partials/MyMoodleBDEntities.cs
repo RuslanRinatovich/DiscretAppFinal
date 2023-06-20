@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace DiscreteMathCourseApp.Models
 {
-    public partial class MyMoodleBDEntities: DbContext
+    public partial class DiscretMathBDEntities: DbContext
     {
-        private static MyMoodleBDEntities _context;
+        private static DiscretMathBDEntities _context;
 
 
-        public static MyMoodleBDEntities GetContext()
+        public static DiscretMathBDEntities GetContext()
         {
             if (_context == null)
             {
-                _context = new MyMoodleBDEntities();
+                _context = new DiscretMathBDEntities();
             }
             return _context;
         }

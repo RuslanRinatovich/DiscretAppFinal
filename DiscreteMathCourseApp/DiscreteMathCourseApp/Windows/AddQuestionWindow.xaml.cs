@@ -1,6 +1,7 @@
 ﻿using DiscreteMathCourseApp.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,10 +33,29 @@ namespace DiscreteMathCourseApp.Windows
     
         void LoadData(Test test)
         {
+
+            currentTest = test;
+            var chapters = DiscretMathBDEntities.GetContext().Chapters.OrderBy(p => p.IndexNumber).ToList();
+            chapters.Insert(0, new Chapter
+            {
+                Title = "Все разделы"
+            }
+            );
+            ComboChapter.ItemsSource = chapters;
+            ComboChapter.SelectedIndex = 0;
+
+            var topics = DiscretMathBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+            topics.Insert(0, new Topic
+            {
+                Title = "Все темы"
+            }
+            );
+            ComboTopic.ItemsSource = topics;
+            ComboTopic.SelectedIndex = 0;
             DataGridData.ItemsSource = null;
             //загрузка обновленных данных
-            MyMoodleBDEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
-            List<TestQuestion> testQuestions = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == test.Id).ToList();
+            DiscretMathBDEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+            List<TestQuestion> testQuestions = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == test.Id).ToList();
             
             
 
@@ -47,7 +67,7 @@ namespace DiscreteMathCourseApp.Windows
                     questions.Add(testQuestion.Question);  
 
             }
-            var data = MyMoodleBDEntities.GetContext().Questions.ToList();
+            var data = DiscretMathBDEntities.GetContext().Questions.OrderBy(p => p.Topic.Chapter.IndexNumber).ThenBy(p => p.Topic.IndexNumber).ToList();
 
 
             foreach (Question question in questions)
@@ -55,7 +75,11 @@ namespace DiscreteMathCourseApp.Windows
                 data.Remove(question);
             }
 
-            DataGridData.ItemsSource = data;
+
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(data);
+            collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Topic.Chapter"));
+            collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Topic"));
+            DataGridData.ItemsSource = collectionView;
 
             TextBlockCount.Text = $" Результат запроса: {_itemcount} записей из {_itemcount}";
             _itemcount = data.Count;
@@ -91,9 +115,9 @@ namespace DiscreteMathCourseApp.Windows
                     if ( selected.Answers.Count > 0 || selected.TestQuestions.Count > 0)
                         throw new Exception("Ошибка удаления, есть связанные записи");
 
-                    MyMoodleBDEntities.GetContext().Questions.Remove(selected);
+                    DiscretMathBDEntities.GetContext().Questions.Remove(selected);
                     //сохраняем изменения
-                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    DiscretMathBDEntities.GetContext().SaveChanges();
                     MessageBox.Show("Записи удалены");
                     LoadData(currentTest);
                 }
@@ -119,11 +143,44 @@ namespace DiscreteMathCourseApp.Windows
         /// </summary>
         private void UpdateData()
         {
-            // получаем текущие данные из бд
-            //var currentGoods = MyMoodleBDEntities.GetContext().Abonements.OrderBy(p => p.CategoryTrainer.Trainer.LastName).ToList();
 
-            var currentData = MyMoodleBDEntities.GetContext().Questions.OrderBy(p => p.Title).ToList();
-            // выбор только тех товаров, которые принадлежат данному производителю
+            List<TestQuestion> testQuestions = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == currentTest.Id).ToList();
+
+
+            List<Question> questions = new List<Question>();
+            foreach (TestQuestion testQuestion in testQuestions)
+            {
+                if (!questions.Contains(testQuestion.Question))
+                    questions.Add(testQuestion.Question);
+
+            }
+            var currentData = DiscretMathBDEntities.GetContext().Questions.OrderBy(p => p.Topic.Chapter.IndexNumber).ThenBy(p => p.Topic.IndexNumber).ToList();
+
+
+            foreach (Question question in questions)
+            {
+                currentData.Remove(question);
+            }
+
+            if (ComboChapter.SelectedIndex > 0)
+            {
+                if (ComboTopic.SelectedIndex > 0)
+                {
+                    currentData = currentData.Where(p => p.Topic.ChapterId == ((ComboChapter.SelectedItem) as Chapter).Id
+                    && p.TopicId == ((ComboTopic.SelectedItem) as Topic).Id).ToList();
+                }
+                else
+                {
+                    currentData = currentData.Where(p => p.Topic.ChapterId == ((ComboChapter.SelectedItem) as Chapter).Id).ToList();
+                }
+            }
+            else
+            {
+                if (ComboTopic.SelectedIndex > 0)
+                {
+                    currentData = currentData.Where(p => p.TopicId == ((ComboTopic.SelectedItem) as Topic).Id).ToList();
+                }
+            }
 
             // выбор тех товаров, в названии которых есть поисковая строка
             currentData = currentData.Where(p => p.Title.ToLower().Contains(TBoxSearch.Text.ToLower())).ToList();
@@ -139,7 +196,10 @@ namespace DiscreteMathCourseApp.Windows
                 // сортировка по убыванию цены
             }
             // В качестве источника данных присваиваем список данных
-            DataGridData.ItemsSource = currentData;
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(currentData);
+            collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Topic.Chapter"));
+            collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Topic"));
+            DataGridData.ItemsSource = collectionView;
             // отображение количества записей
             TextBlockCount.Text = $" Результат запроса: {currentData.Count} записей из {_itemcount}";
         }
@@ -160,6 +220,42 @@ namespace DiscreteMathCourseApp.Windows
              currentItem = (sender as Button).DataContext as Question;
             this.DialogResult = true;
 
+
+
+        }
+
+        private void ComboChapter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ComboChapter.SelectedIndex > 0)
+            {
+                Chapter chapter = ComboChapter.SelectedItem as Chapter;
+
+                var topics = DiscretMathBDEntities.GetContext().Topics.Where(p => p.ChapterId == chapter.Id).OrderBy(p => p.IndexNumber).ToList();
+                topics.Insert(0, new Topic
+                {
+                    Title = "Все темы " + chapter.Title
+                }
+                );
+                ComboTopic.ItemsSource = topics;
+                ComboTopic.SelectedIndex = 0;
+            }
+            else
+            {
+                var topics = DiscretMathBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+                topics.Insert(0, new Topic
+                {
+                    Title = "Все темы"
+                }
+                );
+                ComboTopic.ItemsSource = topics;
+                ComboTopic.SelectedIndex = 0;
+            }
+            UpdateData();
+        }
+
+        private void ComboTopic_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateData();
         }
     }
 }

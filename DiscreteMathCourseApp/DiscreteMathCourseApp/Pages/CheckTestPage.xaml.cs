@@ -34,13 +34,13 @@ namespace DiscreteMathCourseApp.Pages
         void LoadData()
         {
             
-            var tests = MyMoodleBDEntities.GetContext().Tests.OrderBy(p => p.Topic.IndexNumber).ToList();
+            var tests = DiscretMathBDEntities.GetContext().Tests.OrderBy(p => p.Topic.IndexNumber).ToList();
             int passedTests = 0;
             foreach (Test test in tests)
             {
                 string name = user.UserName;
-                UserTestResult userTestResult = MyMoodleBDEntities.GetContext().UserTestResults.FirstOrDefault(p => p.TestId == test.Id && p.UserName == name);
-                double count = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == test.Id).Count();
+                UserTestResult userTestResult = DiscretMathBDEntities.GetContext().UserTestResults.FirstOrDefault(p => p.TestId == test.Id && p.UserName == name);
+                double count = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == test.Id).Count();
 
                 if (userTestResult != null)
                 {
@@ -90,13 +90,13 @@ namespace DiscreteMathCourseApp.Pages
 
         private void UpdateData()
         {
-            var tests = MyMoodleBDEntities.GetContext().Tests.OrderBy(p => p.Topic.IndexNumber).ToList();
+            var tests = DiscretMathBDEntities.GetContext().Tests.OrderBy(p => p.Topic.IndexNumber).ToList();
             int passedTests = 0;
             foreach (Test test in tests)
             {
                 string name = user.UserName;
-                UserTestResult userTestResult = MyMoodleBDEntities.GetContext().UserTestResults.FirstOrDefault(p => p.TestId == test.Id && p.UserName == name);
-                double count = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == test.Id).Count();
+                UserTestResult userTestResult = DiscretMathBDEntities.GetContext().UserTestResults.FirstOrDefault(p => p.TestId == test.Id && p.UserName == name);
+                double count = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == test.Id).Count();
 
                 if (userTestResult != null)
                 {
@@ -195,16 +195,16 @@ namespace DiscreteMathCourseApp.Pages
                    
 
 
-                    var deleted = MyMoodleBDEntities.GetContext().TestProgresses.Where(p => p.UserName == user.UserName && p.TestId == selected.Id).ToList();
+                    var deleted = DiscretMathBDEntities.GetContext().TestProgresses.Where(p => p.UserName == user.UserName && p.TestId == selected.Id).ToList();
 
                   
 
-                    MyMoodleBDEntities.GetContext().TestProgresses.RemoveRange(deleted);
+                    DiscretMathBDEntities.GetContext().TestProgresses.RemoveRange(deleted);
 
-                    var userTestResult = MyMoodleBDEntities.GetContext().UserTestResults.Where(p => p.UserName == user.UserName && p.TestId == selected.Id).ToList();
-                    MyMoodleBDEntities.GetContext().UserTestResults.RemoveRange(userTestResult);
+                    var userTestResult = DiscretMathBDEntities.GetContext().UserTestResults.Where(p => p.UserName == user.UserName && p.TestId == selected.Id).ToList();
+                    DiscretMathBDEntities.GetContext().UserTestResults.RemoveRange(userTestResult);
                     //сохраняем изменения
-                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    DiscretMathBDEntities.GetContext().SaveChanges();
                     MessageBox.Show("Результаты теста очищены");
                     LoadData();
                 }

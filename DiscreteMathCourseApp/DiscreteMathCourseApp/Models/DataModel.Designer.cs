@@ -1,4 +1,4 @@
-﻿// Создание кода T4 для модели "c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\Models\DataModel.edmx" включено. 
+﻿// Создание кода T4 для модели "d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\Models\DataModel.edmx" включено. 
 // Чтобы включить формирование кода прежних версий, измените значение свойства "Стратегия создания кода" конструктора
 // на "Legacy ObjectContext". Это свойство доступно в окне "Свойства", если модель
 // открыта в конструкторе.

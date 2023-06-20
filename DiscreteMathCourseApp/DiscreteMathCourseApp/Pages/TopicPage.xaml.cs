@@ -49,7 +49,7 @@ namespace DiscreteMathCourseApp.Pages
 
         void LoadData()
         {
-            var chapters = MyMoodleBDEntities.GetContext().Chapters.OrderBy(p => p.IndexNumber).ToList();
+            var chapters = DiscretMathBDEntities.GetContext().Chapters.OrderBy(p => p.IndexNumber).ToList();
             chapters.Insert(0, new Chapter
             {
                 Title = "Все разделы"
@@ -58,7 +58,7 @@ namespace DiscreteMathCourseApp.Pages
             ComboChapter.ItemsSource = chapters;
             ComboChapter.SelectedIndex = 0;
 
-            var topicTypes = MyMoodleBDEntities.GetContext().TopicTypes.OrderBy(p => p.Title).ToList();
+            var topicTypes = DiscretMathBDEntities.GetContext().TopicTypes.OrderBy(p => p.Title).ToList();
             TextBoxStats.Text = "";
             string answer = "";
             int sum = 0;
@@ -81,8 +81,8 @@ namespace DiscreteMathCourseApp.Pages
 
             DataGridData.ItemsSource = null;
             //загрузка обновленных данных
-            MyMoodleBDEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
-            data = MyMoodleBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+            DiscretMathBDEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+            data = DiscretMathBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
 
             ICollectionView collectionView = CollectionViewSource.GetDefaultView(data);
             collectionView.GroupDescriptions.Add(new PropertyGroupDescription("Chapter"));
@@ -122,14 +122,14 @@ namespace DiscreteMathCourseApp.Pages
 
                     int k = selected.IndexNumber;
 
-                    data = MyMoodleBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+                    data = DiscretMathBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
 
                     for (int i = k; i < _itemcount; i++)
                         data[i].IndexNumber -= 1;
 
-                    MyMoodleBDEntities.GetContext().Topics.Remove(selected);
+                    DiscretMathBDEntities.GetContext().Topics.Remove(selected);
                     //сохраняем изменения
-                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    DiscretMathBDEntities.GetContext().SaveChanges();
                     MessageBox.Show("Записи удалены");
 
                     LoadData();
@@ -168,9 +168,9 @@ namespace DiscreteMathCourseApp.Pages
         private void UpdateData()
         {
             // получаем текущие данные из бд
-            //var currentGoods = MyMoodleBDEntities.GetContext().Abonements.OrderBy(p => p.CategoryTrainer.Trainer.LastName).ToList();
+            //var currentGoods = DiscretMathBDEntities.GetContext().Abonements.OrderBy(p => p.CategoryTrainer.Trainer.LastName).ToList();
 
-            var currentData = MyMoodleBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+            var currentData = DiscretMathBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
             // выбор только тех товаров, которые принадлежат данному производителю
 
             if (ComboChapter.SelectedIndex > 0)
@@ -221,13 +221,13 @@ namespace DiscreteMathCourseApp.Pages
             if (topic.IndexNumber == 1)
                 return;
             int k = topic.IndexNumber - 1;
-            Topic topicPrev = MyMoodleBDEntities.GetContext().Topics.FirstOrDefault(p => p.IndexNumber == k);
+            Topic topicPrev = DiscretMathBDEntities.GetContext().Topics.FirstOrDefault(p => p.IndexNumber == k);
             if (topicPrev is null)
                 return;
 
             topicPrev.IndexNumber = topic.IndexNumber;
             topic.IndexNumber = k;
-            MyMoodleBDEntities.GetContext().SaveChanges();
+            DiscretMathBDEntities.GetContext().SaveChanges();
             LoadData();
         }
 
@@ -237,13 +237,13 @@ namespace DiscreteMathCourseApp.Pages
             if (topic.IndexNumber == DataGridData.Items.Count)
                 return;
             int k = topic.IndexNumber + 1;
-            Topic topicPrev = MyMoodleBDEntities.GetContext().Topics.FirstOrDefault(p => p.IndexNumber == k);
+            Topic topicPrev = DiscretMathBDEntities.GetContext().Topics.FirstOrDefault(p => p.IndexNumber == k);
             if (topicPrev is null)
                 return;
 
             topicPrev.IndexNumber = topic.IndexNumber;
             topic.IndexNumber = k;
-            MyMoodleBDEntities.GetContext().SaveChanges();
+            DiscretMathBDEntities.GetContext().SaveChanges();
             LoadData();
         }
 

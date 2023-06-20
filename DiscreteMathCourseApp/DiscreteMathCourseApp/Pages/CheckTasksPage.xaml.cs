@@ -40,12 +40,12 @@ namespace DiscreteMathCourseApp.Pages
         {
             string name = currentUser.UserName;
 
-            var controlPoints = MyMoodleBDEntities.GetContext().ControlPoints.OrderBy(p => p.Topic.IndexNumber).ToList();
+            var controlPoints = DiscretMathBDEntities.GetContext().ControlPoints.OrderBy(p => p.Topic.IndexNumber).ToList();
 
             foreach (ControlPoint controlPoint in controlPoints)
             {
 
-                UserControlPoint userControlPoint = MyMoodleBDEntities.GetContext().UserControlPoints.FirstOrDefault(p => p.ControlPointId == controlPoint.Id && p.UserName == name);
+                UserControlPoint userControlPoint = DiscretMathBDEntities.GetContext().UserControlPoints.FirstOrDefault(p => p.ControlPointId == controlPoint.Id && p.UserName == name);
                 if (userControlPoint is null)
                 {
                     controlPoint.GetVisibility = Visibility.Hidden;
@@ -59,7 +59,7 @@ namespace DiscreteMathCourseApp.Pages
                 }
             }
 
-            //  var tasks = MyMoodleBDEntities.GetContext().UserControlPoints.Where(p => p.UserName == currentUser.UserName).OrderBy(p => p.ControlPoint.Topic.IndexNumber).ToList();
+            //  var tasks = DiscretMathBDEntities.GetContext().UserControlPoints.Where(p => p.UserName == currentUser.UserName).OrderBy(p => p.ControlPoint.Topic.IndexNumber).ToList();
             // В качестве источника данных присваиваем список данных
             ICollectionView view = CollectionViewSource.GetDefaultView(controlPoints);
             view.GroupDescriptions.Add(new PropertyGroupDescription("Topic.Title"));
@@ -78,7 +78,7 @@ namespace DiscreteMathCourseApp.Pages
         void LoadAndInitData()
     {
 
-            var chapters = MyMoodleBDEntities.GetContext().Chapters.OrderBy(p => p.IndexNumber).ToList();
+            var chapters = DiscretMathBDEntities.GetContext().Chapters.OrderBy(p => p.IndexNumber).ToList();
             chapters.Insert(0, new Chapter
             {
                 Title = "Все разделы"
@@ -118,13 +118,13 @@ namespace DiscreteMathCourseApp.Pages
         {
             string name = currentUser.UserName;
             // получаем текущие данные из бд
-            //var currentGoods = MyMoodleBDEntities.GetContext().Abonements.OrderBy(p => p.CategoryTrainer.Trainer.LastName).ToList();
-            var controlPoints = MyMoodleBDEntities.GetContext().ControlPoints.OrderBy(p => p.Topic.IndexNumber).ToList();
+            //var currentGoods = DiscretMathBDEntities.GetContext().Abonements.OrderBy(p => p.CategoryTrainer.Trainer.LastName).ToList();
+            var controlPoints = DiscretMathBDEntities.GetContext().ControlPoints.OrderBy(p => p.Topic.IndexNumber).ToList();
 
             foreach (ControlPoint controlPoint in controlPoints)
             {
 
-                UserControlPoint userControlPoint = MyMoodleBDEntities.GetContext().UserControlPoints.FirstOrDefault(p => p.ControlPointId == controlPoint.Id && p.UserName == name);
+                UserControlPoint userControlPoint = DiscretMathBDEntities.GetContext().UserControlPoints.FirstOrDefault(p => p.ControlPointId == controlPoint.Id && p.UserName == name);
                 if (userControlPoint is null)
                 {
                     controlPoint.GetVisibility = Visibility.Hidden;
@@ -199,8 +199,8 @@ namespace DiscreteMathCourseApp.Pages
                 AddMarkTaskWindow window = new AddMarkTaskWindow(selected.GetUserControlPoint);
                 if (window.ShowDialog() == true)
                 {
-                    MyMoodleBDEntities.GetContext().Entry(window.currentItem).State = EntityState.Modified;
-                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    DiscretMathBDEntities.GetContext().Entry(window.currentItem).State = EntityState.Modified;
+                    DiscretMathBDEntities.GetContext().SaveChanges();
                     LoadControlPoints();
                     MessageBox.Show("Запись изменена", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
@@ -227,11 +227,11 @@ namespace DiscreteMathCourseApp.Pages
 
                     UserControlPoint deleted = selected.GetUserControlPoint;
 
-                    MyMoodleBDEntities.GetContext().UserControlPoints.Remove(deleted);
+                    DiscretMathBDEntities.GetContext().UserControlPoints.Remove(deleted);
 
                   
                     //сохраняем изменения
-                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    DiscretMathBDEntities.GetContext().SaveChanges();
                     MessageBox.Show("Ответ на задание удален");
                     LoadControlPoints();
                 }

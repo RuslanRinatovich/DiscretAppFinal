@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-  <EntityContainerMapping StorageEntityContainer="Хранилище DiscretMathBDModelContainer" CdmEntityContainer="MyMoodleBDEntities">
+  <EntityContainerMapping StorageEntityContainer="Хранилище DataModelContainer" CdmEntityContainer="DiscretMathBDEntities">
     <EntitySetMapping Name="Answers">
-      <EntityTypeMapping TypeName="DiscretMathBDModel.Answer">
+      <EntityTypeMapping TypeName="DataModel.Answer">
         <MappingFragment StoreEntitySet="Answer">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Title" ColumnName="Title" />
@@ -12,7 +12,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Chapters">
-      <EntityTypeMapping TypeName="DiscretMathBDModel.Chapter">
+      <EntityTypeMapping TypeName="DataModel.Chapter">
         <MappingFragment StoreEntitySet="Chapter">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Title" ColumnName="Title" />
@@ -22,7 +22,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="ControlPoints">
-      <EntityTypeMapping TypeName="DiscretMathBDModel.ControlPoint">
+      <EntityTypeMapping TypeName="DataModel.ControlPoint">
         <MappingFragment StoreEntitySet="ControlPoint">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="TopicId" ColumnName="TopicId" />
@@ -35,17 +35,18 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Questions">
-      <EntityTypeMapping TypeName="DiscretMathBDModel.Question">
+      <EntityTypeMapping TypeName="DataModel.Question">
         <MappingFragment StoreEntitySet="Question">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Title" ColumnName="Title" />
           <ScalarProperty Name="Image" ColumnName="Image" />
           <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="TopicId" ColumnName="TopicId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Roles">
-      <EntityTypeMapping TypeName="DiscretMathBDModel.Role">
+      <EntityTypeMapping TypeName="DataModel.Role">
         <MappingFragment StoreEntitySet="Role">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Title" ColumnName="Title" />
@@ -54,7 +55,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="StudentGroups">
-      <EntityTypeMapping TypeName="DiscretMathBDModel.StudentGroup">
+      <EntityTypeMapping TypeName="DataModel.StudentGroup">
         <MappingFragment StoreEntitySet="StudentGroup">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Title" ColumnName="Title" />
@@ -62,7 +63,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="sysdiagrams">
-      <EntityTypeMapping TypeName="DiscretMathBDModel.sysdiagram">
+      <EntityTypeMapping TypeName="DataModel.sysdiagram">
         <MappingFragment StoreEntitySet="sysdiagrams">
           <ScalarProperty Name="name" ColumnName="name" />
           <ScalarProperty Name="principal_id" ColumnName="principal_id" />
@@ -73,7 +74,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Tests">
-      <EntityTypeMapping TypeName="DiscretMathBDModel.Test">
+      <EntityTypeMapping TypeName="DataModel.Test">
         <MappingFragment StoreEntitySet="Test">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="TopicId" ColumnName="TopicId" />
@@ -84,7 +85,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="TestProgresses">
-      <EntityTypeMapping TypeName="DiscretMathBDModel.TestProgress">
+      <EntityTypeMapping TypeName="DataModel.TestProgress">
         <MappingFragment StoreEntitySet="TestProgress">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="UserName" ColumnName="UserName" />
@@ -95,7 +96,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="TestQuestions">
-      <EntityTypeMapping TypeName="DiscretMathBDModel.TestQuestion">
+      <EntityTypeMapping TypeName="DataModel.TestQuestion">
         <MappingFragment StoreEntitySet="TestQuestion">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
@@ -105,7 +106,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Topics">
-      <EntityTypeMapping TypeName="DiscretMathBDModel.Topic">
+      <EntityTypeMapping TypeName="DataModel.Topic">
         <MappingFragment StoreEntitySet="Topic">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Title" ColumnName="Title" />
@@ -118,7 +119,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="TopicContents">
-      <EntityTypeMapping TypeName="DiscretMathBDModel.TopicContent">
+      <EntityTypeMapping TypeName="DataModel.TopicContent">
         <MappingFragment StoreEntitySet="TopicContent">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="TopicId" ColumnName="TopicId" />
@@ -129,7 +130,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="TopicTypes">
-      <EntityTypeMapping TypeName="DiscretMathBDModel.TopicType">
+      <EntityTypeMapping TypeName="DataModel.TopicType">
         <MappingFragment StoreEntitySet="TopicType">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Title" ColumnName="Title" />
@@ -137,7 +138,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Users">
-      <EntityTypeMapping TypeName="DiscretMathBDModel.User">
+      <EntityTypeMapping TypeName="DataModel.User">
         <MappingFragment StoreEntitySet="User">
           <ScalarProperty Name="UserName" ColumnName="UserName" />
           <ScalarProperty Name="Password" ColumnName="Password" />
@@ -151,7 +152,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="UserControlPoints">
-      <EntityTypeMapping TypeName="DiscretMathBDModel.UserControlPoint">
+      <EntityTypeMapping TypeName="DataModel.UserControlPoint">
         <MappingFragment StoreEntitySet="UserControlPoint">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="ControlPointId" ColumnName="ControlPointId" />
@@ -163,7 +164,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="UserTestResults">
-      <EntityTypeMapping TypeName="DiscretMathBDModel.UserTestResult">
+      <EntityTypeMapping TypeName="DataModel.UserTestResult">
         <MappingFragment StoreEntitySet="UserTestResults">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="TestId" ColumnName="TestId" />
@@ -173,7 +174,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="UserTopicContents">
-      <EntityTypeMapping TypeName="DiscretMathBDModel.UserTopicContent">
+      <EntityTypeMapping TypeName="DataModel.UserTopicContent">
         <MappingFragment StoreEntitySet="UserTopicContent">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="UserName" ColumnName="UserName" />

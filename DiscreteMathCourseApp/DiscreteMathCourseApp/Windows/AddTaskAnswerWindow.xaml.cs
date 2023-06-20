@@ -195,7 +195,7 @@ namespace DiscreteMathCourseApp.Windows
                 userControlPoint.ControlPointId = currentControlPoint.Id;
                     userControlPoint.UserName =Manager.CurrentUser.UserName;
                     userControlPoint.Answer = TextBoxAnswerTitle.Text;
-                    MyMoodleBDEntities.GetContext().UserControlPoints.Add(userControlPoint);
+                    DiscretMathBDEntities.GetContext().UserControlPoints.Add(userControlPoint);
                 }
                 else
                 {
@@ -222,7 +222,7 @@ namespace DiscreteMathCourseApp.Windows
 
                 }
 
-                MyMoodleBDEntities.GetContext().SaveChanges();
+                DiscretMathBDEntities.GetContext().SaveChanges();
                 // MessageBox.Show("Данные сохранены", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
                 this.DialogResult = true;
             }

@@ -35,7 +35,7 @@ namespace DiscreteMathCourseApp.Pages
 
         void LoadData(Test test)
         {
-            ComboChapter.ItemsSource = MyMoodleBDEntities.GetContext().Chapters.ToList();
+            ComboChapter.ItemsSource = DiscretMathBDEntities.GetContext().Chapters.ToList();
             
             if (test != null)
             {
@@ -48,7 +48,7 @@ namespace DiscreteMathCourseApp.Pages
             }
             // контекст данных текущий товар
             DataContext = _currentTest;
-            List<TestQuestion> testQuestions = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).ToList();
+            List<TestQuestion> testQuestions = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).ToList();
             questions.Clear();
 
             foreach (TestQuestion test1 in testQuestions)
@@ -95,14 +95,14 @@ namespace DiscreteMathCourseApp.Pages
                     // добавление нового товара, 
                     
                     // добавляем товар в БД
-                    MyMoodleBDEntities.GetContext().Tests.Add(_currentTest);
+                    DiscretMathBDEntities.GetContext().Tests.Add(_currentTest);
                 }
                 
-                MyMoodleBDEntities.GetContext().SaveChanges();  // Сохраняем изменения в БД
+                DiscretMathBDEntities.GetContext().SaveChanges();  // Сохраняем изменения в БД
                 MessageBox.Show("Данные сохранены");
 
                
-                List<TestQuestion> testQuestions = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).ToList();
+                List<TestQuestion> testQuestions = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).ToList();
                 questions.Clear();
 
                 foreach (TestQuestion test1 in testQuestions)
@@ -137,11 +137,11 @@ namespace DiscreteMathCourseApp.Pages
                     TestQuestion testQuestion = new TestQuestion();
                     testQuestion.QuestionId = window.currentItem.Id;
                     testQuestion.TestId = _currentTest.Id;
-                    MyMoodleBDEntities.GetContext().TestQuestions.Add(testQuestion);
-                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    DiscretMathBDEntities.GetContext().TestQuestions.Add(testQuestion);
+                    DiscretMathBDEntities.GetContext().SaveChanges();
                     
                     MessageBox.Show("Запись добавлена", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
-                    List<TestQuestion> testQuestions = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).ToList();
+                    List<TestQuestion> testQuestions = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).ToList();
                     questions = new List<Question>();
 
                     foreach (TestQuestion test1 in testQuestions)
@@ -172,18 +172,18 @@ namespace DiscreteMathCourseApp.Pages
                 try
                 {
                     // берем из списка удаляемых товаров один элемент
-                    TestQuestion testQuestion = MyMoodleBDEntities.GetContext().TestQuestions.FirstOrDefault(p => p.TestId == _currentTest.Id && p.QuestionId == selected.Id);
+                    TestQuestion testQuestion = DiscretMathBDEntities.GetContext().TestQuestions.FirstOrDefault(p => p.TestId == _currentTest.Id && p.QuestionId == selected.Id);
                     // проверка, есть ли у товара в таблице о продажах связанные записи
                     // если да, то выбрасывается исключение и удаление прерывается
                     if (testQuestion is null)
                         return;
                     
 
-                    MyMoodleBDEntities.GetContext().TestQuestions.Remove(testQuestion);
+                    DiscretMathBDEntities.GetContext().TestQuestions.Remove(testQuestion);
                     //сохраняем изменения
-                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    DiscretMathBDEntities.GetContext().SaveChanges();
                     MessageBox.Show("Записи удалены");
-                    List<TestQuestion> testQuestions = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).ToList();
+                    List<TestQuestion> testQuestions = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).ToList();
                     questions.Clear();
 
                     foreach (TestQuestion test1 in testQuestions)
@@ -206,7 +206,7 @@ namespace DiscreteMathCourseApp.Pages
             if (ComboChapter.SelectedIndex == -1)
                 return;
             Chapter chapter = ComboChapter.SelectedItem as Chapter;
-            ComboTopic.ItemsSource = MyMoodleBDEntities.GetContext().Topics.Where(p=> p.ChapterId == chapter.Id).ToList();
+            ComboTopic.ItemsSource = DiscretMathBDEntities.GetContext().Topics.Where(p=> p.ChapterId == chapter.Id).ToList();
 
 
         }

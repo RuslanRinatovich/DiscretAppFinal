@@ -41,9 +41,9 @@ namespace DiscreteMathCourseApp.Pages
 
         void LoadData()
         {
-            testQuestions = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == testId).OrderBy(p=> p.IndexNumber).ToList();
+            testQuestions = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == testId).OrderBy(p=> p.IndexNumber).ToList();
             string name = Manager.CurrentUser.UserName;
-            UserTestResult userTestResult = MyMoodleBDEntities.GetContext().UserTestResults.FirstOrDefault(p => p.TestId == testId && p.UserName == name);
+            UserTestResult userTestResult = DiscretMathBDEntities.GetContext().UserTestResults.FirstOrDefault(p => p.TestId == testId && p.UserName == name);
             if (userTestResult != null)
             {
                 ListBoxAnswers.IsEnabled = false;
@@ -69,7 +69,7 @@ namespace DiscreteMathCourseApp.Pages
             string name = Manager.CurrentUser.UserName;
             // выбрать варианты ответов из таблицы Answers
             List<Answer> answers = x.Question.Answers.ToList();
-            TestProgress testProgress = MyMoodleBDEntities.GetContext().TestProgresses.FirstOrDefault(p => p.TestId == testId && p.QuestionId == x.QuestionId && p.UserName == name);
+            TestProgress testProgress = DiscretMathBDEntities.GetContext().TestProgresses.FirstOrDefault(p => p.TestId == testId && p.QuestionId == x.QuestionId && p.UserName == name);
             List<Answer> userAnswers = new List<Answer>();
 
             foreach (Answer answer in answers)
@@ -206,14 +206,14 @@ namespace DiscreteMathCourseApp.Pages
                     if (rightAnswers[item.Key] == id)
                         result += 1;
                 }
-                MyMoodleBDEntities.GetContext().TestProgresses.AddRange(testProgresses);
-                MyMoodleBDEntities.GetContext().SaveChanges();
+                DiscretMathBDEntities.GetContext().TestProgresses.AddRange(testProgresses);
+                DiscretMathBDEntities.GetContext().SaveChanges();
                 UserTestResult userTestResult = new UserTestResult();
                 userTestResult.TestId = testId;
                 userTestResult.UserName = Manager.CurrentUser.UserName;
                 userTestResult.Result = result;
-                MyMoodleBDEntities.GetContext().UserTestResults.Add(userTestResult);
-                MyMoodleBDEntities.GetContext().SaveChanges();
+                DiscretMathBDEntities.GetContext().UserTestResults.Add(userTestResult);
+                DiscretMathBDEntities.GetContext().SaveChanges();
                 double count = testQuestions.Count;
                 int percent = 0;
                 if (count !=0)

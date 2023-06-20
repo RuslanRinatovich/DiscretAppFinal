@@ -59,20 +59,66 @@ namespace DiscreteMathCourseApp.Pages
                     _filePath = _currentDirectory + _currentQuestion.Image;
                     _photoName = _currentQuestion.Image;
                 }
+
                 BtnAddAnswer.Visibility = Visibility.Visible;
             }
             else
             {
                 _currentQuestion = new Question();
                     }
+
+            var chapters = DiscretMathBDEntities.GetContext().Chapters.OrderBy(p => p.IndexNumber).ToList();
+            chapters.Insert(0, new Chapter
+            {
+                Title = "Все разделы"
+            }
+            );
+            ComboChapter.ItemsSource = chapters;
+            ComboChapter.SelectedIndex = 0;
+
+            var topics = DiscretMathBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+            topics.Insert(0, new Topic
+            {
+                Title = "Все темы"
+            }
+            );
+            ComboTopic.ItemsSource = topics;
+            ComboTopic.SelectedIndex = 0;
             // контекст данных текущий товар
             DataContext = _currentQuestion;
 
-            answers = MyMoodleBDEntities.GetContext().Answers.Where(p => p.QuestionId == _currentQuestion.Id).ToList();
+            answers = DiscretMathBDEntities.GetContext().Answers.Where(p => p.QuestionId == _currentQuestion.Id).ToList();
             ListBoxAnswers.ItemsSource = answers;
 
         }
 
+        private void ComboChapter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ComboChapter.SelectedIndex > 0)
+            {
+                Chapter chapter = ComboChapter.SelectedItem as Chapter;
+
+                var topics = DiscretMathBDEntities.GetContext().Topics.Where(p => p.ChapterId == chapter.Id).OrderBy(p => p.IndexNumber).ToList();
+                topics.Insert(0, new Topic
+                {
+                    Title = "Все темы " + chapter.Title
+                }
+                );
+                ComboTopic.ItemsSource = topics;
+                ComboTopic.SelectedIndex = 0;
+            }
+            else
+            {
+                var topics = DiscretMathBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+                topics.Insert(0, new Topic
+                {
+                    Title = "Все темы " 
+                }
+                );
+                ComboTopic.ItemsSource = topics;
+                ComboTopic.SelectedIndex = 0;
+            }
+        }
 
 
 
@@ -87,7 +133,10 @@ namespace DiscreteMathCourseApp.Pages
             // проверка полей на содержимое
             if (string.IsNullOrWhiteSpace(_currentQuestion.Title))
                 s.AppendLine("Поле вопроса пустое");
-            
+
+            if (ComboTopic.SelectedIndex == -1)
+                s.AppendLine("Выберите тему");
+
             if (ListBoxAnswers.SelectedItems.Count == 0 && _currentQuestion.Id != 0)
                 s.AppendLine("Ошибка, не указан верный ответ на вопрос");
             return s;
@@ -105,8 +154,11 @@ namespace DiscreteMathCourseApp.Pages
             }
            
             try
+
             {  // проверка полей прошла успешно
                // если товар новый, то его ID == 0
+
+                _currentQuestion.TopicId = (ComboTopic.SelectedItem as Topic).Id;
                 if (_currentQuestion.Id == 0)
                 {
                     // добавление нового товара, 
@@ -121,7 +173,7 @@ namespace DiscreteMathCourseApp.Pages
                         _currentQuestion.Image = photo;
                     }
                     // добавляем товар в БД
-                    MyMoodleBDEntities.GetContext().Questions.Add(_currentQuestion);
+                    DiscretMathBDEntities.GetContext().Questions.Add(_currentQuestion);
                 }
                 // если изменилось изображение
                 if (_photoChanged)
@@ -137,10 +189,10 @@ namespace DiscreteMathCourseApp.Pages
                     _currentQuestion.Image = null;
                     
                 }
-                MyMoodleBDEntities.GetContext().SaveChanges();  // Сохраняем изменения в БД
+                DiscretMathBDEntities.GetContext().SaveChanges();  // Сохраняем изменения в БД
                 MessageBox.Show("Данные сохранены");
 
-                answers = MyMoodleBDEntities.GetContext().Answers.Where(p => p.QuestionId == _currentQuestion.Id).ToList();
+                answers = DiscretMathBDEntities.GetContext().Answers.Where(p => p.QuestionId == _currentQuestion.Id).ToList();
                 ListBoxAnswers.ItemsSource = answers;
                 BtnAddAnswer.Visibility = Visibility.Visible;
                 DataContext = _currentQuestion;
@@ -209,9 +261,9 @@ namespace DiscreteMathCourseApp.Pages
                 if (window.ShowDialog() == true)
                 {
                     window.currentItem.QuestionId = _currentQuestion.Id;
-                    MyMoodleBDEntities.GetContext().Answers.Add(window.currentItem);
-                    MyMoodleBDEntities.GetContext().SaveChanges();
-                    answers = MyMoodleBDEntities.GetContext().Answers.Where(p => p.QuestionId == _currentQuestion.Id).ToList();
+                    DiscretMathBDEntities.GetContext().Answers.Add(window.currentItem);
+                    DiscretMathBDEntities.GetContext().SaveChanges();
+                    answers = DiscretMathBDEntities.GetContext().Answers.Where(p => p.QuestionId == _currentQuestion.Id).ToList();
                     ListBoxAnswers.ItemsSource = answers;
                     MessageBox.Show("Запись добавлена", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
@@ -243,11 +295,11 @@ namespace DiscreteMathCourseApp.Pages
                     if (selected.TestProgresses.Count > 0)
                         throw new Exception("Ошибка удаления, есть связанные записи");
 
-                    MyMoodleBDEntities.GetContext().Answers.Remove(selected);
+                    DiscretMathBDEntities.GetContext().Answers.Remove(selected);
                     //сохраняем изменения
-                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    DiscretMathBDEntities.GetContext().SaveChanges();
                     MessageBox.Show("Записи удалены");
-                    answers = MyMoodleBDEntities.GetContext().Answers.Where(p => p.QuestionId == _currentQuestion.Id).ToList();
+                    answers = DiscretMathBDEntities.GetContext().Answers.Where(p => p.QuestionId == _currentQuestion.Id).ToList();
 
                     ListBoxAnswers.ItemsSource = answers;
                 }
@@ -267,9 +319,9 @@ namespace DiscreteMathCourseApp.Pages
                 AddAnswerWindow window = new AddAnswerWindow(selected);
                 if (window.ShowDialog() == true)
                 {
-                    MyMoodleBDEntities.GetContext().Entry(window.currentItem).State = EntityState.Modified;
-                    MyMoodleBDEntities.GetContext().SaveChanges();
-                    answers = MyMoodleBDEntities.GetContext().Answers.Where(p => p.QuestionId == _currentQuestion.Id).ToList();
+                    DiscretMathBDEntities.GetContext().Entry(window.currentItem).State = EntityState.Modified;
+                    DiscretMathBDEntities.GetContext().SaveChanges();
+                    answers = DiscretMathBDEntities.GetContext().Answers.Where(p => p.QuestionId == _currentQuestion.Id).ToList();
                     ListBoxAnswers.ItemsSource = answers;
                     MessageBox.Show("Запись изменена", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
                 }

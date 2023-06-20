@@ -49,19 +49,19 @@ namespace DiscreteMathCourseApp.Pages
         void LoadAndInitData(Topic selected)
         {     // если передано null, то мы добавляем новый товар
 
-            topics = MyMoodleBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+            topics = DiscretMathBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
 
-            ComboChapter.ItemsSource = MyMoodleBDEntities.GetContext().Chapters.ToList();
-            ComboTopicType.ItemsSource = MyMoodleBDEntities.GetContext().TopicTypes.ToList();
+            ComboChapter.ItemsSource = DiscretMathBDEntities.GetContext().Chapters.ToList();
+            ComboTopicType.ItemsSource = DiscretMathBDEntities.GetContext().TopicTypes.ToList();
 
             if (selected != null)
             {
                 UpDownIndexNumber.Maximum = topics.Count;
                 _currentItem = selected;
                 _currentIndex = _currentItem.IndexNumber;
-                ListBoxTopicContents.ItemsSource = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == selected.Id).OrderBy(p =>p.IndexNumber).ToList();
-                ListBoxControlPoints.ItemsSource = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == selected.Id).OrderBy(p => p.IndexNumber).ToList();
-                ListBoxTests.ItemsSource = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == selected.Id).OrderBy(p => p.IndexNumber).ToList();
+                ListBoxTopicContents.ItemsSource = DiscretMathBDEntities.GetContext().TopicContents.Where(p => p.TopicId == selected.Id).OrderBy(p =>p.IndexNumber).ToList();
+                ListBoxControlPoints.ItemsSource = DiscretMathBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == selected.Id).OrderBy(p => p.IndexNumber).ToList();
+                ListBoxTests.ItemsSource = DiscretMathBDEntities.GetContext().Tests.Where(p => p.TopicId == selected.Id).OrderBy(p => p.IndexNumber).ToList();
             }
             else
             {
@@ -126,7 +126,7 @@ namespace DiscreteMathCourseApp.Pages
                     }
                 }
 
-                MyMoodleBDEntities.GetContext().Topics.Add(_currentItem);
+                DiscretMathBDEntities.GetContext().Topics.Add(_currentItem);
             }
             else
             {
@@ -141,7 +141,7 @@ namespace DiscreteMathCourseApp.Pages
             {
 
 
-                MyMoodleBDEntities.GetContext().SaveChanges();  // Сохраняем изменения в БД
+                DiscretMathBDEntities.GetContext().SaveChanges();  // Сохраняем изменения в БД
                 MessageBox.Show("Данные сохранены");
                 //Manager.MainFrame.GoBack();  // Возвращаемся на предыдущую форму
                // MessageBox.Show(_currentItem.Id.ToString());
@@ -178,20 +178,20 @@ namespace DiscreteMathCourseApp.Pages
                     string dest = _currentDirectory + photo;
                     File.Copy(_filePath, dest);
                     int maxind = 0;
-                    List <TopicContent> topicContents = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).ToList();
+                    List <TopicContent> topicContents = DiscretMathBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).ToList();
                     if (topicContents.Count > 0)
-                        maxind = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).Max(p => p.IndexNumber);
+                        maxind = DiscretMathBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).Max(p => p.IndexNumber);
                     
                     TopicContent topicContent = new TopicContent();
                     topicContent.IndexNumber = Convert.ToInt32(maxind) + 1;
                     topicContent.TopicLink = _fileName;
                     topicContent.TopicId = _currentItem.Id;
                     topicContent.TopicTitle = _fileName;
-                    MyMoodleBDEntities.GetContext().TopicContents.Add(topicContent);
-                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    DiscretMathBDEntities.GetContext().TopicContents.Add(topicContent);
+                    DiscretMathBDEntities.GetContext().SaveChanges();
 
 
-                    ListBoxTopicContents.ItemsSource = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+                    ListBoxTopicContents.ItemsSource = DiscretMathBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
                 }
         }
 
@@ -242,18 +242,18 @@ string ChangeFileName(string name)
                     if (selected.UserTopicContents.Count > 0)
                         throw new Exception("Ошибка удаления, есть связанные записи");
 
-                    var data = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+                    var data = DiscretMathBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
 
                     int k = selected.IndexNumber;
 
                     for (int i = k; i < data.Count; i++)
                         data[i].IndexNumber -= 1;
 
-                    MyMoodleBDEntities.GetContext().TopicContents.Remove(selected);
+                    DiscretMathBDEntities.GetContext().TopicContents.Remove(selected);
                     //сохраняем изменения
-                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    DiscretMathBDEntities.GetContext().SaveChanges();
                     MessageBox.Show("Записи удалены");
-                    ListBoxTopicContents.ItemsSource = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+                    ListBoxTopicContents.ItemsSource = DiscretMathBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
                 }
                 catch (Exception ex)
                 {
@@ -281,14 +281,14 @@ string ChangeFileName(string name)
                 return;
             int k = item.IndexNumber - 1;
             
-            TopicContent itemPrev = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).FirstOrDefault(p => p.IndexNumber == k);
+            TopicContent itemPrev = DiscretMathBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).FirstOrDefault(p => p.IndexNumber == k);
             if (itemPrev is null)
                 return;
 
             itemPrev.IndexNumber = item.IndexNumber;
             item.IndexNumber = k;
-            MyMoodleBDEntities.GetContext().SaveChanges();
-            ListBoxTopicContents.ItemsSource = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p =>p.IndexNumber).ToList();
+            DiscretMathBDEntities.GetContext().SaveChanges();
+            ListBoxTopicContents.ItemsSource = DiscretMathBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p =>p.IndexNumber).ToList();
         }
 
         private void BtnDown_Click(object sender, RoutedEventArgs e)
@@ -297,14 +297,14 @@ string ChangeFileName(string name)
             if (item.IndexNumber == ListBoxTopicContents.Items.Count)
                 return;
             int k = item.IndexNumber + 1;
-            TopicContent itemPrev = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).FirstOrDefault(p => p.IndexNumber == k);
+            TopicContent itemPrev = DiscretMathBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).FirstOrDefault(p => p.IndexNumber == k);
             if (itemPrev is null)
                 return;
 
             itemPrev.IndexNumber = item.IndexNumber;
             item.IndexNumber = k;
-            MyMoodleBDEntities.GetContext().SaveChanges();
-            ListBoxTopicContents.ItemsSource = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+            DiscretMathBDEntities.GetContext().SaveChanges();
+            ListBoxTopicContents.ItemsSource = DiscretMathBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
         }
 
         private void BtnUpControlPoint_Click(object sender, RoutedEventArgs e)
@@ -314,14 +314,14 @@ string ChangeFileName(string name)
                 return;
             int k = item.IndexNumber - 1;
 
-            ControlPoint itemPrev = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).FirstOrDefault(p => p.IndexNumber == k);
+            ControlPoint itemPrev = DiscretMathBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).FirstOrDefault(p => p.IndexNumber == k);
             if (itemPrev is null)
                 return;
 
             itemPrev.IndexNumber = item.IndexNumber;
             item.IndexNumber = k;
-            MyMoodleBDEntities.GetContext().SaveChanges();
-            ListBoxControlPoints.ItemsSource = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+            DiscretMathBDEntities.GetContext().SaveChanges();
+            ListBoxControlPoints.ItemsSource = DiscretMathBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
         }
 
         private void BtnDownControlPoint_Click(object sender, RoutedEventArgs e)
@@ -330,14 +330,14 @@ string ChangeFileName(string name)
             if (item.IndexNumber == ListBoxControlPoints.Items.Count)
                 return;
             int k = item.IndexNumber + 1;
-            ControlPoint itemPrev = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).FirstOrDefault(p => p.IndexNumber == k);
+            ControlPoint itemPrev = DiscretMathBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).FirstOrDefault(p => p.IndexNumber == k);
             if (itemPrev is null)
                 return;
 
             itemPrev.IndexNumber = item.IndexNumber;
             item.IndexNumber = k;
-            MyMoodleBDEntities.GetContext().SaveChanges();
-            ListBoxControlPoints.ItemsSource = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+            DiscretMathBDEntities.GetContext().SaveChanges();
+            ListBoxControlPoints.ItemsSource = DiscretMathBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
         }
 
         private void BtnEyeControlPoint_Click(object sender, RoutedEventArgs e)
@@ -350,7 +350,7 @@ string ChangeFileName(string name)
                 {
 
                     MessageBox.Show("Запись добавлена", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
-                    ListBoxControlPoints.ItemsSource = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+                    ListBoxControlPoints.ItemsSource = DiscretMathBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
 
                 }
             }
@@ -386,19 +386,19 @@ string ChangeFileName(string name)
                     if (selected.TaskLink != null)
                         File.Delete(_currentDirectory + selected.TaskLink);
 
-                    var data = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+                    var data = DiscretMathBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
 
                     int k = selected.IndexNumber;
 
                     for (int i = k; i < data.Count; i++)
                         data[i].IndexNumber -= 1;
 
-                    MyMoodleBDEntities.GetContext().ControlPoints.Remove(selected);
+                    DiscretMathBDEntities.GetContext().ControlPoints.Remove(selected);
                     //сохраняем изменения
-                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    DiscretMathBDEntities.GetContext().SaveChanges();
                     MessageBox.Show("Записи удалены");
                     ListBoxControlPoints.ItemsSource = null;
-                    ListBoxControlPoints.ItemsSource = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+                    ListBoxControlPoints.ItemsSource = DiscretMathBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
                 }
                 catch (Exception ex)
                 {
@@ -416,7 +416,7 @@ string ChangeFileName(string name)
                 {
                   
                     MessageBox.Show("Запись добавлена", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
-                    ListBoxControlPoints.ItemsSource = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+                    ListBoxControlPoints.ItemsSource = DiscretMathBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
 
                 }
             }
@@ -436,7 +436,7 @@ string ChangeFileName(string name)
 
                     MessageBox.Show("Запись добавлена", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
                     ListBoxTests.ItemsSource = null;
-                    ListBoxTests.ItemsSource = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+                    ListBoxTests.ItemsSource = DiscretMathBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
 
                 }
             }
@@ -447,7 +447,7 @@ string ChangeFileName(string name)
             finally
             {
                 ListBoxTests.ItemsSource = null;
-                ListBoxTests.ItemsSource = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+                ListBoxTests.ItemsSource = DiscretMathBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
             }
         }
 
@@ -462,7 +462,7 @@ string ChangeFileName(string name)
 
                     MessageBox.Show("Запись добавлена", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
                     ListBoxTests.ItemsSource = null;
-                    ListBoxTests.ItemsSource = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+                    ListBoxTests.ItemsSource = DiscretMathBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
 
                 }
             }
@@ -489,19 +489,19 @@ string ChangeFileName(string name)
                         throw new Exception("Ошибка удаления, есть связанные записи");
 
 
-                    var data = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+                    var data = DiscretMathBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
 
                     int k = selected.IndexNumber;
 
                     for (int i = k; i < data.Count; i++)
                         data[i].IndexNumber -= 1;
 
-                    MyMoodleBDEntities.GetContext().Tests.Remove(selected);
+                    DiscretMathBDEntities.GetContext().Tests.Remove(selected);
                     //сохраняем изменения
-                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    DiscretMathBDEntities.GetContext().SaveChanges();
                     MessageBox.Show("Записи удалены");
                     ListBoxTests.ItemsSource = null;
-                    ListBoxTests.ItemsSource = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+                    ListBoxTests.ItemsSource = DiscretMathBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
                 }
                 catch (Exception ex)
                 {
@@ -517,15 +517,15 @@ string ChangeFileName(string name)
                 return;
             int k = item.IndexNumber - 1;
 
-            Test itemPrev = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).FirstOrDefault(p => p.IndexNumber == k);
+            Test itemPrev = DiscretMathBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).FirstOrDefault(p => p.IndexNumber == k);
             if (itemPrev is null)
                 return;
 
             itemPrev.IndexNumber = item.IndexNumber;
             item.IndexNumber = k;
-            MyMoodleBDEntities.GetContext().SaveChanges();
+            DiscretMathBDEntities.GetContext().SaveChanges();
             ListBoxTests.ItemsSource = null;
-            ListBoxTests.ItemsSource = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+            ListBoxTests.ItemsSource = DiscretMathBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
         }
 
         private void BtnDownTest_Click(object sender, RoutedEventArgs e)
@@ -534,15 +534,15 @@ string ChangeFileName(string name)
             if (item.IndexNumber == ListBoxControlPoints.Items.Count)
                 return;
             int k = item.IndexNumber + 1;
-            Test itemPrev = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).FirstOrDefault(p => p.IndexNumber == k);
+            Test itemPrev = DiscretMathBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).FirstOrDefault(p => p.IndexNumber == k);
             if (itemPrev is null)
                 return;
 
             itemPrev.IndexNumber = item.IndexNumber;
             item.IndexNumber = k;
-            MyMoodleBDEntities.GetContext().SaveChanges();
+            DiscretMathBDEntities.GetContext().SaveChanges();
             ListBoxTests.ItemsSource = null;
-            ListBoxTests.ItemsSource = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+            ListBoxTests.ItemsSource = DiscretMathBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
         }
     }
 }

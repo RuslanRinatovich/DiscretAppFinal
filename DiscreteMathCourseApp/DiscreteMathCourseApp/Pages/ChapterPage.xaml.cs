@@ -41,8 +41,8 @@ namespace DiscreteMathCourseApp.Pages
 
             DataGridData.ItemsSource = null;
             //загрузка обновленных данных
-            MyMoodleBDEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
-            data = MyMoodleBDEntities.GetContext().Chapters.OrderBy(p => p.IndexNumber).ToList();
+            DiscretMathBDEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+            data = DiscretMathBDEntities.GetContext().Chapters.OrderBy(p => p.IndexNumber).ToList();
             DataGridData.ItemsSource = data;
 
             TextBlockCount.Text = $" Результат запроса: {_itemcount} записей из {_itemcount}";
@@ -84,16 +84,16 @@ namespace DiscreteMathCourseApp.Pages
                     // если да, то выбрасывается исключение и удаление прерывается
                     if (selected.Topics.Count > 0)
                         throw new Exception("Ошибка удаления, есть связанные записи");
-                    data = MyMoodleBDEntities.GetContext().Chapters.OrderBy(p => p.IndexNumber).ToList();
+                    data = DiscretMathBDEntities.GetContext().Chapters.OrderBy(p => p.IndexNumber).ToList();
 
                     int k = selected.IndexNumber;
 
                     for (int i = k; i < _itemcount; i++)
                         data[i].IndexNumber -= 1; 
 
-                    MyMoodleBDEntities.GetContext().Chapters.Remove(selected);
+                    DiscretMathBDEntities.GetContext().Chapters.Remove(selected);
                     //сохраняем изменения
-                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    DiscretMathBDEntities.GetContext().SaveChanges();
                     MessageBox.Show("Записи удалены");
                     LoadData();
                 }
@@ -120,9 +120,9 @@ namespace DiscreteMathCourseApp.Pages
         private void UpdateData()
         {
             // получаем текущие данные из бд
-            //var currentGoods = MyMoodleBDEntities.GetContext().Abonements.OrderBy(p => p.CategoryTrainer.Trainer.LastName).ToList();
+            //var currentGoods = DiscretMathBDEntities.GetContext().Abonements.OrderBy(p => p.CategoryTrainer.Trainer.LastName).ToList();
 
-            var currentData = MyMoodleBDEntities.GetContext().Chapters.OrderBy(p => p.IndexNumber).ToList();
+            var currentData = DiscretMathBDEntities.GetContext().Chapters.OrderBy(p => p.IndexNumber).ToList();
             // выбор только тех товаров, которые принадлежат данному производителю
 
             // выбор тех товаров, в названии которых есть поисковая строка
@@ -165,13 +165,13 @@ namespace DiscreteMathCourseApp.Pages
             if (chapter.IndexNumber == 1)
                 return;
             int k = chapter.IndexNumber - 1;
-            Chapter chapterPrev = MyMoodleBDEntities.GetContext().Chapters.FirstOrDefault(p => p.IndexNumber == k);
+            Chapter chapterPrev = DiscretMathBDEntities.GetContext().Chapters.FirstOrDefault(p => p.IndexNumber == k);
             if (chapterPrev is null)
                 return;
 
             chapterPrev.IndexNumber = chapter.IndexNumber;
             chapter.IndexNumber = k;
-            MyMoodleBDEntities.GetContext().SaveChanges();
+            DiscretMathBDEntities.GetContext().SaveChanges();
             LoadData();
         }
 
@@ -181,13 +181,13 @@ namespace DiscreteMathCourseApp.Pages
             if (chapter.IndexNumber == DataGridData.Items.Count)
                 return;
             int k = chapter.IndexNumber + 1;
-            Chapter chapterPrev = MyMoodleBDEntities.GetContext().Chapters.FirstOrDefault(p => p.IndexNumber == k);
+            Chapter chapterPrev = DiscretMathBDEntities.GetContext().Chapters.FirstOrDefault(p => p.IndexNumber == k);
             if (chapterPrev is null)
                 return;
 
             chapterPrev.IndexNumber = chapter.IndexNumber;
             chapter.IndexNumber = k;
-            MyMoodleBDEntities.GetContext().SaveChanges();
+            DiscretMathBDEntities.GetContext().SaveChanges();
             LoadData();
         }
     }

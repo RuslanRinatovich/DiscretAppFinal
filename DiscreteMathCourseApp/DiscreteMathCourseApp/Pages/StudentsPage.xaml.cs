@@ -42,14 +42,14 @@ namespace DiscreteMathCourseApp.Pages
 
             DataGridData.ItemsSource = null;
             //загрузка обновленных данных
-            MyMoodleBDEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
-            data = MyMoodleBDEntities.GetContext().Users.OrderBy(p => p.Surname).ThenBy(p => p.Name).ToList();
+            DiscretMathBDEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+            data = DiscretMathBDEntities.GetContext().Users.OrderBy(p => p.Surname).ThenBy(p => p.Name).ToList();
             DataGridData.ItemsSource = data;
 
             TextBlockCount.Text = $" Результат запроса: {_itemcount} записей из {_itemcount}";
 
 
-            var roles = MyMoodleBDEntities.GetContext().Roles.OrderBy(p => p.Title).ToList();
+            var roles = DiscretMathBDEntities.GetContext().Roles.OrderBy(p => p.Title).ToList();
             roles.Insert(0, new Role
             {
                 Title = "Все типы пользователей"
@@ -97,9 +97,9 @@ namespace DiscreteMathCourseApp.Pages
                         throw new Exception("Ошибка удаления, есть связанные записи");
                    
 
-                    MyMoodleBDEntities.GetContext().Users.Remove(selected);
+                    DiscretMathBDEntities.GetContext().Users.Remove(selected);
                     //сохраняем изменения
-                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    DiscretMathBDEntities.GetContext().SaveChanges();
                     MessageBox.Show("Записи удалены");
                     LoadData();
                 }
@@ -126,9 +126,9 @@ namespace DiscreteMathCourseApp.Pages
         private void UpdateData()
         {
             // получаем текущие данные из бд
-            //var currentGoods = MyMoodleBDEntities.GetContext().Abonements.OrderBy(p => p.CategoryTrainer.Trainer.LastName).ToList();
+            //var currentGoods = DiscretMathBDEntities.GetContext().Abonements.OrderBy(p => p.CategoryTrainer.Trainer.LastName).ToList();
 
-            var currentData = MyMoodleBDEntities.GetContext().Users.OrderBy(p => p.Surname).ThenBy(p => p.Name).ToList();
+            var currentData = DiscretMathBDEntities.GetContext().Users.OrderBy(p => p.Surname).ThenBy(p => p.Name).ToList();
             // выбор только тех товаров, которые принадлежат данному производителю
             if (ComboUserType.SelectedIndex > 0)
             {
@@ -332,12 +332,12 @@ namespace DiscreteMathCourseApp.Pages
                 int k = 3;
                 int start = 0;
                 int end = 0;
-                List<Topic> topics = MyMoodleBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+                List<Topic> topics = DiscretMathBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
                 //makeHeader
                 int topicStartIndex = 0;
                 foreach (Topic topic in topics)
                 {
-                    List<TopicContent> topicContents = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
+                    List<TopicContent> topicContents = DiscretMathBDEntities.GetContext().TopicContents.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
                     topicStartIndex = k;
                     xlSheet.Cells[row, 1] = "№";
                     xlSheet.Cells[row, 2] = "ФИО";
@@ -362,7 +362,7 @@ namespace DiscreteMathCourseApp.Pages
                     xlSheet.Cells[2, start] = "Материалы";
 
                     start = k;
-                    var controlPoints = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
+                    var controlPoints = DiscretMathBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
                     foreach (ControlPoint controlPoint in controlPoints)
                     {
                         xlSheet.Cells[row, k] = $"Задание № {controlPoint.IndexNumber}";
@@ -381,7 +381,7 @@ namespace DiscreteMathCourseApp.Pages
                     }
                     xlSheet.Cells[2, start] = "Задания";
                     start = k;
-                    var tests = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
+                    var tests = DiscretMathBDEntities.GetContext().Tests.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
                     foreach (Test test in tests)
                     {
                         xlSheet.Cells[row, k] = $"Тест № {test.IndexNumber}";
@@ -421,7 +421,7 @@ namespace DiscreteMathCourseApp.Pages
                         k = 3;
                         foreach (Topic topic in topics)
                         {
-                            List<TopicContent> topicContents = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
+                            List<TopicContent> topicContents = DiscretMathBDEntities.GetContext().TopicContents.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
                             string name = topicuser.UserName;
                             topicStartIndex = k;
 
@@ -430,7 +430,7 @@ namespace DiscreteMathCourseApp.Pages
                             xlSheet.Cells[row, 2] = topicuser.GetFio;
                             foreach (TopicContent topicContent in topicContents)
                             {
-                                UserTopicContent userTopicContent = MyMoodleBDEntities.GetContext().UserTopicContents.FirstOrDefault(p => p.TopicContentId == topicContent.Id && p.UserName == name);
+                                UserTopicContent userTopicContent = DiscretMathBDEntities.GetContext().UserTopicContents.FirstOrDefault(p => p.TopicContentId == topicContent.Id && p.UserName == name);
 
                                 if (userTopicContent == null)
                                 {
@@ -447,11 +447,11 @@ namespace DiscreteMathCourseApp.Pages
                             }
 
                             start = k;
-                            var controlPoints = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
+                            var controlPoints = DiscretMathBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
                             foreach (ControlPoint controlPoint in controlPoints)
                             {
 
-                                UserControlPoint userControlPoint = MyMoodleBDEntities.GetContext().UserControlPoints.FirstOrDefault(p => p.ControlPointId == controlPoint.Id && p.UserName == name);
+                                UserControlPoint userControlPoint = DiscretMathBDEntities.GetContext().UserControlPoints.FirstOrDefault(p => p.ControlPointId == controlPoint.Id && p.UserName == name);
 
                                 if (userControlPoint == null)
                                 {
@@ -467,11 +467,11 @@ namespace DiscreteMathCourseApp.Pages
                                 k++;
                             }
                             start = k;
-                            var tests = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
+                            var tests = DiscretMathBDEntities.GetContext().Tests.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
                             foreach (Test test in tests)
                             {
-                                UserTestResult userTestResult = MyMoodleBDEntities.GetContext().UserTestResults.FirstOrDefault(p => p.TestId == test.Id && p.UserName == name);
-                                double count = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == test.Id).Count();
+                                UserTestResult userTestResult = DiscretMathBDEntities.GetContext().UserTestResults.FirstOrDefault(p => p.TestId == test.Id && p.UserName == name);
+                                double count = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == test.Id).Count();
                                 if (userTestResult == null)
                                     continue;
                                 int testResult = Convert.ToInt32(Math.Round(userTestResult.Result / count * 100));

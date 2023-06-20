@@ -92,7 +92,7 @@ namespace DiscreteMathCourseApp.Windows
 
                
 
-                MyMoodleBDEntities.GetContext().SaveChanges();
+                DiscretMathBDEntities.GetContext().SaveChanges();
                 // MessageBox.Show("Данные сохранены", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
                 this.DialogResult = true;
             }

@@ -35,7 +35,7 @@ namespace DiscreteMathCourseApp.Pages
         void LoadAndInitData(Chapter selected)
         {     // если передано null, то мы добавляем новый товар
             
-            chapters = MyMoodleBDEntities.GetContext().Chapters.OrderBy(p => p.IndexNumber).ToList();
+            chapters = DiscretMathBDEntities.GetContext().Chapters.OrderBy(p => p.IndexNumber).ToList();
             if (selected != null)
             {
                 UpDownIndexNumber.Maximum = chapters.Count;
@@ -98,7 +98,7 @@ namespace DiscreteMathCourseApp.Pages
                     }
                 }
 
-                MyMoodleBDEntities.GetContext().Chapters.Add(_currentItem);
+                DiscretMathBDEntities.GetContext().Chapters.Add(_currentItem);
             }
             else
             {
@@ -113,7 +113,7 @@ namespace DiscreteMathCourseApp.Pages
             {
                 
 
-                MyMoodleBDEntities.GetContext().SaveChanges();  // Сохраняем изменения в БД
+                DiscretMathBDEntities.GetContext().SaveChanges();  // Сохраняем изменения в БД
                 MessageBox.Show("Данные сохранены");
                 Manager.MainFrame.GoBack();  // Возвращаемся на предыдущую форму
             }

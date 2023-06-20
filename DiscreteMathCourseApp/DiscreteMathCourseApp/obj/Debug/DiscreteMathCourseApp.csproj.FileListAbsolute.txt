@@ -94,7 +94,6 @@ d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\ob
 d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\DiscreteMathCourseApp.csproj.ResolveComReference.cache
 d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\AddChapterPage.g.cs
 d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\ChapterPage.g.cs
-d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\MyCoursePage.g.cs
 d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\TopicPage.g.cs
 d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\TopicTypePage.g.cs
 d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\MainWindow.g.cs
@@ -106,7 +105,6 @@ d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\ob
 d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\App.baml
 d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\AddChapterPage.baml
 d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\ChapterPage.baml
-d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\MyCoursePage.baml
 d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\TopicPage.baml
 d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\TopicTypePage.baml
 d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\MainWindow.baml
@@ -514,3 +512,31 @@ c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\Dis
 c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\RegsWindow.baml
 c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\ShowImageWindow.baml
 c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\StudentGroupWindow.baml
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\bin\Debug\LiveCharts.dll
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\bin\Debug\LiveCharts.Wpf.dll
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\bin\Debug\LiveCharts.pdb
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\bin\Debug\LiveCharts.xml
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\bin\Debug\LiveCharts.Wpf.pdb
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\bin\Debug\LiveCharts.Wpf.xml
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\CheckTasksPage.g.cs
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\CheckTestPage.g.cs
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\GroupsPage.g.cs
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\PassTestPage.g.cs
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\StudentProgressPage.g.cs
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\UsersTestPassPage.g.cs
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\AddMarkTaskWindow.g.cs
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\AddNewQuestionWindow.g.cs
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\RegsWindow.g.cs
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\ShowImageWindow.g.cs
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\StudentGroupWindow.g.cs
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\CheckTasksPage.baml
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\CheckTestPage.baml
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\GroupsPage.baml
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\PassTestPage.baml
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\StudentProgressPage.baml
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Pages\UsersTestPassPage.baml
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\AddMarkTaskWindow.baml
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\AddNewQuestionWindow.baml
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\RegsWindow.baml
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\ShowImageWindow.baml
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\Windows\StudentGroupWindow.baml

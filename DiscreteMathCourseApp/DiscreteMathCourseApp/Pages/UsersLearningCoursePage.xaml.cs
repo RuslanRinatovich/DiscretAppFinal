@@ -52,7 +52,7 @@ namespace DiscreteMathCourseApp.Pages
 
             totalTasks = 0;
             totalCompleteTask = 0;
-            var chapters = MyMoodleBDEntities.GetContext().Chapters.OrderBy(p => p.IndexNumber).ToList();
+            var chapters = DiscretMathBDEntities.GetContext().Chapters.OrderBy(p => p.IndexNumber).ToList();
             chapters.Insert(0, new Chapter
             {
                 Title = "Все разделы"
@@ -61,7 +61,7 @@ namespace DiscreteMathCourseApp.Pages
             ComboChapter.ItemsSource = chapters;
             ComboChapter.SelectedIndex = 0;
 
-            var topicTypes = MyMoodleBDEntities.GetContext().TopicTypes.OrderBy(p => p.Title).ToList();
+            var topicTypes = DiscretMathBDEntities.GetContext().TopicTypes.OrderBy(p => p.Title).ToList();
             TextBoxStats.Text = "";
             string answer = "";
             int sum = 0;
@@ -84,8 +84,8 @@ namespace DiscreteMathCourseApp.Pages
 
             DataGridData.ItemsSource = null;
             //загрузка обновленных данных
-            MyMoodleBDEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
-            data = MyMoodleBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+            DiscretMathBDEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+            data = DiscretMathBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
             
             foreach (Topic topic in data)
             {
@@ -98,23 +98,23 @@ namespace DiscreteMathCourseApp.Pages
                 int controlPointsCount = 0;
                 int testCount = 0;
 
-                List<TopicContent> topicContents = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
+                List<TopicContent> topicContents = DiscretMathBDEntities.GetContext().TopicContents.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
                 //количсетво пройденных тем пользователем
                 topicContentsCount = topicContents.Count;
                 string name = user.UserName;
                 foreach (TopicContent topicContent in topicContents)
                 {
-                    UserTopicContent userTopicContent = MyMoodleBDEntities.GetContext().UserTopicContents.FirstOrDefault(p => p.TopicContentId == topicContent.Id && p.UserName == name);
+                    UserTopicContent userTopicContent = DiscretMathBDEntities.GetContext().UserTopicContents.FirstOrDefault(p => p.TopicContentId == topicContent.Id && p.UserName == name);
                     if (userTopicContent == null)
                         continue;
                     if (userTopicContent.IsStudied)
                         studiedTopicContents++;
                 }
-                var controlPoints = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
+                var controlPoints = DiscretMathBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
                 foreach (ControlPoint controlPoint in controlPoints)
                 {
 
-                    UserControlPoint userControlPoint = MyMoodleBDEntities.GetContext().UserControlPoints.
+                    UserControlPoint userControlPoint = DiscretMathBDEntities.GetContext().UserControlPoints.
                         FirstOrDefault(p => p.ControlPointId == controlPoint.Id && p.UserName == name);
                     if (userControlPoint == null)
                         continue;
@@ -125,11 +125,11 @@ namespace DiscreteMathCourseApp.Pages
                     }
                 }
                 controlPointsCount = controlPoints.Count;
-                var tests = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
+                var tests = DiscretMathBDEntities.GetContext().Tests.Where(p => p.TopicId == topic.Id).OrderBy(p => p.IndexNumber).ToList();
                 foreach (Test test in tests)
                 {
-                    UserTestResult userTestResult = MyMoodleBDEntities.GetContext().UserTestResults.FirstOrDefault(p => p.TestId == test.Id && p.UserName == name);
-                    double count = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == test.Id).Count();
+                    UserTestResult userTestResult = DiscretMathBDEntities.GetContext().UserTestResults.FirstOrDefault(p => p.TestId == test.Id && p.UserName == name);
+                    double count = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == test.Id).Count();
 
                     if (userTestResult == null)
                         continue;
@@ -232,9 +232,9 @@ namespace DiscreteMathCourseApp.Pages
         private void UpdateData()
         {
             // получаем текущие данные из бд
-            //var currentGoods = MyMoodleBDEntities.GetContext().Abonements.OrderBy(p => p.CategoryTrainer.Trainer.LastName).ToList();
+            //var currentGoods = DiscretMathBDEntities.GetContext().Abonements.OrderBy(p => p.CategoryTrainer.Trainer.LastName).ToList();
 
-            var currentData = MyMoodleBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+            var currentData = DiscretMathBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
             // выбор только тех товаров, которые принадлежат данному производителю
 
             if (ComboChapter.SelectedIndex > 0)

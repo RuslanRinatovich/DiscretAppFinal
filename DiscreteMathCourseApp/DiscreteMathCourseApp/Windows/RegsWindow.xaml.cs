@@ -36,9 +36,9 @@ namespace DiscreteMathCourseApp.Windows
         void LoadAndInitData()
         {     // если передано null, то мы добавляем новый товар
 
-            users = MyMoodleBDEntities.GetContext().Users.OrderBy(p => p.UserName).ToList();
+            users = DiscretMathBDEntities.GetContext().Users.OrderBy(p => p.UserName).ToList();
 
-            ComboGroup.ItemsSource = MyMoodleBDEntities.GetContext().StudentGroups.ToList();
+            ComboGroup.ItemsSource = DiscretMathBDEntities.GetContext().StudentGroups.ToList();
 
            
                 _currentItem = new User();
@@ -90,8 +90,8 @@ namespace DiscreteMathCourseApp.Windows
                 _currentItem.RoleId = 1;
                 _currentItem.DateOfRegs = DateTime.Now;
                 _currentItem.Password = PasswordBoxPassword.Password;
-                MyMoodleBDEntities.GetContext().Users.Add(_currentItem);
-                 MyMoodleBDEntities.GetContext().SaveChanges();  // Сохраняем изменения в БД
+                DiscretMathBDEntities.GetContext().Users.Add(_currentItem);
+                 DiscretMathBDEntities.GetContext().SaveChanges();  // Сохраняем изменения в БД
                 MessageBox.Show("Вы успешно зарегистрировались в системе", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
                 this.DialogResult = true;
             }
@@ -106,7 +106,7 @@ namespace DiscreteMathCourseApp.Windows
         private void TextBoxUserName_TextChanged(object sender, TextChangedEventArgs e)
         {
             string username = TextBoxUserName.Text.ToLower();
-            User user = MyMoodleBDEntities.GetContext().Users.Where(p => p.UserName.ToLower() == username).FirstOrDefault();
+            User user = DiscretMathBDEntities.GetContext().Users.Where(p => p.UserName.ToLower() == username).FirstOrDefault();
             if (user == _currentItem)
                 return;
             if (user != null)

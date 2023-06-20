@@ -36,8 +36,8 @@ namespace DiscreteMathCourseApp.Pages
             {
                 DtData.ItemsSource = null;
                 //загрузка обновленных данных
-                MyMoodleBDEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
-                studentGroups = MyMoodleBDEntities.GetContext().StudentGroups.OrderBy(p => p.Title).ToList();
+                DiscretMathBDEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+                studentGroups = DiscretMathBDEntities.GetContext().StudentGroups.OrderBy(p => p.Title).ToList();
                 DtData.ItemsSource = studentGroups;
             }
             catch
@@ -68,8 +68,8 @@ namespace DiscreteMathCourseApp.Pages
                 StudentGroupWindow window = new StudentGroupWindow(new StudentGroup());
                 if (window.ShowDialog() == true)
                 {
-                    MyMoodleBDEntities.GetContext().StudentGroups.Add(window.currentItem);
-                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    DiscretMathBDEntities.GetContext().StudentGroups.Add(window.currentItem);
+                    DiscretMathBDEntities.GetContext().SaveChanges();
                     LoadData();
                     MessageBox.Show("Запись добавлена", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
@@ -93,15 +93,15 @@ namespace DiscreteMathCourseApp.Pages
                 {
                     if (window.currentItem != null)
                     {
-                        MyMoodleBDEntities.GetContext().Entry(window.currentItem).State = EntityState.Modified;
-                        MyMoodleBDEntities.GetContext().SaveChanges();
+                        DiscretMathBDEntities.GetContext().Entry(window.currentItem).State = EntityState.Modified;
+                        DiscretMathBDEntities.GetContext().SaveChanges();
                         LoadData();
                         MessageBox.Show("Запись изменена", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
                 else
                 {
-                    MyMoodleBDEntities.GetContext().Entry(window.currentItem).Reload();
+                    DiscretMathBDEntities.GetContext().Entry(window.currentItem).Reload();
                     LoadData();
                 }
             }
@@ -127,8 +127,8 @@ MessageBoxImage.Question);
                     {
                         throw new Exception("Ошибка удаления, есть связанные записи");
                     }
-                    MyMoodleBDEntities.GetContext().StudentGroups.Remove(deletedItem);
-                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    DiscretMathBDEntities.GetContext().StudentGroups.Remove(deletedItem);
+                    DiscretMathBDEntities.GetContext().SaveChanges();
                     LoadData();
                     MessageBox.Show("Запись удалена", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
                 }

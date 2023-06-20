@@ -37,11 +37,11 @@ namespace DiscreteMathCourseApp.Pages
         void LoadAndInitData(User selected)
         {     // если передано null, то мы добавляем новый товар
 
-            users = MyMoodleBDEntities.GetContext().Users.OrderBy(p => p.UserName).ToList();
+            users = DiscretMathBDEntities.GetContext().Users.OrderBy(p => p.UserName).ToList();
 
-            ComboUserType.ItemsSource = MyMoodleBDEntities.GetContext().Roles.ToList();
+            ComboUserType.ItemsSource = DiscretMathBDEntities.GetContext().Roles.ToList();
 
-            ComboGroup.ItemsSource = MyMoodleBDEntities.GetContext().StudentGroups.ToList();
+            ComboGroup.ItemsSource = DiscretMathBDEntities.GetContext().StudentGroups.ToList();
             if (selected != null)
             {
                 _currentItem = selected;
@@ -100,14 +100,14 @@ namespace DiscreteMathCourseApp.Pages
             {
                 // добавление нового товара, 
                 _currentItem.DateOfRegs = DateTime.Now;
-                MyMoodleBDEntities.GetContext().Users.Add(_currentItem);
+                DiscretMathBDEntities.GetContext().Users.Add(_currentItem);
             }
            
             try
             {
 
                 
-                MyMoodleBDEntities.GetContext().SaveChanges();  // Сохраняем изменения в БД
+                DiscretMathBDEntities.GetContext().SaveChanges();  // Сохраняем изменения в БД
                 MessageBox.Show(msg, "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
                 //Manager.MainFrame.GoBack();  // Возвращаемся на предыдущую форму
             }
@@ -131,7 +131,7 @@ namespace DiscreteMathCourseApp.Pages
         private void TextBoxUserName_TextChanged(object sender, TextChangedEventArgs e)
         {
             string username = TextBoxUserName.Text.ToLower();
-            User user = MyMoodleBDEntities.GetContext().Users.Where(p => p.UserName.ToLower() == username).FirstOrDefault();
+            User user = DiscretMathBDEntities.GetContext().Users.Where(p => p.UserName.ToLower() == username).FirstOrDefault();
             if (user == _currentItem)
                 return;
             if (user != null)

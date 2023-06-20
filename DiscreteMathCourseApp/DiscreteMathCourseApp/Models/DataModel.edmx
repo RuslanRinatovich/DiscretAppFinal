@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Хранилище DiscretMathBDModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="Хранилище DataModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Answer">
           <Key>
             <PropertyRef Name="Id" />
@@ -43,6 +43,7 @@
           <Property Name="Title" Type="nvarchar" MaxLength="1000" Nullable="false" />
           <Property Name="Image" Type="nvarchar" MaxLength="1000" />
           <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+          <Property Name="TopicId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -205,6 +206,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Question_Topic">
+          <End Role="Topic" Type="Self.Topic" Multiplicity="1" />
+          <End Role="Question" Type="Self.Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Topic">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="TopicId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Test_Topic">
           <End Role="Topic" Type="Self.Topic" Multiplicity="1" />
           <End Role="Test" Type="Self.Test" Multiplicity="*" />
@@ -409,7 +422,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="Хранилище DiscretMathBDModelContainer">
+        <EntityContainer Name="Хранилище DataModelContainer">
           <EntitySet Name="Answer" EntityType="Self.Answer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Chapter" EntityType="Self.Chapter" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ControlPoint" EntityType="Self.ControlPoint" Schema="dbo" store:Type="Tables" />
@@ -438,6 +451,10 @@
           <AssociationSet Name="FK_CourseProgress_User" Association="Self.FK_CourseProgress_User">
             <End Role="User" EntitySet="User" />
             <End Role="UserTopicContent" EntitySet="UserTopicContent" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Question_Topic" Association="Self.FK_Question_Topic">
+            <End Role="Topic" EntitySet="Topic" />
+            <End Role="Question" EntitySet="Question" />
           </AssociationSet>
           <AssociationSet Name="FK_Test_Topic" Association="Self.FK_Test_Topic">
             <End Role="Topic" EntitySet="Topic" />
@@ -512,7 +529,7 @@
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="DiscretMathBDModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="DataModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Answer">
           <Key>
             <PropertyRef Name="Id" />
@@ -556,7 +573,9 @@
           <Property Name="Title" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Image" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="TopicId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Answers" Relationship="Self.FK_Answer_Question" FromRole="Question" ToRole="Answer" />
+          <NavigationProperty Name="Topic" Relationship="Self.FK_Question_Topic" FromRole="Question" ToRole="Topic" />
           <NavigationProperty Name="TestProgresses" Relationship="Self.FK_TestProgress_Question" FromRole="Question" ToRole="TestProgress" />
           <NavigationProperty Name="TestQuestions" Relationship="Self.FK_TestQuestion_Question" FromRole="Question" ToRole="TestQuestion" />
         </EntityType>
@@ -639,6 +658,7 @@
           <Property Name="TopicTypeId" Type="Int32" />
           <NavigationProperty Name="Chapter" Relationship="Self.FK_Topic_Chapter" FromRole="Topic" ToRole="Chapter" />
           <NavigationProperty Name="ControlPoints" Relationship="Self.FK_ControlPoint_Topic" FromRole="Topic" ToRole="ControlPoint" />
+          <NavigationProperty Name="Questions" Relationship="Self.FK_Question_Topic" FromRole="Topic" ToRole="Question" />
           <NavigationProperty Name="Tests" Relationship="Self.FK_Test_Topic" FromRole="Topic" ToRole="Test" />
           <NavigationProperty Name="TopicType" Relationship="Self.FK_Topic_TopicType" FromRole="Topic" ToRole="TopicType" />
           <NavigationProperty Name="TopicContents" Relationship="Self.FK_TopicContent_Topic" FromRole="Topic" ToRole="TopicContent" />
@@ -774,6 +794,18 @@
             </Principal>
             <Dependent Role="UserControlPoint">
               <PropertyRef Name="ControlPointId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Question_Topic">
+          <End Role="Topic" Type="Self.Topic" Multiplicity="1" />
+          <End Role="Question" Type="Self.Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Topic">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="TopicId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -957,7 +989,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="MyMoodleBDEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="DiscretMathBDEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Answers" EntityType="Self.Answer" />
           <EntitySet Name="Chapters" EntityType="Self.Chapter" />
           <EntitySet Name="ControlPoints" EntityType="Self.ControlPoint" />
@@ -994,6 +1026,10 @@
           <AssociationSet Name="FK_UserControlPoint_ControlPoint" Association="Self.FK_UserControlPoint_ControlPoint">
             <End Role="ControlPoint" EntitySet="ControlPoints" />
             <End Role="UserControlPoint" EntitySet="UserControlPoints" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Question_Topic" Association="Self.FK_Question_Topic">
+            <End Role="Topic" EntitySet="Topics" />
+            <End Role="Question" EntitySet="Questions" />
           </AssociationSet>
           <AssociationSet Name="FK_TestProgress_Question" Association="Self.FK_TestProgress_Question">
             <End Role="Question" EntitySet="Questions" />
@@ -1061,9 +1097,9 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="Хранилище DiscretMathBDModelContainer" CdmEntityContainer="MyMoodleBDEntities">
+        <EntityContainerMapping StorageEntityContainer="Хранилище DataModelContainer" CdmEntityContainer="DiscretMathBDEntities">
           <EntitySetMapping Name="Answers">
-            <EntityTypeMapping TypeName="DiscretMathBDModel.Answer">
+            <EntityTypeMapping TypeName="DataModel.Answer">
               <MappingFragment StoreEntitySet="Answer">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
@@ -1073,7 +1109,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Chapters">
-            <EntityTypeMapping TypeName="DiscretMathBDModel.Chapter">
+            <EntityTypeMapping TypeName="DataModel.Chapter">
               <MappingFragment StoreEntitySet="Chapter">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
@@ -1083,7 +1119,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ControlPoints">
-            <EntityTypeMapping TypeName="DiscretMathBDModel.ControlPoint">
+            <EntityTypeMapping TypeName="DataModel.ControlPoint">
               <MappingFragment StoreEntitySet="ControlPoint">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="TopicId" ColumnName="TopicId" />
@@ -1096,17 +1132,18 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Questions">
-            <EntityTypeMapping TypeName="DiscretMathBDModel.Question">
+            <EntityTypeMapping TypeName="DataModel.Question">
               <MappingFragment StoreEntitySet="Question">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="Image" ColumnName="Image" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="TopicId" ColumnName="TopicId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Roles">
-            <EntityTypeMapping TypeName="DiscretMathBDModel.Role">
+            <EntityTypeMapping TypeName="DataModel.Role">
               <MappingFragment StoreEntitySet="Role">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
@@ -1115,7 +1152,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="StudentGroups">
-            <EntityTypeMapping TypeName="DiscretMathBDModel.StudentGroup">
+            <EntityTypeMapping TypeName="DataModel.StudentGroup">
               <MappingFragment StoreEntitySet="StudentGroup">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
@@ -1123,7 +1160,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="DiscretMathBDModel.sysdiagram">
+            <EntityTypeMapping TypeName="DataModel.sysdiagram">
               <MappingFragment StoreEntitySet="sysdiagrams">
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="principal_id" ColumnName="principal_id" />
@@ -1134,7 +1171,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Tests">
-            <EntityTypeMapping TypeName="DiscretMathBDModel.Test">
+            <EntityTypeMapping TypeName="DataModel.Test">
               <MappingFragment StoreEntitySet="Test">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="TopicId" ColumnName="TopicId" />
@@ -1145,7 +1182,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TestProgresses">
-            <EntityTypeMapping TypeName="DiscretMathBDModel.TestProgress">
+            <EntityTypeMapping TypeName="DataModel.TestProgress">
               <MappingFragment StoreEntitySet="TestProgress">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
@@ -1156,7 +1193,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TestQuestions">
-            <EntityTypeMapping TypeName="DiscretMathBDModel.TestQuestion">
+            <EntityTypeMapping TypeName="DataModel.TestQuestion">
               <MappingFragment StoreEntitySet="TestQuestion">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
@@ -1166,7 +1203,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Topics">
-            <EntityTypeMapping TypeName="DiscretMathBDModel.Topic">
+            <EntityTypeMapping TypeName="DataModel.Topic">
               <MappingFragment StoreEntitySet="Topic">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
@@ -1179,7 +1216,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TopicContents">
-            <EntityTypeMapping TypeName="DiscretMathBDModel.TopicContent">
+            <EntityTypeMapping TypeName="DataModel.TopicContent">
               <MappingFragment StoreEntitySet="TopicContent">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="TopicId" ColumnName="TopicId" />
@@ -1190,7 +1227,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TopicTypes">
-            <EntityTypeMapping TypeName="DiscretMathBDModel.TopicType">
+            <EntityTypeMapping TypeName="DataModel.TopicType">
               <MappingFragment StoreEntitySet="TopicType">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
@@ -1198,7 +1235,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="DiscretMathBDModel.User">
+            <EntityTypeMapping TypeName="DataModel.User">
               <MappingFragment StoreEntitySet="User">
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
@@ -1212,7 +1249,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="UserControlPoints">
-            <EntityTypeMapping TypeName="DiscretMathBDModel.UserControlPoint">
+            <EntityTypeMapping TypeName="DataModel.UserControlPoint">
               <MappingFragment StoreEntitySet="UserControlPoint">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="ControlPointId" ColumnName="ControlPointId" />
@@ -1224,7 +1261,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="UserTestResults">
-            <EntityTypeMapping TypeName="DiscretMathBDModel.UserTestResult">
+            <EntityTypeMapping TypeName="DataModel.UserTestResult">
               <MappingFragment StoreEntitySet="UserTestResults">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="TestId" ColumnName="TestId" />
@@ -1234,7 +1271,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="UserTopicContents">
-            <EntityTypeMapping TypeName="DiscretMathBDModel.UserTopicContent">
+            <EntityTypeMapping TypeName="DataModel.UserTopicContent">
               <MappingFragment StoreEntitySet="UserTopicContent">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />

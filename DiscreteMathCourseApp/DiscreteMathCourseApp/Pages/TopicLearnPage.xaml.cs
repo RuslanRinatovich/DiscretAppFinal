@@ -56,7 +56,7 @@ namespace DiscreteMathCourseApp.Pages
             //обновление данных после каждой активации окна
             if (Visibility == Visibility.Visible)
             {
-                MyMoodleBDEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+                DiscretMathBDEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
                 LoadAndInitData(_currentItem);
             }
         }
@@ -64,7 +64,7 @@ namespace DiscreteMathCourseApp.Pages
         void LoadAndInitData(Topic selected)
         {     // если передано null, то мы добавляем новый товар
 
-            topics = MyMoodleBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
+            topics = DiscretMathBDEntities.GetContext().Topics.OrderBy(p => p.IndexNumber).ToList();
             studiedTopicContents = 0;
             passedControlPoints = 0;
             passedTests = 0;
@@ -73,28 +73,28 @@ namespace DiscreteMathCourseApp.Pages
             {
                 _currentItem = selected;
                 _currentIndex = _currentItem.IndexNumber;
-                List<TopicContent> topicContents = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == selected.Id).OrderBy(p => p.IndexNumber).ToList();
+                List<TopicContent> topicContents = DiscretMathBDEntities.GetContext().TopicContents.Where(p => p.TopicId == selected.Id).OrderBy(p => p.IndexNumber).ToList();
                 //количсетво пройденных тем пользователем
                 
                 foreach (TopicContent topicContent in topicContents)
                 {
-                    UserTopicContent userTopicContent = MyMoodleBDEntities.GetContext().UserTopicContents.FirstOrDefault(p => p.TopicContentId == topicContent.Id && p.UserName == Manager.CurrentUser.UserName);
+                    UserTopicContent userTopicContent = DiscretMathBDEntities.GetContext().UserTopicContents.FirstOrDefault(p => p.TopicContentId == topicContent.Id && p.UserName == Manager.CurrentUser.UserName);
                     if (userTopicContent == null)
                         continue;
                     if (userTopicContent.IsStudied)
                         studiedTopicContents++;
                 }
 
-                ListBoxTopicContents.ItemsSource = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == selected.Id).OrderBy(p => p.IndexNumber).ToList();
+                ListBoxTopicContents.ItemsSource = DiscretMathBDEntities.GetContext().TopicContents.Where(p => p.TopicId == selected.Id).OrderBy(p => p.IndexNumber).ToList();
                 
                 
                 
-                var controlPoints = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == selected.Id).
+                var controlPoints = DiscretMathBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == selected.Id).
                     OrderBy(p => p.IndexNumber).ToList();
                 foreach (ControlPoint controlPoint in controlPoints)
                 {
                     string name = Manager.CurrentUser.UserName;
-                    UserControlPoint userControlPoint = MyMoodleBDEntities.GetContext().UserControlPoints.
+                    UserControlPoint userControlPoint = DiscretMathBDEntities.GetContext().UserControlPoints.
                         FirstOrDefault(p => p.ControlPointId == controlPoint.Id && p.UserName == name);
                     if (userControlPoint == null)
                     {
@@ -130,12 +130,12 @@ namespace DiscreteMathCourseApp.Pages
 
                 ListBoxControlPoints.ItemsSource = controlPoints;
 
-                var tests = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == selected.Id).OrderBy(p => p.IndexNumber).ToList();
+                var tests = DiscretMathBDEntities.GetContext().Tests.Where(p => p.TopicId == selected.Id).OrderBy(p => p.IndexNumber).ToList();
                 foreach (Test test in tests)
                 {
                     string name = Manager.CurrentUser.UserName;
-                    UserTestResult userTestResult = MyMoodleBDEntities.GetContext().UserTestResults.FirstOrDefault(p => p.TestId == test.Id && p.UserName == name);
-                    double count = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == test.Id).Count();
+                    UserTestResult userTestResult = DiscretMathBDEntities.GetContext().UserTestResults.FirstOrDefault(p => p.TestId == test.Id && p.UserName == name);
+                    double count = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == test.Id).Count();
 
                     if (userTestResult != null)
                     {
@@ -172,7 +172,7 @@ namespace DiscreteMathCourseApp.Pages
                     }
                 }
                 ListBoxTests.ItemsSource = tests;
-               // ListBoxTests.ItemsSource = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == selected.Id).OrderBy(p => p.IndexNumber).ToList();
+               // ListBoxTests.ItemsSource = DiscretMathBDEntities.GetContext().Tests.Where(p => p.TopicId == selected.Id).OrderBy(p => p.IndexNumber).ToList();
             }
             else
             {
@@ -219,7 +219,7 @@ namespace DiscreteMathCourseApp.Pages
             {
                 string name = Manager.CurrentUser.UserName;
                 ControlPoint controlPoint = (sender as Button).DataContext as ControlPoint;
-                UserControlPoint userControlPoint = MyMoodleBDEntities.GetContext().UserControlPoints.FirstOrDefault(p => p.ControlPointId == controlPoint.Id && p.UserName == name);
+                UserControlPoint userControlPoint = DiscretMathBDEntities.GetContext().UserControlPoints.FirstOrDefault(p => p.ControlPointId == controlPoint.Id && p.UserName == name);
                 
 
                 AddTaskAnswerWindow window = new AddTaskAnswerWindow(userControlPoint, _currentItem, controlPoint);
@@ -227,7 +227,7 @@ namespace DiscreteMathCourseApp.Pages
                 {
 
                     MessageBox.Show("Запись добавлена", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
-                    ListBoxControlPoints.ItemsSource = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+                    ListBoxControlPoints.ItemsSource = DiscretMathBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
 
                 }
             }
@@ -244,11 +244,11 @@ namespace DiscreteMathCourseApp.Pages
             {
                 Test testx = (sender as Button).DataContext as Test;
                 Manager.MainFrame.Navigate(new PassTestPage(testx));
-                var tests = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+                var tests = DiscretMathBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
                 //foreach (Test test in tests)
                 //{
-                //    UserTestResult userTestResult = MyMoodleBDEntities.GetContext().UserTestResults.FirstOrDefault(p => p.TestId == test.Id && p.UserName == Manager.CurrentUser.UserName);
-                //    double count = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == test.Id).Count();
+                //    UserTestResult userTestResult = DiscretMathBDEntities.GetContext().UserTestResults.FirstOrDefault(p => p.TestId == test.Id && p.UserName == Manager.CurrentUser.UserName);
+                //    double count = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == test.Id).Count();
 
                 //    if (userTestResult != null)
                 //    {
@@ -275,7 +275,7 @@ namespace DiscreteMathCourseApp.Pages
 
                 //    }
                 //}
-                //ListBoxTests.ItemsSource = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+                //ListBoxTests.ItemsSource = DiscretMathBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
             }
             catch
             {
@@ -296,11 +296,11 @@ namespace DiscreteMathCourseApp.Pages
             //    userTopicContent.TopicContentId = tc.Id;
             //    userTopicContent.UserName = Manager.CurrentUser.UserName;
 
-            //    MyMoodleBDEntities.GetContext().UserTopicContents.Add(userTopicContent);
+            //    DiscretMathBDEntities.GetContext().UserTopicContents.Add(userTopicContent);
             //}
             //userTopicContent.IsStudied = true;
-            //MyMoodleBDEntities.GetContext().SaveChanges();
-            //ListBoxTopicContents.ItemsSource = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+            //DiscretMathBDEntities.GetContext().SaveChanges();
+            //ListBoxTopicContents.ItemsSource = DiscretMathBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
         }
 
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
@@ -316,11 +316,11 @@ namespace DiscreteMathCourseApp.Pages
             //    userTopicContent.TopicContentId = tc.Id;
             //    userTopicContent.UserName = Manager.CurrentUser.UserName;
 
-            //    MyMoodleBDEntities.GetContext().UserTopicContents.Add(userTopicContent);
+            //    DiscretMathBDEntities.GetContext().UserTopicContents.Add(userTopicContent);
             //}
             //userTopicContent.IsStudied = false;
-            //MyMoodleBDEntities.GetContext().SaveChanges();
-            //ListBoxTopicContents.ItemsSource = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+            //DiscretMathBDEntities.GetContext().SaveChanges();
+            //ListBoxTopicContents.ItemsSource = DiscretMathBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
         }
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)
@@ -336,27 +336,27 @@ namespace DiscreteMathCourseApp.Pages
                 userTopicContent.TopicContentId = tc.Id;
                 userTopicContent.UserName = Manager.CurrentUser.UserName;
 
-                MyMoodleBDEntities.GetContext().UserTopicContents.Add(userTopicContent);
+                DiscretMathBDEntities.GetContext().UserTopicContents.Add(userTopicContent);
             }
             bool status = Convert.ToBoolean((sender as CheckBox).IsChecked);
             userTopicContent.IsStudied = status;
             if (!status && userTopicContent != null)
             {
-                MyMoodleBDEntities.GetContext().UserTopicContents.Remove(userTopicContent);
+                DiscretMathBDEntities.GetContext().UserTopicContents.Remove(userTopicContent);
             }
-            MyMoodleBDEntities.GetContext().SaveChanges();
+            DiscretMathBDEntities.GetContext().SaveChanges();
 
 
             controlPointsCount = ListBoxControlPoints.Items.Count;
             testCount = ListBoxTests.Items.Count;
             topicCount = ListBoxTopicContents.Items.Count;
             studiedTopicContents = 0;
-            List<TopicContent> topicContents = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+            List<TopicContent> topicContents = DiscretMathBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
             //количсетво пройденных тем пользователем
 
             foreach (TopicContent topicContent in topicContents)
             {
-                userTopicContent = MyMoodleBDEntities.GetContext().UserTopicContents.FirstOrDefault(p => p.TopicContentId == topicContent.Id && p.UserName == Manager.CurrentUser.UserName);
+                userTopicContent = DiscretMathBDEntities.GetContext().UserTopicContents.FirstOrDefault(p => p.TopicContentId == topicContent.Id && p.UserName == Manager.CurrentUser.UserName);
                 if (userTopicContent == null)
                     continue;
                 if (userTopicContent.IsStudied)
@@ -389,27 +389,27 @@ namespace DiscreteMathCourseApp.Pages
                 userTopicContent.TopicContentId = tc.Id;
                 userTopicContent.UserName = Manager.CurrentUser.UserName;
 
-                MyMoodleBDEntities.GetContext().UserTopicContents.Add(userTopicContent);
+                DiscretMathBDEntities.GetContext().UserTopicContents.Add(userTopicContent);
             }
             bool status = Convert.ToBoolean((sender as ToggleButton).IsChecked);
             userTopicContent.IsStudied = status;
             if (!status && userTopicContent != null)
             {
-                MyMoodleBDEntities.GetContext().UserTopicContents.Remove(userTopicContent);
+                DiscretMathBDEntities.GetContext().UserTopicContents.Remove(userTopicContent);
             }
-            MyMoodleBDEntities.GetContext().SaveChanges();
+            DiscretMathBDEntities.GetContext().SaveChanges();
 
 
             controlPointsCount = ListBoxControlPoints.Items.Count;
             testCount = ListBoxTests.Items.Count;
             topicCount = ListBoxTopicContents.Items.Count;
             studiedTopicContents = 0;
-            List<TopicContent> topicContents = MyMoodleBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
+            List<TopicContent> topicContents = DiscretMathBDEntities.GetContext().TopicContents.Where(p => p.TopicId == _currentItem.Id).OrderBy(p => p.IndexNumber).ToList();
             //количсетво пройденных тем пользователем
 
             foreach (TopicContent topicContent in topicContents)
             {
-                userTopicContent = MyMoodleBDEntities.GetContext().UserTopicContents.FirstOrDefault(p => p.TopicContentId == topicContent.Id && p.UserName == Manager.CurrentUser.UserName);
+                userTopicContent = DiscretMathBDEntities.GetContext().UserTopicContents.FirstOrDefault(p => p.TopicContentId == topicContent.Id && p.UserName == Manager.CurrentUser.UserName);
                 if (userTopicContent == null)
                     continue;
                 if (userTopicContent.IsStudied)

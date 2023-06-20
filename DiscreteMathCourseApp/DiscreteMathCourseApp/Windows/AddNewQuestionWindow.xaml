@@ -21,6 +21,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="200"/>
             <RowDefinition Height="100"/>
+            <RowDefinition Height="40"/>
             <RowDefinition/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
@@ -28,14 +29,26 @@
 
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="BtnSave" Grid.Row="3" Content="Сохранить"    Style="{StaticResource MaterialDesignFlatButton}"
+        <Button x:Name="BtnSave" Grid.Row="4" Content="Сохранить"    Style="{StaticResource MaterialDesignFlatButton}"
                 HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" 
                 Click="BtnSave_Click" Grid.Column="1" Margin="213,3,222,0"/>
         <Image x:Name="ImagePhoto" Source="{Binding GetImage}" 
                Grid.Row="0" Grid.Column="1" Width="200" 
                VerticalAlignment="Stretch" HorizontalAlignment="Right" Margin="0 0 0 40" />
 
+        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <ComboBox  x:Name="ComboChapter" FontSize="14" Padding="3" Grid.Column="0" 
+                      materialDesign:HintAssist.Hint="Выберите раздел" Margin="5"
+                    SelectionChanged="ComboChapter_SelectionChanged" DisplayMemberPath="Title"/>
 
+            <ComboBox  x:Name="ComboTopic" FontSize="14" Padding="3" Grid.Column="1" Margin="5"
+                      materialDesign:HintAssist.Hint="Выберите тему" SelectedItem="{Binding Topic}"
+                     DisplayMemberPath="Title"/>
+        </Grid>
 
         <StackPanel Orientation="Horizontal"  HorizontalAlignment="Right">
             <Button   Content="{materialDesign:PackIcon Kind=Upload}"   Style="{StaticResource MaterialDesignFlatButton}"
@@ -56,7 +69,7 @@
                   Click="BtnView_Click"/>
 
 
-            
+
         </StackPanel>
 
         <TextBox x:Name="TextBoxTitle" Text="{Binding Title}" materialDesign:HintAssist.Hint="Вопрос"
@@ -71,7 +84,7 @@
 
         <ListBox x:Name="ListBoxAnswers"   
                  ScrollViewer.VerticalScrollBarVisibility="Visible"   
-                 SelectedValuePath="AgentId"    Grid.Row="2" Grid.Column="0"
+                 SelectedValuePath="AgentId"    Grid.Row="3" Grid.Column="0"
                  ItemContainerStyle="{DynamicResource good_item}" Margin="0 0 50 0" SelectionChanged="ListBoxAnswers_SelectionChanged"
                 >
             <ListBox.ItemTemplate>
@@ -113,7 +126,7 @@
 
         </ListBox>
 
-        <StackPanel Grid.Row="2">
+        <StackPanel Grid.Row="3">
             <Button   Content="{materialDesign:PackIcon Add}"  x:Name="BtnAddAnswer" ToolTip="Добавить" Grid.Row="7" Grid.Column="1" Width="40" Padding="0"
                   HorizontalAlignment="Right"  Style="{StaticResource MaterialDesignFlatButton}"
                   VerticalAlignment="Top" Click="BtnAddAnswer_Click"/>

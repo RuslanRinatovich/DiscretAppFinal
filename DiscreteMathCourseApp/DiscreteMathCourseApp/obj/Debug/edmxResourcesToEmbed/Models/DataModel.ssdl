@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Schema Namespace="Хранилище DiscretMathBDModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+<Schema Namespace="Хранилище DataModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
   <EntityType Name="Answer">
     <Key>
       <PropertyRef Name="Id" />
@@ -38,6 +38,7 @@
     <Property Name="Title" Type="nvarchar" MaxLength="1000" Nullable="false" />
     <Property Name="Image" Type="nvarchar" MaxLength="1000" />
     <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+    <Property Name="TopicId" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Role">
     <Key>
@@ -46,6 +47,13 @@
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Title" Type="nvarchar" MaxLength="50" Nullable="false" />
     <Property Name="Grade" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="StudentGroup">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
   </EntityType>
   <EntityType Name="sysdiagrams">
     <Key>
@@ -126,7 +134,7 @@
     <Property Name="Name" Type="nvarchar" MaxLength="100" />
     <Property Name="Patronymic" Type="nvarchar" MaxLength="100" />
     <Property Name="DateOfRegs" Type="date" Nullable="false" />
-    <Property Name="StudentGroup" Type="nvarchar" MaxLength="50" />
+    <Property Name="StudentGroupId" Type="int" />
   </EntityType>
   <EntityType Name="UserControlPoint">
     <Key>
@@ -190,6 +198,18 @@
       </Principal>
       <Dependent Role="UserTopicContent">
         <PropertyRef Name="UserName" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Question_Topic">
+    <End Role="Topic" Type="Self.Topic" Multiplicity="1" />
+    <End Role="Question" Type="Self.Question" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Topic">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Question">
+        <PropertyRef Name="TopicId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -349,6 +369,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_User_StudentGroup">
+    <End Role="StudentGroup" Type="Self.StudentGroup" Multiplicity="0..1" />
+    <End Role="User" Type="Self.User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StudentGroup">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="StudentGroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_UserControlPoint_ControlPoint">
     <End Role="ControlPoint" Type="Self.ControlPoint" Multiplicity="1" />
     <End Role="UserControlPoint" Type="Self.UserControlPoint" Multiplicity="*" />
@@ -385,12 +417,13 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <EntityContainer Name="Хранилище DiscretMathBDModelContainer">
+  <EntityContainer Name="Хранилище DataModelContainer">
     <EntitySet Name="Answer" EntityType="Self.Answer" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Chapter" EntityType="Self.Chapter" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ControlPoint" EntityType="Self.ControlPoint" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Question" EntityType="Self.Question" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="StudentGroup" EntityType="Self.StudentGroup" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Test" EntityType="Self.Test" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="TestProgress" EntityType="Self.TestProgress" Schema="dbo" store:Type="Tables" />
@@ -413,6 +446,10 @@
     <AssociationSet Name="FK_CourseProgress_User" Association="Self.FK_CourseProgress_User">
       <End Role="User" EntitySet="User" />
       <End Role="UserTopicContent" EntitySet="UserTopicContent" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Question_Topic" Association="Self.FK_Question_Topic">
+      <End Role="Topic" EntitySet="Topic" />
+      <End Role="Question" EntitySet="Question" />
     </AssociationSet>
     <AssociationSet Name="FK_Test_Topic" Association="Self.FK_Test_Topic">
       <End Role="Topic" EntitySet="Topic" />
@@ -464,6 +501,10 @@
     </AssociationSet>
     <AssociationSet Name="FK_User_Role" Association="Self.FK_User_Role">
       <End Role="Role" EntitySet="Role" />
+      <End Role="User" EntitySet="User" />
+    </AssociationSet>
+    <AssociationSet Name="FK_User_StudentGroup" Association="Self.FK_User_StudentGroup">
+      <End Role="StudentGroup" EntitySet="StudentGroup" />
       <End Role="User" EntitySet="User" />
     </AssociationSet>
     <AssociationSet Name="FK_UserControlPoint_ControlPoint" Association="Self.FK_UserControlPoint_ControlPoint">

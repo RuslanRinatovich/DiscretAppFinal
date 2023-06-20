@@ -21,7 +21,7 @@ namespace DiscreteMathCourseApp.Models
         {
             get
             {
-                int tests = MyMoodleBDEntities.GetContext().Tests.Count();
+                int tests = DiscretMathBDEntities.GetContext().Tests.Count();
 
                 return $"{GetTestPassCount} из {tests}";
             }
@@ -58,7 +58,7 @@ namespace DiscreteMathCourseApp.Models
         {
             get
             {
-                int controlPoints = MyMoodleBDEntities.GetContext().ControlPoints.Count(); // 4
+                int controlPoints = DiscretMathBDEntities.GetContext().ControlPoints.Count(); // 4
 
                 return $"{GetPassedControlPointCount} из {controlPoints}";
             }
@@ -81,7 +81,7 @@ namespace DiscreteMathCourseApp.Models
         {
             get
             {
-                int topicContents = MyMoodleBDEntities.GetContext().TopicContents.Count(); // 5
+                int topicContents = DiscretMathBDEntities.GetContext().TopicContents.Count(); // 5
 
                 return $"{GetPassedTopicContent} из {topicContents}";
             }
@@ -91,9 +91,9 @@ namespace DiscreteMathCourseApp.Models
         {
             get
             {
-                int controlPoints = MyMoodleBDEntities.GetContext().ControlPoints.Count(); // 4
-                int topicContents = MyMoodleBDEntities.GetContext().TopicContents.Count(); // 5
-                int tests = MyMoodleBDEntities.GetContext().Tests.Count(); // 3
+                int controlPoints = DiscretMathBDEntities.GetContext().ControlPoints.Count(); // 4
+                int topicContents = DiscretMathBDEntities.GetContext().TopicContents.Count(); // 5
+                int tests = DiscretMathBDEntities.GetContext().Tests.Count(); // 3
 
                 double total = controlPoints + topicContents + tests;
                 // 2 + 3 + 3

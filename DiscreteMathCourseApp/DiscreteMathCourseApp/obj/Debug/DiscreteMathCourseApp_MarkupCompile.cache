@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\obj\Debug\
 DiscreteMathCourseApp
 none
 false
 DEBUG;TRACE
-c:\Users\Main\Documents\ЗМК\ДИПЛОМ2023\Leisan\DiscreteMathCourseApp\DiscreteMathCourseApp\App.xaml
+d:\ДИПЛОМ 2023\Лейсан\DiscreteMathCourseApp\DiscreteMathCourseApp\App.xaml
 341118036740
 2-1890902742
 69915703797
-331379431089
+33296801055
 Dictionary1.xaml;Pages\AddChapterPage.xaml;Pages\AddQuestionPage.xaml;Pages\AddTestPage.xaml;Pages\AddTopicPage.xaml;Pages\AddUserPage.xaml;Pages\ChapterPage.xaml;Pages\CheckTasksPage.xaml;Pages\CheckTestPage.xaml;Pages\GroupsPage.xaml;Pages\PassTestPage.xaml;Pages\QuestionsPage.xaml;Pages\StudentProgressPage.xaml;Pages\StudentsPage.xaml;Pages\TestsPage.xaml;Pages\TopicLearnPage.xaml;Pages\TopicPage.xaml;Pages\TopicTypePage.xaml;Pages\UsersLearningCoursePage.xaml;Pages\UsersTestPassPage.xaml;Windows\AddAnswerWindow.xaml;Windows\AddControlPointWindow.xaml;Windows\AddMarkTaskWindow.xaml;Windows\AddNewQuestionWindow.xaml;Windows\AddQuestionWindow.xaml;Windows\AddTaskAnswerWindow.xaml;Windows\AddTestWindow.xaml;Windows\DocumentViewerWindow.xaml;Windows\LoginWindow.xaml;Windows\MainWindow.xaml;Windows\RegsWindow.xaml;Windows\ShowImageWindow.xaml;Windows\StudentGroupWindow.xaml;Windows\TopicTypeWindow.xaml;
 
 False

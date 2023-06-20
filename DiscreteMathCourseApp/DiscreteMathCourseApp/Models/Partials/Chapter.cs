@@ -20,7 +20,7 @@ namespace DiscreteMathCourseApp.Models
         {
             get
             {
-                List<TopicType> topicTypes = MyMoodleBDEntities.GetContext().TopicTypes.OrderBy(p => p.Title).ToList();
+                List<TopicType> topicTypes = DiscretMathBDEntities.GetContext().TopicTypes.OrderBy(p => p.Title).ToList();
                 Dictionary<string, int> data = new Dictionary<string, int>();
                 foreach (TopicType x in topicTypes)
                 {

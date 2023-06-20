@@ -13,10 +13,10 @@ namespace DiscreteMathCourseApp.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class MyMoodleBDEntities : DbContext
+    public partial class DiscretMathBDEntities : DbContext
     {
-        public MyMoodleBDEntities()
-            : base("name=MyMoodleBDEntities")
+        public DiscretMathBDEntities()
+            : base("name=DiscretMathBDEntities")
         {
         }
     

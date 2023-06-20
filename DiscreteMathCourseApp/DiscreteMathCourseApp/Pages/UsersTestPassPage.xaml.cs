@@ -41,9 +41,9 @@ namespace DiscreteMathCourseApp.Pages
 
         void LoadData()
         {
-            testQuestions = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == testId).OrderBy(p => p.IndexNumber).ToList();
+            testQuestions = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == testId).OrderBy(p => p.IndexNumber).ToList();
             string name = currentUser.UserName;
-            UserTestResult userTestResult = MyMoodleBDEntities.GetContext().UserTestResults.FirstOrDefault(p => p.TestId == testId && p.UserName == name);
+            UserTestResult userTestResult = DiscretMathBDEntities.GetContext().UserTestResults.FirstOrDefault(p => p.TestId == testId && p.UserName == name);
             // ListBoxAnswers.IsEnabled = false;
             ListBoxAnswers.SelectionMode = SelectionMode.Single;
             for (int i = 0; i < testQuestions.Count; i++)
@@ -61,7 +61,7 @@ namespace DiscreteMathCourseApp.Pages
             string name = currentUser.UserName;
             // выбрать варианты ответов из таблицы Answers
             List<Answer> answers = x.Question.Answers.ToList();
-            TestProgress testProgress = MyMoodleBDEntities.GetContext().TestProgresses.FirstOrDefault(p => p.TestId == testId && p.QuestionId == x.QuestionId && p.UserName == name);
+            TestProgress testProgress = DiscretMathBDEntities.GetContext().TestProgresses.FirstOrDefault(p => p.TestId == testId && p.QuestionId == x.QuestionId && p.UserName == name);
             List<Answer> userAnswers = new List<Answer>();
 
             foreach (Answer answer in answers)

@@ -30,8 +30,13 @@
             <TextBox Width="275" x:Name="TBoxSearch"   materialDesign:HintAssist.Hint="Введите текст вопроса"
                          TextChanged="TBoxSearchTextChanged"/>
 
-
-
+            <ComboBox Width="275" x:Name="ComboChapter" FontSize="14" Padding="3"
+                      materialDesign:HintAssist.Hint="Выберите раздел"
+                    SelectionChanged="ComboChapter_SelectionChanged" DisplayMemberPath="Title"/>
+            
+            <ComboBox Width="275" x:Name="ComboTopic" FontSize="14" Padding="3"
+                      materialDesign:HintAssist.Hint="Выберите тему"
+                    SelectionChanged="ComboTopic_SelectionChanged" DisplayMemberPath="Title"/>
 
             <ComboBox Width="275" materialDesign:HintAssist.Hint="Сортировать"
                           x:Name="ComboSort"
@@ -74,8 +79,10 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding Id}" Header="№" Width="60" ElementStyle="{StaticResource WrapText}" />
-                <DataGridTextColumn Binding="{Binding Title}" Header="Название" Width="4*" ElementStyle="{StaticResource WrapText}"/>
-                <DataGridTextColumn Binding="{Binding Description}" Header="Описание" Width="*" />
+                <DataGridTextColumn Binding="{Binding Title}" Header="Вопрос" Width="4*" ElementStyle="{StaticResource WrapText}"/>
+               
+                <!--<DataGridTextColumn Binding="{Binding Topic.Title}" Header="Тема" Width="*" ElementStyle="{StaticResource WrapText}" />-->
+                
                 
                 <DataGridTemplateColumn Width="auto">
                     <DataGridTemplateColumn.CellTemplate>
@@ -94,6 +101,82 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
+            <DataGrid.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Path=Topic.Chapter}"    FontWeight="Bold" Padding="3"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                    <GroupStyle.ContainerStyle>
+                        <Style TargetType="{x:Type GroupItem}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type GroupItem}">
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="auto" />
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Rectangle Margin="5" Grid.Row="0" Height="2" Fill="#FF9A67EA"/>
+                                            <Expander Grid.Row="1" IsExpanded="True">
+                                                <Expander.Header >
+                                                    <StackPanel >
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="{Binding Path=Name.Title}" Style="{StaticResource MaterialDesignHeadline6TextBlock}"  />
+                                                            <TextBlock Text="{Binding Path=ItemCount, StringFormat= {}{0} вопросов}" Margin="10 0 0 0"  Style="{DynamicResource MaterialDesignSubtitle2TextBlock}"/>
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </Expander.Header>
+                                                <ItemsPresenter />
+                                            </Expander>
+                                            <Rectangle Margin="5" Grid.Row="2" Height="2" Fill="#FF9A67EA"/>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </GroupStyle.ContainerStyle>
+                </GroupStyle>
+                <GroupStyle>
+                    <!--<GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                               <StackPanel   Height="23" Orientation="Horizontal" Margin="3,0,0,0" Background="#FFF3F3F3">
+                                        <TextBlock FontWeight="Bold"  Text="{Binding Path=Name.Title, StringFormat={}Тема: {0}}"  Style="{StaticResource MaterialDesignSubtitle2TextBlock}" />
+                                    </StackPanel>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>-->
+
+                    <GroupStyle.ContainerStyle>
+                        <Style TargetType="{x:Type GroupItem}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type GroupItem}">
+                                        <Grid HorizontalAlignment="Stretch">
+                                            
+                                            <Expander Grid.Row="1" IsExpanded="True">
+                                                <Expander.Header >
+                                                    <StackPanel >
+                                                        <StackPanel Orientation="Horizontal"  Margin="5 0 5 0">
+                                                            <TextBlock Text="{Binding Path=Name.Title, StringFormat={}Тема: {0}}" Style="{StaticResource MaterialDesignSubtitle2TextBlock}"  />
+                                                            <TextBlock Text="{Binding Path=ItemCount, StringFormat= {}{0} вопросов}" Margin="10 0 0 0"  Style="{DynamicResource MaterialDesignSubtitle2TextBlock}"/>
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </Expander.Header>
+                                                <ItemsPresenter Margin=" 10 0 0 0"/>
+                                            </Expander>
+                                            
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </GroupStyle.ContainerStyle>
+                </GroupStyle>
+            </DataGrid.GroupStyle>
         </DataGrid>
         <Button x:Name="BtnAdd" Grid.Row="2" Width="100" Style="{StaticResource MaterialDesignFlatButton}" HorizontalAlignment="Right" Margin="3 0 10 0"
                 Content="Добавить" Click="BtnAddClick"/>

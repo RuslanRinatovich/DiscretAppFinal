@@ -24,7 +24,7 @@ namespace DiscreteMathCourseApp.Windows
         {
             try
             {  //загрузка всех пользователей из БД в список
-                List<User> users = MyMoodleBDEntities.GetContext().Users.ToList();
+                List<User> users = DiscretMathBDEntities.GetContext().Users.ToList();
                 //попытка найти пользователя с указанным паролем и логином
                 //если такого пользователя не будет обнаружено то переменная u будет равна null
                 User u = users.FirstOrDefault(p => p.Password == TbPass.Password && p.UserName == TbLogin.Text);

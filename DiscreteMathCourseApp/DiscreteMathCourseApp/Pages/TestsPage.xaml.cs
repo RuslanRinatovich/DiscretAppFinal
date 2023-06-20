@@ -42,8 +42,8 @@ namespace DiscreteMathCourseApp.Pages
 
                 DataGridData.ItemsSource = null;
                 //загрузка обновленных данных
-                MyMoodleBDEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
-                data = MyMoodleBDEntities.GetContext().Tests.OrderBy(p => p.Title).ToList();
+                DiscretMathBDEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+                data = DiscretMathBDEntities.GetContext().Tests.OrderBy(p => p.Title).ToList();
                 DataGridData.ItemsSource = data;
 
                 TextBlockCount.Text = $" Результат запроса: {_itemcount} записей из {_itemcount}";
@@ -86,9 +86,9 @@ namespace DiscreteMathCourseApp.Pages
                         if (selected.UserTestResults.Count > 0 || selected.TestQuestions.Count > 0)
                             throw new Exception("Ошибка удаления, есть связанные записи");
 
-                        MyMoodleBDEntities.GetContext().Tests.Remove(selected);
+                        DiscretMathBDEntities.GetContext().Tests.Remove(selected);
                         //сохраняем изменения
-                        MyMoodleBDEntities.GetContext().SaveChanges();
+                        DiscretMathBDEntities.GetContext().SaveChanges();
                         MessageBox.Show("Записи удалены");
                         LoadData();
                     }
@@ -115,9 +115,9 @@ namespace DiscreteMathCourseApp.Pages
             private void UpdateData()
             {
                 // получаем текущие данные из бд
-                //var currentGoods = MyMoodleBDEntities.GetContext().Abonements.OrderBy(p => p.CategoryTrainer.Trainer.LastName).ToList();
+                //var currentGoods = DiscretMathBDEntities.GetContext().Abonements.OrderBy(p => p.CategoryTrainer.Trainer.LastName).ToList();
 
-                var currentData = MyMoodleBDEntities.GetContext().Tests.OrderBy(p => p.Title).ToList();
+                var currentData = DiscretMathBDEntities.GetContext().Tests.OrderBy(p => p.Title).ToList();
                 // выбор только тех товаров, которые принадлежат данному производителю
 
                 // выбор тех товаров, в названии которых есть поисковая строка

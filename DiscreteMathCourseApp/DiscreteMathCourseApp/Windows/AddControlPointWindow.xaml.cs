@@ -179,15 +179,15 @@ namespace DiscreteMathCourseApp.Windows
 
 
                     int maxind = 0;
-                    List<ControlPoint> controlPoints = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == currentTopic.Id).ToList();
+                    List<ControlPoint> controlPoints = DiscretMathBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == currentTopic.Id).ToList();
                     if (controlPoints.Count > 0)
-                        maxind = MyMoodleBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == currentTopic.Id).Max(p => p.IndexNumber);
+                        maxind = DiscretMathBDEntities.GetContext().ControlPoints.Where(p => p.TopicId == currentTopic.Id).Max(p => p.IndexNumber);
 
                     controlPoint.IndexNumber = Convert.ToInt32(maxind) + 1;
                     controlPoint.TopicId = currentTopic.Id;
                     controlPoint.TaskTitle = TextBoxTaskTitle.Text;
                     controlPoint.AnswerTitle = TextBoxAnswerTitle.Text;
-                    MyMoodleBDEntities.GetContext().ControlPoints.Add(controlPoint);
+                    DiscretMathBDEntities.GetContext().ControlPoints.Add(controlPoint);
                 }
                 else
                 {
@@ -231,7 +231,7 @@ namespace DiscreteMathCourseApp.Windows
 
                 }
 
-                MyMoodleBDEntities.GetContext().SaveChanges();
+                DiscretMathBDEntities.GetContext().SaveChanges();
                // MessageBox.Show("Данные сохранены", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
                 this.DialogResult = true;
             }

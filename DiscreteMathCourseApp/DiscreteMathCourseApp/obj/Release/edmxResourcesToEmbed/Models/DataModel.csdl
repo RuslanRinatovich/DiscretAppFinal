@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Schema Namespace="DiscretMathBDModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+<Schema Namespace="DataModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
   <EntityType Name="Answer">
     <Key>
       <PropertyRef Name="Id" />
@@ -43,7 +43,9 @@
     <Property Name="Title" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="Image" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
     <Property Name="Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Name="TopicId" Type="Int32" Nullable="false" />
     <NavigationProperty Name="Answers" Relationship="Self.FK_Answer_Question" FromRole="Question" ToRole="Answer" />
+    <NavigationProperty Name="Topic" Relationship="Self.FK_Question_Topic" FromRole="Question" ToRole="Topic" />
     <NavigationProperty Name="TestProgresses" Relationship="Self.FK_TestProgress_Question" FromRole="Question" ToRole="TestProgress" />
     <NavigationProperty Name="TestQuestions" Relationship="Self.FK_TestQuestion_Question" FromRole="Question" ToRole="TestQuestion" />
   </EntityType>
@@ -126,6 +128,7 @@
     <Property Name="TopicTypeId" Type="Int32" />
     <NavigationProperty Name="Chapter" Relationship="Self.FK_Topic_Chapter" FromRole="Topic" ToRole="Chapter" />
     <NavigationProperty Name="ControlPoints" Relationship="Self.FK_ControlPoint_Topic" FromRole="Topic" ToRole="ControlPoint" />
+    <NavigationProperty Name="Questions" Relationship="Self.FK_Question_Topic" FromRole="Topic" ToRole="Question" />
     <NavigationProperty Name="Tests" Relationship="Self.FK_Test_Topic" FromRole="Topic" ToRole="Test" />
     <NavigationProperty Name="TopicType" Relationship="Self.FK_Topic_TopicType" FromRole="Topic" ToRole="TopicType" />
     <NavigationProperty Name="TopicContents" Relationship="Self.FK_TopicContent_Topic" FromRole="Topic" ToRole="TopicContent" />
@@ -261,6 +264,18 @@
       </Principal>
       <Dependent Role="UserControlPoint">
         <PropertyRef Name="ControlPointId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Question_Topic">
+    <End Role="Topic" Type="Self.Topic" Multiplicity="1" />
+    <End Role="Question" Type="Self.Question" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Topic">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Question">
+        <PropertyRef Name="TopicId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -444,7 +459,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <EntityContainer Name="MyMoodleBDEntities" annotation:LazyLoadingEnabled="true">
+  <EntityContainer Name="DiscretMathBDEntities" annotation:LazyLoadingEnabled="true">
     <EntitySet Name="Answers" EntityType="Self.Answer" />
     <EntitySet Name="Chapters" EntityType="Self.Chapter" />
     <EntitySet Name="ControlPoints" EntityType="Self.ControlPoint" />
@@ -481,6 +496,10 @@
     <AssociationSet Name="FK_UserControlPoint_ControlPoint" Association="Self.FK_UserControlPoint_ControlPoint">
       <End Role="ControlPoint" EntitySet="ControlPoints" />
       <End Role="UserControlPoint" EntitySet="UserControlPoints" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Question_Topic" Association="Self.FK_Question_Topic">
+      <End Role="Topic" EntitySet="Topics" />
+      <End Role="Question" EntitySet="Questions" />
     </AssociationSet>
     <AssociationSet Name="FK_TestProgress_Question" Association="Self.FK_TestProgress_Question">
       <End Role="Question" EntitySet="Questions" />

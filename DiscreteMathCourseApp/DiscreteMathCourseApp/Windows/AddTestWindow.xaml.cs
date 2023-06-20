@@ -45,7 +45,7 @@ namespace DiscreteMathCourseApp.Windows
             }
             // контекст данных текущий товар
             DataContext = _currentTest;
-            List<TestQuestion> testQuestions = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).OrderBy(p => p.IndexNumber).ToList();
+            List<TestQuestion> testQuestions = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).OrderBy(p => p.IndexNumber).ToList();
             //questions.Clear();
 
             //foreach (TestQuestion test1 in testQuestions)
@@ -89,20 +89,20 @@ namespace DiscreteMathCourseApp.Windows
                 if (_currentTest.Id == 0)
                 {
                     int maxind = 0;
-                    List<Test> tests = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentTopic.Id).ToList();
+                    List<Test> tests = DiscretMathBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentTopic.Id).ToList();
                     if (tests.Count > 0)
-                        maxind = MyMoodleBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentTopic.Id).Max(p => p.IndexNumber);
+                        maxind = DiscretMathBDEntities.GetContext().Tests.Where(p => p.TopicId == _currentTopic.Id).Max(p => p.IndexNumber);
                     // добавление нового товара, 
                     _currentTest.IndexNumber = maxind + 1;
                     // добавляем товар в БД
-                    MyMoodleBDEntities.GetContext().Tests.Add(_currentTest);
+                    DiscretMathBDEntities.GetContext().Tests.Add(_currentTest);
                 }
 
-                MyMoodleBDEntities.GetContext().SaveChanges();  // Сохраняем изменения в БД
+                DiscretMathBDEntities.GetContext().SaveChanges();  // Сохраняем изменения в БД
                 MessageBox.Show("Данные сохранены");
 
 
-                List<TestQuestion> testQuestions = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).OrderBy(p => p.IndexNumber).ToList();
+                List<TestQuestion> testQuestions = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).OrderBy(p => p.IndexNumber).ToList();
                 //questions.Clear();
 
                 //foreach (TestQuestion test1 in testQuestions)
@@ -139,18 +139,18 @@ namespace DiscreteMathCourseApp.Windows
                     testQuestion.TestId = _currentTest.Id;
 
                     int maxind = 0;
-                    List<TestQuestion> testQuestions1 = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).ToList();
+                    List<TestQuestion> testQuestions1 = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).ToList();
                     if (testQuestions1.Count > 0)
-                        maxind = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).Max(p => p.IndexNumber);
+                        maxind = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).Max(p => p.IndexNumber);
                     // добавление нового товара, 
                     testQuestion.IndexNumber = maxind + 1;
 
 
-                    MyMoodleBDEntities.GetContext().TestQuestions.Add(testQuestion);
-                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    DiscretMathBDEntities.GetContext().TestQuestions.Add(testQuestion);
+                    DiscretMathBDEntities.GetContext().SaveChanges();
 
                     MessageBox.Show("Запись добавлена", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
-                    List<TestQuestion> testQuestions = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).OrderBy(p => p.IndexNumber).ToList();
+                    List<TestQuestion> testQuestions = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).OrderBy(p => p.IndexNumber).ToList();
                     //questions = new List<Question>();
 
                     //foreach (TestQuestion test1 in testQuestions)
@@ -181,23 +181,23 @@ namespace DiscreteMathCourseApp.Windows
                 try
                 {
                     //// берем из списка удаляемых товаров один элемент
-                    //TestQuestion testQuestion = MyMoodleBDEntities.GetContext().TestQuestions.FirstOrDefault(p => p.TestId == _currentTest.Id && p.QuestionId == selected.Id);
+                    //TestQuestion testQuestion = DiscretMathBDEntities.GetContext().TestQuestions.FirstOrDefault(p => p.TestId == _currentTest.Id && p.QuestionId == selected.Id);
                     //// проверка, есть ли у товара в таблице о продажах связанные записи
                     //// если да, то выбрасывается исключение и удаление прерывается
                     //if (testQuestion is null)
                     //    return;
-                    var testProgress = MyMoodleBDEntities.GetContext().TestProgresses.Where(p => p.QuestionId == selected.QuestionId && p.TestId == selected.TestId).ToList();
+                    var testProgress = DiscretMathBDEntities.GetContext().TestProgresses.Where(p => p.QuestionId == selected.QuestionId && p.TestId == selected.TestId).ToList();
                     
                     if (testProgress.Count > 0 )
                         throw new Exception("Ошибка удаления, есть связанные записи");
 
 
 
-                    MyMoodleBDEntities.GetContext().TestQuestions.Remove(selected);
+                    DiscretMathBDEntities.GetContext().TestQuestions.Remove(selected);
                     //сохраняем изменения
-                    MyMoodleBDEntities.GetContext().SaveChanges();
+                    DiscretMathBDEntities.GetContext().SaveChanges();
                     MessageBox.Show("Записи удалены");
-                    List<TestQuestion> testQuestions = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).OrderBy(p => p.IndexNumber).ToList();
+                    List<TestQuestion> testQuestions = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).OrderBy(p => p.IndexNumber).ToList();
                     //questions.Clear();
 
                     //foreach (TestQuestion test1 in testQuestions)
@@ -222,15 +222,15 @@ namespace DiscreteMathCourseApp.Windows
                 return;
             int k = item.IndexNumber - 1;
 
-            TestQuestion itemPrev = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).FirstOrDefault(p => p.IndexNumber == k);
+            TestQuestion itemPrev = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).FirstOrDefault(p => p.IndexNumber == k);
             if (itemPrev is null)
                 return;
 
             itemPrev.IndexNumber = item.IndexNumber;
             item.IndexNumber = k;
-            MyMoodleBDEntities.GetContext().SaveChanges();
+            DiscretMathBDEntities.GetContext().SaveChanges();
             ListBoxQuestions.ItemsSource = null;
-            List<TestQuestion> testQuestions = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).OrderBy(p => p.IndexNumber).ToList();
+            List<TestQuestion> testQuestions = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).OrderBy(p => p.IndexNumber).ToList();
             ListBoxQuestions.ItemsSource = testQuestions;
         }
 
@@ -240,15 +240,15 @@ namespace DiscreteMathCourseApp.Windows
             if (item.IndexNumber == ListBoxQuestions.Items.Count)
                 return;
             int k = item.IndexNumber + 1;
-            TestQuestion itemPrev = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).FirstOrDefault(p => p.IndexNumber == k);
+            TestQuestion itemPrev = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).FirstOrDefault(p => p.IndexNumber == k);
             if (itemPrev is null)
                 return;
 
             itemPrev.IndexNumber = item.IndexNumber;
             item.IndexNumber = k;
-            MyMoodleBDEntities.GetContext().SaveChanges();
+            DiscretMathBDEntities.GetContext().SaveChanges();
             ListBoxQuestions.ItemsSource = null;
-            List<TestQuestion> testQuestions = MyMoodleBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).OrderBy(p => p.IndexNumber).ToList();
+            List<TestQuestion> testQuestions = DiscretMathBDEntities.GetContext().TestQuestions.Where(p => p.TestId == _currentTest.Id).OrderBy(p => p.IndexNumber).ToList();
             ListBoxQuestions.ItemsSource = testQuestions;
         }
     }
