@@ -107,7 +107,7 @@
             
 
         </StackPanel>
-        <TextBlock x:Name="TextBlockQuestionNumber"  Grid.Row="4" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Width="200"/>
+        <TextBlock x:Name="TextBlockQuestionNumber"  Grid.Row="4" HorizontalAlignment="Left" FontSize="16"  Width="200"/>
     </Grid>
 </Page>
 

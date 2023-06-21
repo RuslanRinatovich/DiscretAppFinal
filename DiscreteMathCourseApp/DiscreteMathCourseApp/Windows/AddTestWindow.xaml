@@ -32,7 +32,7 @@
         <Button x:Name="BtnSave" Grid.Row="4" Content="Сохранить"  
                 HorizontalAlignment="Center" VerticalAlignment="Top" Width="120" 
                 Click="BtnSave_Click" Grid.Column="1"  Style="{StaticResource MaterialDesignFlatButton}" Margin="213,3,222,0"/>
-        <TextBox x:Name="TextBoxTitle" Text="{Binding Title}" materialDesign:HintAssist.Hint="Заголовок теста"
+        <TextBox x:Name="TextBoxTitle" Text="{Binding Title}" materialDesign:HintAssist.Hint="Заголовок теста" FontSize="16"
                  Style="{DynamicResource MaterialDesignTextBox}"
                 
                  Grid.Row="0" Grid.Column="1" Padding="0,2" Height="Auto"/>
@@ -61,10 +61,10 @@
 
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock  FontSize="16" FontWeight="Bold" Grid.Column="0" 
+                        <TextBlock  FontSize="14" Grid.Column="0" 
                                        Text="{Binding Path=IndexNumber, StringFormat={}№: {0}}" TextWrapping="Wrap"
                                        Width="Auto" HorizontalAlignment="Left" VerticalAlignment="Center" />
-                        <TextBlock  FontSize="16" FontWeight="Bold" Grid.Column="1" 
+                        <TextBlock  FontSize="14"  Grid.Column="1" 
                                        Text="{Binding Path=Question.Title}" TextWrapping="Wrap"
                                        Width="Auto" HorizontalAlignment="Left" VerticalAlignment="Center" />
 

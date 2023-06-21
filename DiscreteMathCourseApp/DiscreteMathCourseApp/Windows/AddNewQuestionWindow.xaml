@@ -74,8 +74,8 @@
 
         <TextBox x:Name="TextBoxTitle" Text="{Binding Title}" materialDesign:HintAssist.Hint="Вопрос"
                  Style="{DynamicResource MaterialDesignTextBox}"  
-                TextWrapping="Wrap"
-                 Grid.Row="0"  Padding="0,2" Height="Auto" Margin="0 0 210 0"/>
+                TextWrapping="Wrap" FontSize="16"
+                 Grid.Row="0"  Padding="5" Height="Auto" Margin="0 0 210 0"/>
         <TextBox x:Name="TextBoxProductDescription" Text="{Binding Description}"  VerticalAlignment="Stretch"  Margin="10 0" 
                  HorizontalAlignment="Stretch" TextWrapping="Wrap"   materialDesign:HintAssist.Hint="Описание"
                  VerticalContentAlignment="Top"  Style="{DynamicResource MaterialDesignTextBox}"

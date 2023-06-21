@@ -106,7 +106,7 @@
                   VerticalAlignment="Top" Click="BtnFinishTest_Click"/>
 
         </StackPanel>
-        <TextBlock x:Name="TextBlockQuestionNumber" Grid.Row="4" HorizontalAlignment="Left" Width="200" FontSize="16" FontWeight="Bold"/>
+        <TextBlock x:Name="TextBlockQuestionNumber" Grid.Row="4" HorizontalAlignment="Left" Width="200" FontSize="16" />
     </Grid>
 </Page>
 
