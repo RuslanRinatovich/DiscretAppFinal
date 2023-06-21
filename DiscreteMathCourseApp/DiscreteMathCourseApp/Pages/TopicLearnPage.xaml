@@ -19,29 +19,33 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
-            <RowDefinition Height="200"/>
+            <RowDefinition Height="160"/>
+            <RowDefinition Height="40"/>
             <RowDefinition/>
 
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
         <ProgressBar x:Name="TopicProgress" 
   Height="20" Background="White"  Foreground="Green" Margin="5 0 5 0"/>
-        
-        
+
+
         <TextBlock x:Name="TextBlockPercent" Visibility="Hidden"/>
-        <TextBlock Grid.Row="1" Grid.Column="0" x:Name="TextBlockTopic" Text="{Binding GetAllInformation}" Margin="20 0" Style="{StaticResource MaterialDesignHeadline6TextBlock }"/>
-        <ScrollViewer Grid.Row="2" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <TextBlock Grid.Row="1" Grid.Column="0" x:Name="TextBlockTopic" Text="{Binding GetAllInformation}"
+                   Margin="10 0" Style="{StaticResource MaterialDesignSubtitle1TextBlock }" TextWrapping="Wrap"/>
+        <ScrollViewer Grid.Row="3" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="20"/>
                     <RowDefinition/>
                     <RowDefinition Height="20"/>
+                    <RowDefinition Height="34"/>
                     <RowDefinition/>
                     <RowDefinition Height="20"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Rectangle  Fill="#FF9A67EA" Grid.Row="0" />
                 <TextBlock Grid.Row="0" Text="Материал занятия" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}" Foreground="White" HorizontalAlignment="Center"/>
+
 
                 <ListBox x:Name="ListBoxTopicContents"   
                  ScrollViewer.VerticalScrollBarVisibility="Visible"    HorizontalContentAlignment="Stretch"
@@ -61,7 +65,7 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="40"/>
                                     <ColumnDefinition Width="60"/>
-                               
+
                                 </Grid.ColumnDefinitions>
                                 <Image Grid.Column="0" Width="60" Height="40" 
                                Stretch="Uniform" Source="{Binding Path=GetIcon}" 
@@ -100,13 +104,13 @@
 
 
 
-
                 <!--<Rectangle  Fill="#FF9A67EA" Grid.Row="2" />-->
                 <Rectangle  Fill="#FF9A67EA" Grid.Row="2" />
-                <TextBlock Grid.Row="2" Text="Задания" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}" Foreground="White" HorizontalAlignment="Center"/>
+                <TextBlock Grid.Row="2" Text="Задания" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}" Foreground="White"  HorizontalAlignment="Center"/>
+                <Button Grid.Row="3" Content="Гаврилов Г.П., Сапоженко А.А. - Задачи и упражнения по дискретной математике " BorderThickness="1" BorderBrush="Black" Background="#FF9A67EA" Click="Button_Click"/>
                 <ListBox x:Name="ListBoxControlPoints"   
                  ScrollViewer.VerticalScrollBarVisibility="Visible"    HorizontalContentAlignment="Stretch"
-                    Grid.Row="3"  
+                    Grid.Row="4"  
                  
                 >
                     <ListBox.ItemContainerStyle>
@@ -158,12 +162,12 @@
 
 
 
-                <Rectangle  Fill="#FF9A67EA" Grid.Row="4"/>
-                <TextBlock Grid.Row="4"  Text="Тесты" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}"
+                <Rectangle  Fill="#FF9A67EA" Grid.Row="5"/>
+                <TextBlock Grid.Row="5"  Text="Тесты" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}"
                    Foreground="White" HorizontalAlignment="Center"/>
                 <ListBox x:Name="ListBoxTests"   
                  ScrollViewer.VerticalScrollBarVisibility="Visible"    HorizontalContentAlignment="Stretch"
-                    Grid.Row="5"
+                    Grid.Row="6"
                  
                 >
                     <ListBox.ItemContainerStyle>

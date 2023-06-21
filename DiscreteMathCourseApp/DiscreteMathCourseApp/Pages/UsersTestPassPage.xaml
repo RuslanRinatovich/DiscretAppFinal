@@ -70,13 +70,13 @@
                             <ColumnDefinition Width="50"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock  FontSize="16" FontWeight="Bold" Grid.Column="1" 
-                                       Text="{Binding Path=Title}" 
+                        <TextBlock  FontSize="16" Grid.Column="1" 
+                                       Text="{Binding Path=Title}" VerticalAlignment="Center"
                                        Width="Auto" HorizontalAlignment="Left" />
                         <CheckBox Grid.Column ="0"  materialDesign:CheckBoxAssist.CheckBoxSize="30"
-                                  IsEnabled="False"
+                                  IsHitTestVisible="False"  Focusable="False"
                                   IsChecked="{Binding IsRight}"
-                                  Style="{DynamicResource MaterialDesignAccentCheckBox}" Margin="10 0 10 0"/>
+                                  Style="{DynamicResource MaterialDesignDarkCheckBox}" Margin="10 0 10 0"/>
 
                         <!--<ToggleButton    Grid.Column ="0"  Content="{materialDesign:PackIcon Kind=Check, Size=21}" 
                                          
@@ -91,23 +91,23 @@
         </ListBox>
 
         <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button   Content="{materialDesign:PackIcon SkipPrevious}"  x:Name="BtnFirst" ToolTip="Первый вопрос"  Width="40" Padding="0"
+            <Button   Content="{materialDesign:PackIcon SkipPrevious, Size=30}"  x:Name="BtnFirst" ToolTip="Первый вопрос"  Width="60" Padding="0"
                   HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFlatButton}"
                   VerticalAlignment="Top" Click="BtnFirst_Click"/>
-            <Button   Content="{materialDesign:PackIcon ArrowLeftBold}" Style="{StaticResource MaterialDesignFlatButton}" x:Name="BtnArrowLeftBold" ToolTip="Предыдущий вопрос"  Width="40" Padding="0"
+            <Button   Content="{materialDesign:PackIcon ArrowLeftBold, Size=30}" Style="{StaticResource MaterialDesignFlatButton}" x:Name="BtnArrowLeftBold" ToolTip="Предыдущий вопрос"  Width="60" Padding="0"
                   HorizontalAlignment="Right" 
                   VerticalAlignment="Top" Click="BtnArrowLeftBold_Click"/>
-            <Button   Content="{materialDesign:PackIcon ArrowRightBold}" Style="{StaticResource MaterialDesignFlatButton}" x:Name="BtnArrowRightBold" ToolTip="Следующий вопрос"  Width="40" Padding="0"
+            <Button   Content="{materialDesign:PackIcon ArrowRightBold, Size=30}" Style="{StaticResource MaterialDesignFlatButton}" x:Name="BtnArrowRightBold" ToolTip="Следующий вопрос"  Width="60" Padding="0"
                   HorizontalAlignment="Right" 
                   VerticalAlignment="Top" Click="BtnArrowRightBold_Click"/>
-            <Button   Content="{materialDesign:PackIcon SkipNext}" Style="{StaticResource MaterialDesignFlatButton}" x:Name="BtnLast" ToolTip="Последний вопрос"  Width="40" Padding="0"
+            <Button   Content="{materialDesign:PackIcon SkipNext, Size=30}" Style="{StaticResource MaterialDesignFlatButton}" x:Name="BtnLast" ToolTip="Последний вопрос"  Width="60" Padding="0"
                   HorizontalAlignment="Right" 
                   VerticalAlignment="Top" Click="BtnLast_Click"/>
 
             
 
         </StackPanel>
-        <TextBlock x:Name="TextBlockQuestionNumber" Grid.Row="4" HorizontalAlignment="Left" Width="200"/>
+        <TextBlock x:Name="TextBlockQuestionNumber"  Grid.Row="4" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Width="200"/>
     </Grid>
 </Page>
 

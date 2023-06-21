@@ -427,6 +427,13 @@ namespace DiscreteMathCourseApp.Pages
                 TopicProgress.Value = Convert.ToInt32(Convert.ToDouble(k) / m * 100);
             TextBlockPercent.Text = TopicProgress.Value.ToString();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            string filename = Directory.GetCurrentDirectory() + @"\Data\TopicContents\Gavrilov_Zadachi_uprazhnenija_diskretnoj_matematike.pdf";
+           
+            Process.Start(filename);
+        }
     }
 }
 

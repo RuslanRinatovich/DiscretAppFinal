@@ -95,6 +95,8 @@ namespace DiscreteMathCourseApp.Pages
                     start = k;
                     foreach (TopicContent topicContent in topicContents)
                     {
+                        //if (topicContent.TopicTitle == "Задачник")
+                        //    continue;
                         xlSheet.Cells[row, k] = topicContent.TopicTitle;
                         xlSheet.Cells[row, k].Orientation = 90;
                         k++;
@@ -169,6 +171,8 @@ namespace DiscreteMathCourseApp.Pages
                     xlSheet.Cells[row, 1] = user.GetFio;
                     foreach (TopicContent topicContent in topicContents)
                     {
+                        //if (topicContent.TopicTitle == "Задачник")
+                        //    continue;
                         UserTopicContent userTopicContent = DiscretMathBDEntities.GetContext().UserTopicContents.FirstOrDefault(p => p.TopicContentId == topicContent.Id && p.UserName == name);
                        
                         if (userTopicContent == null)
